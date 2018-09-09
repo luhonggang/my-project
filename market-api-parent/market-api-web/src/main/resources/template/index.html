@@ -1,0 +1,593 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Echarts数据显示</title>
+    <link th:href="@{bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{bootstrap/css/bootstrap-theme.min.css}" rel="stylesheet" />
+    <!-- 引入开始 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Dashboard - Ace Admin</title>
+    <meta name="description" content="overview &amp; stats" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <!-- bootstrap & fontawesome -->
+    <link rel="stylesheet" th:href="@{assets/css/bootstrap.css}" />
+    <link rel="stylesheet" th:href="@{assets/css/font-awesome.css}" />
+    <link rel="stylesheet" th:href="@{assets/css/ace-fonts.css}" />
+    <link rel="stylesheet" th:href="@{assets/css/ace.css}" class="ace-main-stylesheet" id="main-ace-style" />
+    <link rel="stylesheet" th:href="@{assets/css/ace-part2.css}" class="ace-main-stylesheet" />
+    <link rel="stylesheet" th:href="@{assets/css/ace-ie.css}" />
+    <script th:src="@{jquery-3.1.1.js}" type="text/javascript"></script>
+    <script th:src="@{bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
+    <script th:src="@{assets/js/ace-extra.js}"></script>
+    <script th:src="@{echarts-all.js}" type="text/javascript"></script>
+</head>
+<body class="no-skin">
+<!-- #section:basics/navbar.layout -->
+<div id="navbar" class="navbar navbar-default">
+    <div class="navbar-container" id="navbar-container">
+        <div class="navbar-header pull-left">
+            <!-- #section:basics/navbar.layout.brand -->
+            <a href="#" class="navbar-brand">
+                <small>
+                    <i class="fa fa-leaf"></i>
+                    Echarts数据统计
+                </small>
+            </a>
+        </div>
+        <!-- #section:basics/navbar.dropdwn -->
+        <div class="navbar-buttons navbar-header pull-right" role="navigation">
+            数据统计详情页
+        </div>
+        <!-- /section:basics/navbar.dropdown -->
+    </div><!-- /.navbar-container -->
+</div>
+
+<!-- /section:basics/navbar.layout -->
+<div class="main-container" id="main-container">
+    <script th:inline="javascript" >
+        try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+    </script>
+
+    <!-- #section:basics/sidebar -->
+    <div id="sidebar" class="sidebar    responsive">
+        <script th:inline="javascript">
+            try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
+        </script>
+
+        <div class="sidebar-shortcuts" id="sidebar-shortcuts">
+            <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+                <button class="btn btn-success">
+                    <i class="ace-icon fa fa-signal"></i>
+                </button>
+
+                <button class="btn btn-info">
+                    <i class="ace-icon fa fa-pencil"></i>
+                </button>
+
+                <!-- #section:basics/sidebar.layout.shortcuts -->
+                <button class="btn btn-warning">
+                    <i class="ace-icon fa fa-users"></i>
+                </button>
+
+                <button class="btn btn-danger">
+                    <i class="ace-icon fa fa-cogs"></i>
+                </button>
+
+                <!-- /section:basics/sidebar.layout.shortcuts -->
+            </div>
+
+            <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+                <span class="btn btn-success"></span>
+
+                <span class="btn btn-info"></span>
+
+                <span class="btn btn-warning"></span>
+
+                <span class="btn btn-danger"></span>
+            </div>
+        </div><!-- /.sidebar-shortcuts -->
+
+        <ul class="nav nav-list">
+                <li class="">
+                    <a onclick="linesChart()" style="cursor:pointer">
+                        <i class="menu-icon fa fa-list"></i>
+                        <span class="menu-text"> 折线图 </span>
+                    </a>
+                    <b class="arrow"></b>
+                </li>
+                <li class="">
+                    <a onclick="piePage()" style="cursor:pointer">
+                        <i class="menu-icon fa fa-picture-o"></i>
+                        <span class="menu-text"> 饼&nbsp;&nbsp;&nbsp;图 </span>
+                    </a>
+                    <b class="arrow"></b>
+                </li>
+                <li class="">
+                    <a onclick="radarChart()" style="cursor:pointer">
+                        <i class="menu-icon fa fa-picture-o"></i>
+                        <span class="menu-text"> 雷达图 </span>
+                    </a>
+                    <b class="arrow"></b>
+                </li>
+                <li class="">
+                    <a onclick="mapChart()" style="cursor:pointer">
+                        <i class="menu-icon fa fa-picture-o"></i>
+                        <span class="menu-text"> 地图形 </span>
+                    </a>
+                    <b class="arrow"></b>
+                </li>
+                <li class="">
+                    <a onclick="areaChart()" style="cursor:pointer">
+                        <i class="menu-icon fa fa-picture-o"></i>
+                        <span class="menu-text"> 面积图 </span>
+                    </a>
+                    <b class="arrow"></b>
+                </li>
+                <li class="">
+                    <a onclick="markTimeLine()" style="cursor:pointer">
+                        <i class="menu-icon fa fa-list-alt"></i>
+                        <span class="menu-text"> 字符云 </span>
+                    </a>
+                    <b class="arrow"></b>
+                </li>
+                <li class="">
+                    <a onclick="circleChart()" style="cursor:pointer">
+                        <i class="menu-icon fa fa-list-alt"></i>
+                        <span class="menu-text"> 动态图 </span>
+                    </a>
+                    <b class="arrow"></b>
+                </li>
+
+                <li class="">
+                    <a onclick="lineBarChart()" style="cursor:pointer">
+                        <i class="menu-icon fa fa-calendar"></i>
+                        <span class="menu-text">
+								柱状图
+                            <!-- #section:basics/sidebar.layout.badge -->
+								<!--<span class="badge badge-transparent tooltip-error" title="2 Important Events">
+									<i class="ace-icon fa fa-exclamation-triangle red bigger-130"></i>
+								</span>-->
+							</span>
+                    </a>
+                    <b class="arrow"></b>
+                </li>
+
+                <li class="">
+                    <a  onclick="squareChart()" style="cursor:pointer">
+                        <i class="menu-icon fa fa-picture-o"></i>
+                        <span class="menu-text"> 对比图 </span>
+                    </a>
+                    <b class="arrow"></b>
+                </li>
+            </ul><!-- /.nav-list -->
+
+            <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+                <i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+            </div>
+            <script th:inline="javascript">
+                try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
+            </script>
+        </div>
+
+        <div class="main-content">
+            <div class="main-content-inner">
+                <div class="breadcrumbs" id="breadcrumbs">
+                    <script type="text/javascript">
+                        try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+                    </script>
+
+                    <ul class="breadcrumb">
+                        <li>
+                            <i class="ace-icon fa fa-home home-icon"></i>
+                            <a href="#">Home</a>
+                        </li>
+
+                        <li>
+                            <a href="#"><span id="showText">折线图数据</span></a>
+                        </li>
+                        <!--<li class="active"></li>-->
+                    </ul><!-- /.breadcrumb -->
+
+                    <!-- #section:basics/content.searchbox -->
+                    <div class="nav-search" id="nav-search">
+                        <form class="form-search">
+								<span class="input-icon">
+									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+									<i class="ace-icon fa fa-search nav-search-icon"></i>
+								</span>
+                        </form>
+                    </div><!-- /.nav-search -->
+
+                    <!-- /section:basics/content.searchbox -->
+                </div>
+                <!-- /section:basics/content.breadcrumbs -->
+                <div class="page-content" id="pageContent"><!-- id="sidebar" -->
+                    <!--<div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">折线图数据展现</h3>
+                        </div>
+                    </div>-->
+                    <div id="main" style="height:400px"></div>
+                    <div id="lines" style="height: 400px;"></div>
+                </div><!-- /.page-content -->
+            </div>
+        </div><!-- /.main-content -->
+
+        <div class="footer">
+            <div class="footer-inner">
+                <!-- #section:basics/footer -->
+                <div class="footer-content">
+						<span class="bigger-120">
+							<span class="blue bolder">Ace</span>
+							Application &copy; 2013-2014
+						</span>
+
+                    &nbsp; &nbsp;
+                    <span class="action-buttons">
+							<a href="#">
+								<i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
+							</a>
+
+							<a href="#">
+								<i class="ace-icon fa fa-facebook-square text-primary bigger-150"></i>
+							</a>
+
+							<a href="#">
+								<i class="ace-icon fa fa-rss-square orange bigger-150"></i>
+							</a>
+						</span>
+                </div>
+            </div>
+        </div>
+                <!-- /section:basics/footer -->
+        <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+            <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+        </a>
+    </div><!-- /.main-container -->
+</body>
+    <!-- <![endif]-->
+    <script th:src="@{assets/js/bootstrap.js}"></script>
+
+    <!-- page specific plugin scripts -->
+
+    <!--[if lte IE 8]>
+    <script src="@{assets/js/excanvas.js}"></script>
+    <![endif]-->
+    <script th:src="@{assets/js/jquery-ui.custom.js}"></script>
+    <script th:src="@{assets/js/jquery.ui.touch-punch.js}"></script>
+    <script th:src="@{assets/js/jquery.easypiechart.js}"></script>
+    <script th:src="@{assets/js/jquery.sparkline.js}"></script>
+    <script th:src="@{assets/js/flot/jquery.flot.js}"></script>
+    <script th:src="@{assets/js/flot/jquery.flot.pie.js}"></script>
+    <script th:src="@{assets/js/flot/jquery.flot.resize.js}"></script>
+    <!-- the following scripts are used in demo only for onpage help and you don't need them -->
+    <link rel="stylesheet" th:href="@{assets/css/ace.onpage-help.css}" />
+    <!--<link rel="stylesheet" th:href="@{docs/assets/js/themes/sunburst.css}" />-->
+    <script th:inline="javascript"> ace.vars['base'] = '.'; </script>
+    <script th:src="@{assets/js/ace/elements.onpage-help.js}"></script>
+    <script th:src="@{assets/js/ace/ace.onpage-help.js}"></script>
+<script th:inline="javascript">
+    $(function () {
+        console.log("运行程序");
+        $.ajax({
+            url:'/queryLinesForWebsite',
+            type:'POST',
+            async:"true", //默认是true,异步
+            dataType:"json",
+            data:null,
+            success:function(res){
+                $("#showText").val("");
+                $("#showText").val("折线图数据");
+                loadBarDataForWebSite(res);
+                loadEchartsDataForLines(res);
+            }
+        });
+    });
+    function loadBarDataForWebSite(res){
+        // 基于准备好的dom，初始化echarts图表 折线图中 标注面积图
+        var myChart = echarts.init(document.getElementById('main'));
+
+        var option = {
+            title : {
+                text: '用户访问情况',
+                subtext: '纯属虚构'
+            },
+            tooltip : {
+                trigger: 'axis'
+            },
+            legend: {
+                data:res.type,
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            xAxis : [
+                {
+                    type : 'category',
+                    boundaryGap : false,
+                    data : res.dateArray,
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value'
+                }
+            ],
+            series : [
+                {
+                    name:res.type[0],
+                    type:'line',
+                    smooth:true,
+                    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                    data:res.a1,
+                },
+                {
+                    name:res.type[1],
+                    type:'line',
+                    smooth:true,
+                    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                    data:res.a2,
+                },
+                {
+                    name:res.type[2],
+                    type:'line',
+                    smooth:true,
+                    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                    data:res.a3,
+                },
+                {
+                    name:res.type[3],
+                    type:'line',
+                    smooth:true,
+                    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                    data:res.a4,
+                },
+                {
+                    name:res.type[4],
+                    type:'line',
+                    smooth:true,
+                    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                    data:res.a5,
+                },
+                {
+                    name:res.type[5],
+                    type:'line',
+                    smooth:true,
+                    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                    data:res.a6,
+                }
+            ]
+        };
+        // 为echarts对象加载数据
+        myChart.setOption(option);
+    }
+    // 折线图
+    function loadEchartsDataForLines(res) {
+        // 基于准备好的dom，初始化echarts图表 折线图中 标注面积图
+        var myChart = echarts.init(document.getElementById('lines'));
+        option = {
+            title : {
+                text: '最近一周的访问量变化',
+                subtext: '纯属虚构'
+            },
+            tooltip : {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['最高访问量','最低访问量']
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {show: true, type: ['line', 'bar']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            xAxis : [
+                {
+                    type : 'category',
+                    boundaryGap : false,
+                    data : res.dateArray,
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value',
+                    axisLabel : {
+                        formatter: '{value} °C'
+                    }
+                }
+            ],
+            series : [
+                {
+                    name:'最高访问量',
+                    type:'line',
+                    data:res.a1,
+                    markPoint : {
+                        data : [
+                            {type : 'max', name: '最大值'},
+                            {type : 'min', name: '最小值'}
+                        ]
+                    },
+                    markLine : {
+                        data : [
+                            {type : 'average', name: '平均值'}
+                        ]
+                    }
+                },
+                {
+                    name:'最低访问量',
+                    type:'line',
+                    data:res.a6,
+                    markPoint : {
+                        data : [
+                            {name : '周最低', value : -2, xAxis: 1, yAxis: -1.5}
+                        ]
+                    },
+                    markLine : {
+                        data : [
+                            {type : 'average', name : '平均值'}
+                        ]
+                    }
+                }
+            ]
+        };
+        // 为echarts对象加载数据
+        myChart.setOption(option);
+    }
+
+    function linesChart(){
+        $("#showText").val("");
+        $("#showText").val("折线图数据");
+        $.ajax({
+            url:'/linesChart',
+            type:'GET',
+            async:"true", //默认是true,异步
+            dataType:"html",
+            data:null,
+            success:function(result){
+                $("#pageContent").html("");
+                $("#pageContent").html(result);
+            }
+        });
+    }
+    // 饼图
+    function piePage(){
+        $("#showText").text("");
+        $("#showText").text("饼图数据");
+        $.ajax({
+            url:'/piepage',
+            type:'GET',
+            async:"true", //默认是true,异步
+            dataType:"html",
+            data:null,
+            success:function(result){
+                $("#pageContent").html("");
+                $("#pageContent").html(result);
+            }
+        });
+    }
+    function radarChart(){
+        $("#showText").text("");
+        $("#showText").text("雷达图数据");
+        $.ajax({
+            url:'/radarChart',
+            type:'GET',
+            async:"true", //默认是true,异步
+            dataType:"html",
+            data:null,
+            success:function(result){
+                $("#pageContent").html("");
+                $("#pageContent").html(result);
+            }
+        });
+    }
+    function mapChart(){
+        $("#showText").text("");
+        $("#showText").text("地图数据");
+        $.ajax({
+            url:'/mapChart',
+            type:'GET',
+            async:"true", //默认是true,异步
+            dataType:"html",
+            data:null,
+            success:function(result){
+                $("#pageContent").html("");
+                $("#pageContent").html(result);
+            }
+        });
+    }
+    function areaChart(){
+        $("#showText").text("");
+        $("#showText").text("面积图数据");
+        $.ajax({
+            url:'/areaChart',
+            type:'GET',
+            async:"true", //默认是true,异步
+            dataType:"html",
+            data:null,
+            success:function(result){
+                $("#pageContent").html("");
+                $("#pageContent").html(result);
+            }
+        });
+    }
+    // 时间轴
+    function markTimeLine(){
+        $("#showText").text("");
+        $("#showText").text("字符云数据");
+        $.ajax({
+            url:'/markTimeLine',
+            type:'GET',
+            async:"true", //默认是true,异步
+            dataType:"html",
+            data:null,
+            success:function(result){
+                $("#pageContent").html("");
+                $("#pageContent").html(result);
+            }
+        });
+    }
+    // 柱状图
+    function lineBarChart(){
+        $("#showText").text("");
+        $("#showText").text("柱状图数据");
+        $.ajax({
+            url:'/lineBarChart',
+            type:'GET',
+            async:"true", //默认是true,异步
+            dataType:"html",
+            data:null,
+            success:function(result){
+                $("#pageContent").html("");
+                $("#pageContent").html(result);
+            }
+        });
+    }
+    // 矩形图
+    function squareChart(){
+        $("#showText").text("");
+        $("#showText").text("对比图数据");
+        $.ajax({
+            url:'/squareChart',
+            type:'GET',
+            async:"true", //默认是true,异步
+            dataType:"html",
+            data:null,
+            success:function(result){
+                $("#pageContent").html("");
+                $("#pageContent").html(result);
+            }
+        });
+    }
+
+    function circleChart(){
+        $("#showText").text("");
+        $("#showText").text("动态图数据");
+        $.ajax({
+            url:'/circleChart',
+            type:'GET',
+            async:"true", //默认是true,异步
+            dataType:"html",
+            data:null,
+            success:function(result){
+                console.log(" 返回的页面 : "+result);
+                $("#pageContent").html("");
+                $("#pageContent").html(result);
+            }
+        });
+    }
+</script>
+</html>
