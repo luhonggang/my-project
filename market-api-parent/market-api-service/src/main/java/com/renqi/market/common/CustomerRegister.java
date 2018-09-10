@@ -13,54 +13,21 @@ import javax.validation.constraints.NotNull;
 @Data
 public class CustomerRegister implements Serializable {
     private String userName;
-    @NotNull(message="mobile")
-    private String mobile;
+    @NotNull(message="phone")
+    private String phone;
     @NotNull(message="passWord不可为空")
     private String passWord;
+    private String confirmPwd;
 //    @NotNull(message="mobileCode不可为空")
     private String mobileCode;
-
     public CustomerRegister() {
     }
 
-    public CustomerRegister(String userName, @NotNull String mobile, @NotNull String passWord, String mobileCode) {
+    public CustomerRegister(String userName, String phone, String passWord, String confirmPwd, String mobileCode) {
         this.userName = userName;
-        this.mobile = mobile;
+        this.phone = phone;
         this.passWord = passWord;
-        this.mobileCode = mobileCode;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    @NotNull
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(@NotNull String mobile) {
-        this.mobile = mobile;
-    }
-
-    @NotNull
-    public String getPassWord() {
-        return passWord;
-    }
-
-    public void setPassWord(@NotNull String passWord) {
-        this.passWord = passWord;
-    }
-
-    public String getMobileCode() {
-        return mobileCode;
-    }
-
-    public void setMobileCode(String mobileCode) {
+        this.confirmPwd = confirmPwd;
         this.mobileCode = mobileCode;
     }
 }

@@ -19,9 +19,10 @@ public enum SystemCode {
     GET_MOBILE_CODE("406","验证获取成功"),
     MOBILE_IS_ERROR("407","参数为空"),
     MOBILE_IS_REGISTER("408","手机号码已经注册过,请更换手机号"),
-    MOBILE_IS_EXIST("409","验证码已经生成过,2分钟内不可重复生成"),
-    MOBILE_SEND_ERROR("410","验证码发送失败"),
+    MOBILE_IS_EXIST("409","验证码已经发送过,2分钟内不可重复发送"),
+    MOBILE_SEND_ERROR("410","验证码发送失败,请稍后再试"),
     INPUT_CODE_ERROR("411","验证码输入有误"),
+    MOBILE_EXPIRED("412","验证码失效,请重新发送验证码"),
     SYSTEM_ERROR("500","系统异常"),
     UNKNOW_EXCEPTION("500","未知异常");
 

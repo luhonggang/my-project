@@ -82,23 +82,17 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	/**
-	 * 校验手机号码
-	 * @param mobile
-	 * @param map
-	 * @return
-	 */
-	@Override
-	/**
 	 *
 	 * @param mobile
 	 * @param map
 	 * @return
 	 */
+	@Override
 	public boolean checkMobileCodeIsOk(String mobile,Map<String,String> map) {
 		boolean flag = true;
 		try {
 		    String ywType = map.get("type");
-			if (redisService.exists(ywType+"_"+mobile+"_"+System.currentTimeMillis())) {
+			if (redisService.exists(ywType+"_"+mobile+"_"+map.get("mobileCode"))) {
                // 比较用户输入的验证码和 是否是发送的验证码
 				if(!map.get("mobileCode").equals(redisService.get(ywType+"_"+mobile+"_"+map.get("mobileCode")))) {
 					flag = false;
@@ -120,7 +114,7 @@ public class CustomerServiceImpl implements CustomerService {
 	 */
 	@Override
 	public boolean checkMobileIsRegister(String mobile) {
-		return  customerMapper.checkMobileIsRegister(mobile) == 0;
+		return  customerMapper.checkMobileIsRegister(mobile) != 0 ? true : false;
 	}
 
 	/**
@@ -149,7 +143,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void registerCustomer(CustomerRegister user) {
         Customer customer = new Customer();
-        customer.setPhone(user.getMobile());
+        customer.setPhone(user.getPhone());
         customer.setPassWord(user.getPassWord());
         customer.setLevelId(1);
         customer.setShopId(null);
@@ -169,9 +163,12 @@ public class CustomerServiceImpl implements CustomerService {
 			String ywType = typeAndTemplate.get("type");
 			if(StringUtils.isNotBlank(ywType)){
 				if ("2".equals(map.get("msg"))){
-					redisService.set(ywType+"_"+mobile+"_"+System.currentTimeMillis(),1800L);
+					redisService.set(ywType+"_"+mobile,120L);
 					// 记录验证码并设置失效时间
-					redisService.set(ywType+"_"+mobile+"_"+map.get("mobileCode"),120L);
+					redisService.set(ywType+"_"+mobile+"_"+map.get("mobileCode"),300L);
+					// 记录当前注册的手机号是点击了发送验证码按钮
+					redisService.set(ywType+"_"+mobile+"_HAVE_CODE",300L);
+					base.setData(map.get("mobileCode"));
 					return base;
 				}else {
                     return ResultMsgUtil.setCodeMsg(base,SystemCode.MOBILE_SEND_ERROR.getCode(),SystemCode.MOBILE_SEND_ERROR.getMsg());

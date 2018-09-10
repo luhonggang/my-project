@@ -43,18 +43,12 @@ public class UserLoginController extends GlobalExceptionHandler {
      */
     @RequestMapping(value="/login",method = RequestMethod.POST)
     public BaseResultMsg customerLogin(@RequestBody CustomerRegister customer){
-//        @RequestParam("phone") String phone,
-//        @RequestParam("passWord") String passWord
-//        BaseResultMsg baseResultMsg = new BaseResultMsg();
-        String phone = customer.getMobile();
+        String phone = customer.getPhone();
         String passWord = customer.getPassWord();
-//        if(StringUtils.isNotBlank(phone)){ todo 前端校验手机号是否为空
+       // todo 前端校验手机号是否为空
         BaseResultMsg baseResultMsg = new BaseResultMsg();
          // 校验手机号是否正确
          if(StringHandleUtils.checkCellphone(phone)){
-           // 检查输入的密码是否正确
-//             String pwdMd5Str = MD5Utils.md5(passWord);
-//            if(StringHandleUtils.checkIsEncode(pwdMd5Str)){
                 // 输入的手机号码和密码都符合查库查询用户信息
                 BaseCustomer lognCustomer = customerService.selectCustomerByPhonePwd(phone,passWord);
                 if(null != lognCustomer){
@@ -73,9 +67,6 @@ public class UserLoginController extends GlobalExceptionHandler {
                 }
                 // 说明用户没有注册 先注册
                 return ResultMsgUtil.setResponse(baseResultMsg,SystemCode.SYSTEM_LOGIN_ERROR.getCode(), SystemCode.SYSTEM_LOGIN_ERROR.getMsg(),lognCustomer);
-//            }else{
-//                return  ResultMsgUtil.setResponse(baseResultMsg,SystemCode.PASS_WORD_ERROR.getCode(), SystemCode.PASS_WORD_ERROR.getMsg(),null);
-//            }
            }else{
                 return  ResultMsgUtil.setResponse(baseResultMsg,SystemCode.PHONE_NUMBER_ERROR.getCode(), SystemCode.PHONE_NUMBER_ERROR.getMsg(),null);
           }
@@ -88,19 +79,19 @@ public class UserLoginController extends GlobalExceptionHandler {
      */
     @RequestMapping(value = "/customerRegister", method = RequestMethod.POST)
     public BaseResultMsg customerRegister(@RequestBody CustomerRegister user) {
-        BaseResultMsg base = new BaseResultMsg(SystemCode.SYSTEM_SUCCESS.getCode(),SystemCode.SYSTEM_SUCCESS.getMsg());
+        BaseResultMsg base = new BaseResultMsg(SystemCode.SYSTEM_SUCCESS.getCode(),"注册成功");
         try{
-            if(customerService.checkMobileIsRegister(user.getMobile())){
-                return ResultMsgUtil.setCodeMsg(base,SystemCode.MOBILE_IS_REGISTER.getCode(),"您已注册,请登录");
+            if(customerService.checkMobileIsRegister(user.getPhone())){
+                return ResultMsgUtil.setCodeMsg(base,SystemCode.SYSTEM_SUCCESS.getCode(),"您已注册,请登录");
             }
-            Map<String,String> map  = new HashMap<>();
-            map.put("type","register");
-            map.put("mobileCode",user.getMobileCode());
-            // 前端校验手机号码 为非空
-            if(customerService.checkMobileCodeIsOk(user.getMobile(),map)){
+            // 若存在说明验证码有效的，否则无效
+            if(redisService.exists("register_"+user.getPhone()+"_"+user.getMobileCode())){
                customerService.registerCustomer(user);
             }else{
-               return ResultMsgUtil.setCodeMsg(base,SystemCode.INPUT_CODE_ERROR.getCode(),SystemCode.INPUT_CODE_ERROR.getMsg());
+                if(!redisService.exists("register_"+user.getPhone()+"_HAVE_CODE")){
+                    return ResultMsgUtil.setCodeMsg(base,SystemCode.INPUT_CODE_ERROR.getCode(),SystemCode.INPUT_CODE_ERROR.getMsg());
+                }
+               return ResultMsgUtil.setCodeMsg(base,SystemCode.MOBILE_EXPIRED.getCode(),SystemCode.MOBILE_EXPIRED.getMsg());
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -112,26 +103,40 @@ public class UserLoginController extends GlobalExceptionHandler {
     /**
      * 依据手机号码获取验证码
      * @param mobile 手机号码
+     * @param mobileCode 验证码
      * @return
      */
-    @RequestMapping(value = "/mobileCode", method = RequestMethod.GET)
-    public BaseResultMsg getMobileCode(String mobile) {
+    @RequestMapping(value = "/mobileCode", method = RequestMethod.POST)
+    public BaseResultMsg getMobileCode(@RequestBody CustomerRegister customer) {
         BaseResultMsg base = new BaseResultMsg(SystemCode.SYSTEM_SUCCESS.getCode(),SystemCode.GET_MOBILE_CODE.getMsg());
         /**
          *  验证手机号码是否注册过,注册过的不让注册
          */
-        if(StringUtils.isEmpty(mobile) ){
+        String phone = customer.getPhone();
+        String mobileCode = customer.getMobileCode();
+        if(StringUtils.isEmpty(phone)){
             return ResultMsgUtil.setCodeMsg(base,SystemCode.MOBILE_IS_ERROR.getCode(),SystemCode.MOBILE_IS_ERROR.getMsg());
         }else{
-            // 注册过的不再发送验证码
-            if(customerService.checkMobileIsRegister(mobile)){
-                // 说明手机号未注册
-                String type = "register";
+            String type = "register";
+            if(StringUtils.isNotBlank(mobileCode)){
+              // 1. 说明是校验验证码是否正确
+                if(redisService.exists(type+"_"+phone+"_"+mobileCode)){
+                  // 存在该值说明输入的验证码是正确的 否则是输入有误
+                    return ResultMsgUtil.setCodeMsg(base,SystemCode.SYSTEM_SUCCESS.getCode(),SystemCode.SYSTEM_SUCCESS.getMsg());
+                }
+                    return ResultMsgUtil.setCodeMsg(base,SystemCode.INPUT_CODE_ERROR.getCode(),SystemCode.INPUT_CODE_ERROR.getMsg());
+            }
+            // 2.说明是获取验证码 注册过的不再发送验证码
+            if(customerService.checkMobileIsRegister(phone)){
+                // 3.说明手机号未注册
+                if(redisService.exists(type+"_"+phone)){
+                    return ResultMsgUtil.setCodeMsg(base,SystemCode.MOBILE_IS_EXIST.getCode(),SystemCode.MOBILE_IS_EXIST.getMsg());
+                }
                 String template = new String("您的验证码是：ABCD。请不要把验证码泄露给其他人。");
                 Map<String,String> map = new HashMap<>();
                 map.put("type",type);
                 map.put("template",template);
-                return  customerService.getIdentiFyingCode(mobile,map);
+                return  customerService.getIdentiFyingCode(phone,map);
             }else{
                 return ResultMsgUtil.setCodeMsg(base,SystemCode.MOBILE_IS_REGISTER.getCode(),SystemCode.MOBILE_IS_REGISTER.getMsg());
             }
