@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/customer")
+@SuppressWarnings("all")
 public class UserLoginController extends GlobalExceptionHandler {
     private final static Logger logger = LoggerFactory.getLogger(UserLoginController.class);
 
@@ -32,32 +34,37 @@ public class UserLoginController extends GlobalExceptionHandler {
     @Autowired
     private RedisService redisService;
 
+    @Value("${token.expiredTime}")
+    private Long expiredTime;
     /**
      * 用户登录接口
      * @param
      * @return         用户信息
      */
     @RequestMapping(value="/login",method = RequestMethod.POST)
-    public BaseResultMsg customerLogin(@RequestParam("phone") String phone,
-                                   @RequestParam("passWord") String passWord){
+    public BaseResultMsg customerLogin(@RequestBody CustomerRegister customer){
+//        @RequestParam("phone") String phone,
+//        @RequestParam("passWord") String passWord
 //        BaseResultMsg baseResultMsg = new BaseResultMsg();
-//        String customerPhone = customer.getPhone();
-//        String customerPwd = customer.getPassWord();
+        String phone = customer.getMobile();
+        String passWord = customer.getPassWord();
 //        if(StringUtils.isNotBlank(phone)){ todo 前端校验手机号是否为空
         BaseResultMsg baseResultMsg = new BaseResultMsg();
          // 校验手机号是否正确
          if(StringHandleUtils.checkCellphone(phone)){
            // 检查输入的密码是否正确
-             String pwdMd5Str = MD5Utils.md5(passWord);
-            if(StringHandleUtils.checkIsEncode(pwdMd5Str)){
+//             String pwdMd5Str = MD5Utils.md5(passWord);
+//            if(StringHandleUtils.checkIsEncode(pwdMd5Str)){
                 // 输入的手机号码和密码都符合查库查询用户信息
-                BaseCustomer lognCustomer = customerService.selectCustomerByPhonePwd(phone,pwdMd5Str);
+                BaseCustomer lognCustomer = customerService.selectCustomerByPhonePwd(phone,passWord);
                 if(null != lognCustomer){
                     // 重新生成token
-                    String token = JwtTokenUtil.createJWT(lognCustomer.getCustomerId()+"","renqi",lognCustomer.getShopId()+"",1000*60,null);
+                    String token = JwtTokenUtil.createJWT(lognCustomer.getCustomerId()+"","renqi",
+                            lognCustomer.getShopId()+"",expiredTime,null);
                     //redisService.set("user_token:"+customerPhone,token);
                     lognCustomer.setToken(token);
-                    //lognCustomer.setExpireTime(System.currentTimeMillis()+);
+                    // 过期时间
+                    lognCustomer.setExpireTime((System.currentTimeMillis()+expiredTime)+"");
                     // 此时要将token更新入库
                     lognCustomer.setLoginTime(new Date());
                     lognCustomer.setUpdateTime(new Date());
@@ -66,9 +73,9 @@ public class UserLoginController extends GlobalExceptionHandler {
                 }
                 // 说明用户没有注册 先注册
                 return ResultMsgUtil.setResponse(baseResultMsg,SystemCode.SYSTEM_LOGIN_ERROR.getCode(), SystemCode.SYSTEM_LOGIN_ERROR.getMsg(),lognCustomer);
-            }else{
-                return  ResultMsgUtil.setResponse(baseResultMsg,SystemCode.PASS_WORD_ERROR.getCode(), SystemCode.PASS_WORD_ERROR.getMsg(),null);
-            }
+//            }else{
+//                return  ResultMsgUtil.setResponse(baseResultMsg,SystemCode.PASS_WORD_ERROR.getCode(), SystemCode.PASS_WORD_ERROR.getMsg(),null);
+//            }
            }else{
                 return  ResultMsgUtil.setResponse(baseResultMsg,SystemCode.PHONE_NUMBER_ERROR.getCode(), SystemCode.PHONE_NUMBER_ERROR.getMsg(),null);
           }

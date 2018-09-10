@@ -1,4 +1,4 @@
-var baseUrl = 'market/';
+var baseUrl = '/market/';
 
 // $(function () {
 //     localStorage.setItem("name", name);

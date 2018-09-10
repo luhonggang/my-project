@@ -15,14 +15,14 @@
 //@RequestMapping("/page")
 //public class PageIndexController {
 //
-//    @RequestMapping(value="/login",method = RequestMethod.GET)
+//    @RequestMapping(value="/login.html",method = RequestMethod.GET)
 //    public ModelAndView loginPage(){
-//        return new ModelAndView("/login");
+//        return new ModelAndView("login");
 //    }
 //
-//    @RequestMapping(value="/index",method = RequestMethod.GET)
+//    @RequestMapping(value="/index.html",method = RequestMethod.GET)
 //    public ModelAndView index(){
-//        return new ModelAndView("/index");
+//        return new ModelAndView("index");
 //
 //    }
 //}
