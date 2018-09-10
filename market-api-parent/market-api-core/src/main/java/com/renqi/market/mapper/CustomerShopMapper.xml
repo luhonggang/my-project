@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renqi.market.dao.CustomerShopMapper">
+  <resultMap id="BaseResultMap" type="com.renqi.market.entity.CustomerShop">
+    <id column="shop_id" jdbcType="INTEGER" property="shopId" />
+    <result column="shop_name" jdbcType="VARCHAR" property="shopName" />
+    <result column="customer_id" jdbcType="INTEGER" property="customerId" />
+    <result column="shop_no" jdbcType="VARCHAR" property="shopNo" />
+    <result column="credit_score" jdbcType="INTEGER" property="creditScore" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update" jdbcType="TIMESTAMP" property="update" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    shop_id, shop_name, customer_id, shop_no, credit_score, create_time, update
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from customer_shop
+    where shop_id = #{shopId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from customer_shop
+    where shop_id = #{shopId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.renqi.market.entity.CustomerShop">
+    insert into customer_shop (shop_id, shop_name, customer_id, 
+      shop_no, credit_score, create_time, 
+      update)
+    values (#{shopId,jdbcType=INTEGER}, #{shopName,jdbcType=VARCHAR}, #{customerId,jdbcType=INTEGER}, 
+      #{shopNo,jdbcType=VARCHAR}, #{creditScore,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{update,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.renqi.market.entity.CustomerShop">
+    insert into customer_shop
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="shopId != null">
+        shop_id,
+      </if>
+      <if test="shopName != null">
+        shop_name,
+      </if>
+      <if test="customerId != null">
+        customer_id,
+      </if>
+      <if test="shopNo != null">
+        shop_no,
+      </if>
+      <if test="creditScore != null">
+        credit_score,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="update != null">
+        update,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="shopId != null">
+        #{shopId,jdbcType=INTEGER},
+      </if>
+      <if test="shopName != null">
+        #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null">
+        #{customerId,jdbcType=INTEGER},
+      </if>
+      <if test="shopNo != null">
+        #{shopNo,jdbcType=VARCHAR},
+      </if>
+      <if test="creditScore != null">
+        #{creditScore,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="update != null">
+        #{update,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.renqi.market.entity.CustomerShop">
+    update customer_shop
+    <set>
+      <if test="shopName != null">
+        shop_name = #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null">
+        customer_id = #{customerId,jdbcType=INTEGER},
+      </if>
+      <if test="shopNo != null">
+        shop_no = #{shopNo,jdbcType=VARCHAR},
+      </if>
+      <if test="creditScore != null">
+        credit_score = #{creditScore,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="update != null">
+        update = #{update,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where shop_id = #{shopId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.renqi.market.entity.CustomerShop">
+    update customer_shop
+    set shop_name = #{shopName,jdbcType=VARCHAR},
+      customer_id = #{customerId,jdbcType=INTEGER},
+      shop_no = #{shopNo,jdbcType=VARCHAR},
+      credit_score = #{creditScore,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update = #{update,jdbcType=TIMESTAMP}
+    where shop_id = #{shopId,jdbcType=INTEGER}
+  </update>
+</mapper>

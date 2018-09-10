@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renqi.market.dao.CustomerTaskMapper">
+  <resultMap id="BaseResultMap" type="com.renqi.market.entity.CustomerTask">
+    <id column="task_id" jdbcType="INTEGER" property="taskId" />
+    <result column="task_type" jdbcType="VARCHAR" property="taskType" />
+    <result column="good_id" jdbcType="INTEGER" property="goodId" />
+    <result column="good_link_url" jdbcType="VARCHAR" property="goodLinkUrl" />
+    <result column="good_title" jdbcType="VARCHAR" property="goodTitle" />
+    <result column="store_name" jdbcType="VARCHAR" property="storeName" />
+    <result column="total_visitor" jdbcType="INTEGER" property="totalVisitor" />
+    <result column="total_number" jdbcType="INTEGER" property="totalNumber" />
+    <result column="task_time" jdbcType="VARCHAR" property="taskTime" />
+    <result column="task_begin_hour" jdbcType="VARCHAR" property="taskBeginHour" />
+    <result column="task_end_hour" jdbcType="VARCHAR" property="taskEndHour" />
+    <result column="task_begin_miunte" jdbcType="VARCHAR" property="taskBeginMiunte" />
+    <result column="task_end_miunte" jdbcType="VARCHAR" property="taskEndMiunte" />
+    <result column="task_search_scope" jdbcType="VARCHAR" property="taskSearchScope" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    task_id, task_type, good_id, good_link_url, good_title, store_name, total_visitor, 
+    total_number, task_time, task_begin_hour, task_end_hour, task_begin_miunte, task_end_miunte, 
+    task_search_scope, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from customer_task
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from customer_task
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.renqi.market.entity.CustomerTask">
+    insert into customer_task (task_id, task_type, good_id, 
+      good_link_url, good_title, store_name, 
+      total_visitor, total_number, task_time, 
+      task_begin_hour, task_end_hour, task_begin_miunte, 
+      task_end_miunte, task_search_scope, create_time, 
+      update_time)
+    values (#{taskId,jdbcType=INTEGER}, #{taskType,jdbcType=VARCHAR}, #{goodId,jdbcType=INTEGER}, 
+      #{goodLinkUrl,jdbcType=VARCHAR}, #{goodTitle,jdbcType=VARCHAR}, #{storeName,jdbcType=VARCHAR}, 
+      #{totalVisitor,jdbcType=INTEGER}, #{totalNumber,jdbcType=INTEGER}, #{taskTime,jdbcType=VARCHAR}, 
+      #{taskBeginHour,jdbcType=VARCHAR}, #{taskEndHour,jdbcType=VARCHAR}, #{taskBeginMiunte,jdbcType=VARCHAR}, 
+      #{taskEndMiunte,jdbcType=VARCHAR}, #{taskSearchScope,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.renqi.market.entity.CustomerTask">
+    insert into customer_task
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        task_id,
+      </if>
+      <if test="taskType != null">
+        task_type,
+      </if>
+      <if test="goodId != null">
+        good_id,
+      </if>
+      <if test="goodLinkUrl != null">
+        good_link_url,
+      </if>
+      <if test="goodTitle != null">
+        good_title,
+      </if>
+      <if test="storeName != null">
+        store_name,
+      </if>
+      <if test="totalVisitor != null">
+        total_visitor,
+      </if>
+      <if test="totalNumber != null">
+        total_number,
+      </if>
+      <if test="taskTime != null">
+        task_time,
+      </if>
+      <if test="taskBeginHour != null">
+        task_begin_hour,
+      </if>
+      <if test="taskEndHour != null">
+        task_end_hour,
+      </if>
+      <if test="taskBeginMiunte != null">
+        task_begin_miunte,
+      </if>
+      <if test="taskEndMiunte != null">
+        task_end_miunte,
+      </if>
+      <if test="taskSearchScope != null">
+        task_search_scope,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        #{taskId,jdbcType=INTEGER},
+      </if>
+      <if test="taskType != null">
+        #{taskType,jdbcType=VARCHAR},
+      </if>
+      <if test="goodId != null">
+        #{goodId,jdbcType=INTEGER},
+      </if>
+      <if test="goodLinkUrl != null">
+        #{goodLinkUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTitle != null">
+        #{goodTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="storeName != null">
+        #{storeName,jdbcType=VARCHAR},
+      </if>
+      <if test="totalVisitor != null">
+        #{totalVisitor,jdbcType=INTEGER},
+      </if>
+      <if test="totalNumber != null">
+        #{totalNumber,jdbcType=INTEGER},
+      </if>
+      <if test="taskTime != null">
+        #{taskTime,jdbcType=VARCHAR},
+      </if>
+      <if test="taskBeginHour != null">
+        #{taskBeginHour,jdbcType=VARCHAR},
+      </if>
+      <if test="taskEndHour != null">
+        #{taskEndHour,jdbcType=VARCHAR},
+      </if>
+      <if test="taskBeginMiunte != null">
+        #{taskBeginMiunte,jdbcType=VARCHAR},
+      </if>
+      <if test="taskEndMiunte != null">
+        #{taskEndMiunte,jdbcType=VARCHAR},
+      </if>
+      <if test="taskSearchScope != null">
+        #{taskSearchScope,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.renqi.market.entity.CustomerTask">
+    update customer_task
+    <set>
+      <if test="taskType != null">
+        task_type = #{taskType,jdbcType=VARCHAR},
+      </if>
+      <if test="goodId != null">
+        good_id = #{goodId,jdbcType=INTEGER},
+      </if>
+      <if test="goodLinkUrl != null">
+        good_link_url = #{goodLinkUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="goodTitle != null">
+        good_title = #{goodTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="storeName != null">
+        store_name = #{storeName,jdbcType=VARCHAR},
+      </if>
+      <if test="totalVisitor != null">
+        total_visitor = #{totalVisitor,jdbcType=INTEGER},
+      </if>
+      <if test="totalNumber != null">
+        total_number = #{totalNumber,jdbcType=INTEGER},
+      </if>
+      <if test="taskTime != null">
+        task_time = #{taskTime,jdbcType=VARCHAR},
+      </if>
+      <if test="taskBeginHour != null">
+        task_begin_hour = #{taskBeginHour,jdbcType=VARCHAR},
+      </if>
+      <if test="taskEndHour != null">
+        task_end_hour = #{taskEndHour,jdbcType=VARCHAR},
+      </if>
+      <if test="taskBeginMiunte != null">
+        task_begin_miunte = #{taskBeginMiunte,jdbcType=VARCHAR},
+      </if>
+      <if test="taskEndMiunte != null">
+        task_end_miunte = #{taskEndMiunte,jdbcType=VARCHAR},
+      </if>
+      <if test="taskSearchScope != null">
+        task_search_scope = #{taskSearchScope,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.renqi.market.entity.CustomerTask">
+    update customer_task
+    set task_type = #{taskType,jdbcType=VARCHAR},
+      good_id = #{goodId,jdbcType=INTEGER},
+      good_link_url = #{goodLinkUrl,jdbcType=VARCHAR},
+      good_title = #{goodTitle,jdbcType=VARCHAR},
+      store_name = #{storeName,jdbcType=VARCHAR},
+      total_visitor = #{totalVisitor,jdbcType=INTEGER},
+      total_number = #{totalNumber,jdbcType=INTEGER},
+      task_time = #{taskTime,jdbcType=VARCHAR},
+      task_begin_hour = #{taskBeginHour,jdbcType=VARCHAR},
+      task_end_hour = #{taskEndHour,jdbcType=VARCHAR},
+      task_begin_miunte = #{taskBeginMiunte,jdbcType=VARCHAR},
+      task_end_miunte = #{taskEndMiunte,jdbcType=VARCHAR},
+      task_search_scope = #{taskSearchScope,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </update>
+</mapper>

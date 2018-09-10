@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renqi.market.dao.CustomerMoneyMapper">
+  <resultMap id="BaseResultMap" type="com.renqi.market.entity.CustomerMoney">
+    <id column="amount_id" jdbcType="INTEGER" property="amountId" />
+    <result column="customer_id" jdbcType="INTEGER" property="customerId" />
+    <result column="amount_money" jdbcType="VARCHAR" property="amountMoney" />
+    <result column="level_id" jdbcType="INTEGER" property="levelId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    amount_id, customer_id, amount_money, level_id, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from customer_money
+    where amount_id = #{amountId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from customer_money
+    where amount_id = #{amountId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.renqi.market.entity.CustomerMoney">
+    insert into customer_money (amount_id, customer_id, amount_money, 
+      level_id, create_time)
+    values (#{amountId,jdbcType=INTEGER}, #{customerId,jdbcType=INTEGER}, #{amountMoney,jdbcType=VARCHAR}, 
+      #{levelId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.renqi.market.entity.CustomerMoney">
+    insert into customer_money
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="amountId != null">
+        amount_id,
+      </if>
+      <if test="customerId != null">
+        customer_id,
+      </if>
+      <if test="amountMoney != null">
+        amount_money,
+      </if>
+      <if test="levelId != null">
+        level_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="amountId != null">
+        #{amountId,jdbcType=INTEGER},
+      </if>
+      <if test="customerId != null">
+        #{customerId,jdbcType=INTEGER},
+      </if>
+      <if test="amountMoney != null">
+        #{amountMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="levelId != null">
+        #{levelId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.renqi.market.entity.CustomerMoney">
+    update customer_money
+    <set>
+      <if test="customerId != null">
+        customer_id = #{customerId,jdbcType=INTEGER},
+      </if>
+      <if test="amountMoney != null">
+        amount_money = #{amountMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="levelId != null">
+        level_id = #{levelId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where amount_id = #{amountId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.renqi.market.entity.CustomerMoney">
+    update customer_money
+    set customer_id = #{customerId,jdbcType=INTEGER},
+      amount_money = #{amountMoney,jdbcType=VARCHAR},
+      level_id = #{levelId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where amount_id = #{amountId,jdbcType=INTEGER}
+  </update>
+</mapper>

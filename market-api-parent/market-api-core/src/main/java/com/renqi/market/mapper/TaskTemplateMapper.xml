@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renqi.market.dao.TaskTemplateMapper">
+  <resultMap id="BaseResultMap" type="com.renqi.market.entity.TaskTemplate">
+    <id column="template_id" jdbcType="INTEGER" property="templateId" />
+    <result column="task_begin_browse" jdbcType="VARCHAR" property="taskBeginBrowse" />
+    <result column="task_end_browse" jdbcType="VARCHAR" property="taskEndBrowse" />
+    <result column="task_browse_second" jdbcType="VARCHAR" property="taskBrowseSecond" />
+    <result column="require_name" jdbcType="VARCHAR" property="requireName" />
+    <result column="task_type" jdbcType="VARCHAR" property="taskType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    template_id, task_begin_browse, task_end_browse, task_browse_second, require_name, 
+    task_type
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from task_template
+    where template_id = #{templateId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from task_template
+    where template_id = #{templateId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.renqi.market.entity.TaskTemplate">
+    insert into task_template (template_id, task_begin_browse, task_end_browse, 
+      task_browse_second, require_name, task_type
+      )
+    values (#{templateId,jdbcType=INTEGER}, #{taskBeginBrowse,jdbcType=VARCHAR}, #{taskEndBrowse,jdbcType=VARCHAR}, 
+      #{taskBrowseSecond,jdbcType=VARCHAR}, #{requireName,jdbcType=VARCHAR}, #{taskType,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.renqi.market.entity.TaskTemplate">
+    insert into task_template
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        template_id,
+      </if>
+      <if test="taskBeginBrowse != null">
+        task_begin_browse,
+      </if>
+      <if test="taskEndBrowse != null">
+        task_end_browse,
+      </if>
+      <if test="taskBrowseSecond != null">
+        task_browse_second,
+      </if>
+      <if test="requireName != null">
+        require_name,
+      </if>
+      <if test="taskType != null">
+        task_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="templateId != null">
+        #{templateId,jdbcType=INTEGER},
+      </if>
+      <if test="taskBeginBrowse != null">
+        #{taskBeginBrowse,jdbcType=VARCHAR},
+      </if>
+      <if test="taskEndBrowse != null">
+        #{taskEndBrowse,jdbcType=VARCHAR},
+      </if>
+      <if test="taskBrowseSecond != null">
+        #{taskBrowseSecond,jdbcType=VARCHAR},
+      </if>
+      <if test="requireName != null">
+        #{requireName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskType != null">
+        #{taskType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.renqi.market.entity.TaskTemplate">
+    update task_template
+    <set>
+      <if test="taskBeginBrowse != null">
+        task_begin_browse = #{taskBeginBrowse,jdbcType=VARCHAR},
+      </if>
+      <if test="taskEndBrowse != null">
+        task_end_browse = #{taskEndBrowse,jdbcType=VARCHAR},
+      </if>
+      <if test="taskBrowseSecond != null">
+        task_browse_second = #{taskBrowseSecond,jdbcType=VARCHAR},
+      </if>
+      <if test="requireName != null">
+        require_name = #{requireName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskType != null">
+        task_type = #{taskType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where template_id = #{templateId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.renqi.market.entity.TaskTemplate">
+    update task_template
+    set task_begin_browse = #{taskBeginBrowse,jdbcType=VARCHAR},
+      task_end_browse = #{taskEndBrowse,jdbcType=VARCHAR},
+      task_browse_second = #{taskBrowseSecond,jdbcType=VARCHAR},
+      require_name = #{requireName,jdbcType=VARCHAR},
+      task_type = #{taskType,jdbcType=VARCHAR}
+    where template_id = #{templateId,jdbcType=INTEGER}
+  </update>
+</mapper>

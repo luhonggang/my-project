@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renqi.market.dao.CustomerStateMapper">
+  <resultMap id="BaseResultMap" type="com.renqi.market.entity.CustomerState">
+    <id column="customer_state_id" jdbcType="INTEGER" property="customerStateId" />
+    <result column="customer_id" jdbcType="INTEGER" property="customerId" />
+    <result column="total_task" jdbcType="INTEGER" property="totalTask" />
+    <result column="is_recharge" jdbcType="INTEGER" property="isRecharge" />
+    <result column="expired_time" jdbcType="VARCHAR" property="expiredTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    customer_state_id, customer_id, total_task, is_recharge, expired_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from customer_state
+    where customer_state_id = #{customerStateId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from customer_state
+    where customer_state_id = #{customerStateId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.renqi.market.entity.CustomerState">
+    insert into customer_state (customer_state_id, customer_id, total_task, 
+      is_recharge, expired_time)
+    values (#{customerStateId,jdbcType=INTEGER}, #{customerId,jdbcType=INTEGER}, #{totalTask,jdbcType=INTEGER}, 
+      #{isRecharge,jdbcType=INTEGER}, #{expiredTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.renqi.market.entity.CustomerState">
+    insert into customer_state
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="customerStateId != null">
+        customer_state_id,
+      </if>
+      <if test="customerId != null">
+        customer_id,
+      </if>
+      <if test="totalTask != null">
+        total_task,
+      </if>
+      <if test="isRecharge != null">
+        is_recharge,
+      </if>
+      <if test="expiredTime != null">
+        expired_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="customerStateId != null">
+        #{customerStateId,jdbcType=INTEGER},
+      </if>
+      <if test="customerId != null">
+        #{customerId,jdbcType=INTEGER},
+      </if>
+      <if test="totalTask != null">
+        #{totalTask,jdbcType=INTEGER},
+      </if>
+      <if test="isRecharge != null">
+        #{isRecharge,jdbcType=INTEGER},
+      </if>
+      <if test="expiredTime != null">
+        #{expiredTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.renqi.market.entity.CustomerState">
+    update customer_state
+    <set>
+      <if test="customerId != null">
+        customer_id = #{customerId,jdbcType=INTEGER},
+      </if>
+      <if test="totalTask != null">
+        total_task = #{totalTask,jdbcType=INTEGER},
+      </if>
+      <if test="isRecharge != null">
+        is_recharge = #{isRecharge,jdbcType=INTEGER},
+      </if>
+      <if test="expiredTime != null">
+        expired_time = #{expiredTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where customer_state_id = #{customerStateId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.renqi.market.entity.CustomerState">
+    update customer_state
+    set customer_id = #{customerId,jdbcType=INTEGER},
+      total_task = #{totalTask,jdbcType=INTEGER},
+      is_recharge = #{isRecharge,jdbcType=INTEGER},
+      expired_time = #{expiredTime,jdbcType=VARCHAR}
+    where customer_state_id = #{customerStateId,jdbcType=INTEGER}
+  </update>
+</mapper>

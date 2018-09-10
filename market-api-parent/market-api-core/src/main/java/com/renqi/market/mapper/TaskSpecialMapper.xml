@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renqi.market.dao.TaskSpecialMapper">
+  <resultMap id="BaseResultMap" type="com.renqi.market.entity.TaskSpecial">
+    <id column="task_special_id" jdbcType="INTEGER" property="taskSpecialId" />
+    <result column="task_search_plat" jdbcType="VARCHAR" property="taskSearchPlat" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    task_special_id, task_search_plat, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from task_special
+    where task_special_id = #{taskSpecialId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from task_special
+    where task_special_id = #{taskSpecialId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.renqi.market.entity.TaskSpecial">
+    insert into task_special (task_special_id, task_search_plat, create_time
+      )
+    values (#{taskSpecialId,jdbcType=INTEGER}, #{taskSearchPlat,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.renqi.market.entity.TaskSpecial">
+    insert into task_special
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="taskSpecialId != null">
+        task_special_id,
+      </if>
+      <if test="taskSearchPlat != null">
+        task_search_plat,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="taskSpecialId != null">
+        #{taskSpecialId,jdbcType=INTEGER},
+      </if>
+      <if test="taskSearchPlat != null">
+        #{taskSearchPlat,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.renqi.market.entity.TaskSpecial">
+    update task_special
+    <set>
+      <if test="taskSearchPlat != null">
+        task_search_plat = #{taskSearchPlat,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where task_special_id = #{taskSpecialId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.renqi.market.entity.TaskSpecial">
+    update task_special
+    set task_search_plat = #{taskSearchPlat,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where task_special_id = #{taskSpecialId,jdbcType=INTEGER}
+  </update>
+</mapper>

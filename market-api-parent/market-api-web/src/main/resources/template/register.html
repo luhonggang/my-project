@@ -1,0 +1,236 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="assets/css/renqitong/reg.css">
+    <title>欢迎注册人气通，国内最顶尖的人气提升平台</title>
+</head>
+<script type="text/javascript">
+    /* 窗口尺寸改变的事件 */
+    onload = function(){
+        changeBgSize();
+    }
+
+    onresize = function(){
+        changeBgSize();
+    }
+    function changeBgSize(){
+        /* 得到窗口的宽高 */
+        var w = document.body.clientWidth;
+        var h = document.body.parentElement.clientHeight;
+        /* 把得到的窗口宽高给到body的背景图片 */
+        document.body.style.backgroundSize = w+"px "+h+"px";
+    }
+</script>
+<style type="text/css">
+    body{
+        margin: 0;
+        background-image: url("assets/login/images/register/ld-bg.jpg");
+        background-repeat: no-repeat;
+        overflow: hidden;
+    }
+
+</style>
+
+<body>
+<div class="header">
+    <!--导航条-->
+    <span style="padding-left: 15%">欢迎登陆人气通&nbsp;|</span>
+    <span><a href="#">返回首页</a></span>
+    <span style="padding-left: 40%;"><a href="#">用户注册&nbsp;|</a></span>
+    <span><a href="#">帮助中心&nbsp;|</a></span>
+    <span><a href="#">联系客服</a></span>
+</div>
+    <!--注册-->
+<form action="" method="">
+    <div class="reg_div">
+        <div class="reg_phone_img"><img style="width: 350px;height:500px;"  src="assets/login/images/register/reg-sjpg.jpg"/></div>
+        <div class="reg_logo">
+            <img src="assets/login/images/register/reg-logo1.png" style="width:200px;height:90px;"/>
+            <div><span style="letter-spacing:3px;}">欢迎加入我们</span><br/><span style="font-size: 17px;color: #FF5454">WELCOME TO JOIN US</span></div>
+        </div>
+        <div class="form_input">
+            <div><input id="phone" type="text"  placeholder="请输入您的手机号码"/></div>
+            <div><input id ="passWord" type="passWord" placeholder="请输入您要设置的密码"/></div>
+            <div><input id="confirmPwd" type="passWord" placeholder="请再次确认您输入的密码"/></div>
+            <div><input id="mobileCode" style="width:199px;" type="text" placeholder="请输入您的短信验证码"/>
+                <input  id="send_Code" style="height: 32px"  type="button" value="获取短信验证码"/></div>
+            <div><input id ="register_submit" type="submit" value="立即注册"/></div>
+            <div style="margin-top: 25px;"><a href="login.html">我已经有账号，现在登录</a></div>
+        </div>
+    </div>
+</form>
+<!--尾部-->
+<div class="footer">
+    <span>2,236,0家网店都在用人气通推广提升店铺人气，还可以免费挂机赚钱，你还在等什么？</span>
+</div>
+</body>
+<script th:src="@{assets/login/base.js}" type="text/javascript"></script>
+<script th:src="@{jquery-3.1.1.js}" type="text/javascript"></script>
+<script th:inline="javascript">
+    $(function(){
+        // 回车键登录
+        document.onkeyup = function (event) {
+            var e = event || window.event;
+            var keyCode = e.keyCode || e.which;
+            if(keyCode === 13){
+                $("#register_submit").click();
+            }
+        };
+         // 校验手机号是否正确
+         $('#phone').on('blur',function(){
+             var myPhone = $('#phone').val();
+             console.log(myPhone);
+            if(myPhone.length < 11){
+                alert("手机号有误");
+                $('#mobileCode').attr('disabled',true);
+                $('#register_submit').attr('disabled',true);
+                $('#send_Code').attr('disabled',true);
+                return false;
+            }
+             $('#mobileCode').removeAttr('disabled',false);
+             $('#send_Code').attr('disabled',false);
+             $('#register_submit').removeAttr('disabled',false);
+         });
+        // 校验手机号是否正确
+        $('#confirmPwd').on('blur',function(){
+            if($('#confirmPwd').val() != $("#passWord").val()){
+               alert("请重新确认密码");
+            }
+        });
+
+         // 发送验证码
+        $('#send_Code').on('click',function(){
+            var myPhone = $('#phone').val();
+            console.log(myPhone);
+            if(myPhone==''){
+               alert("请您输入手机号码");
+                return false;
+            }
+            var jsonCode = '{"phone":"'+myPhone+'","mobileCode":""}';
+            console.log(jsonCode);
+            $.ajax({
+                url:baseUrl+'customer/mobileCode',
+                type:'POST',
+                async:"true", //默认是true,异步
+                dataType:"json",
+                data:jsonCode,
+                processData:false, //post一个对象需要设置为false
+                contentType:"application/json",
+                success:function(result){
+                    console.log(result);
+                    if(result.code == '200' ){
+                        console.log(result.msg);
+                        // 发送成功后自动录入验证码
+                        $('#mobileCode').val(result.data);
+                    }else if(result.code == '408'){
+                        // 手机号码已经注册过,请更换手机号
+                        alert(result.msg);
+                    }else if(result.code == '409'){
+                        //验证码已经发送过,2分钟内不可重复发送
+                        alert(result.msg);
+                    }else if(result.code == '500'){
+                        // 系统异常
+                        alert(result.msg);
+                    }else if(result.code == '410'){
+                        // 验证码发送失败,请稍后再试
+                        alert(result.msg);
+                    }
+                }
+            });
+        });
+
+         // 验证码校验
+        $('#mobileCode').on('blur',function(){
+            var mobileCode = $("#mobileCode").val();
+            if(mobileCode == ''){
+                return false;
+            }
+            var jsonCode = '{"phone":"'+$('#phone').val()+'","mobileCode":"'+mobileCode+'"}';
+            console.log(jsonCode);
+            $.ajax({
+                url:baseUrl+'customer/mobileCode',
+                type:'POST',
+                async:"true", //默认是true,异步
+                dataType:"json",
+                data:jsonCode,
+                processData:false, //post一个对象需要设置为false
+                contentType:"application/json",
+                success:function(result){
+                    console.log(result);
+                    if(result.code == '411'){
+                        // 验证码输入有误
+                        alert(result.msg);
+                    }
+                }
+            });
+        });
+
+        $("#register_submit").click(function () {
+            var customerPhone = $("#phone").val();
+            var customerPwd = $("#passWord").val();
+            var confirmPwd = $("#confirmPwd").val();
+            var mobileCode = $("#mobileCode").val();
+            if(customerPwd != customerPwd || customerPwd == '' || confirmPwd == ''){
+               // 密码有误
+                alert("重新输入密码");
+                return false;
+            }
+            if(customerPhone == '' || mobileCode == '' ){
+                alert("手机号码或验证码为空");
+                return false;
+            }
+            var jsonFrom = '{"phone":"'+customerPhone+'","passWord":"'+customerPwd+'",' +
+                           '"confirmPwd":"'+confirmPwd+'","mobileCode":"'+mobileCode+'"}';
+            $.ajax({
+                url:baseUrl+'customer/customerRegister',
+                type:'POST',
+                async:"true", //默认是true,异步
+                dataType:"json",
+                data:jsonFrom,
+                processData:false, //post一个对象需要设置为false
+                contentType:"application/json",
+                success:function(result){
+                    console.log(result);
+                    if(result.code=='200' || result.code == '408'){
+                        alert(result.msg);
+                        // 说明注册成功 跳转到登录页面
+                        window.location.href = baseUrl+"page/login.html";
+                    }else if(result.code == '411'){
+                        // 输入的验证码有误
+                        alert(result.msg);
+                    }
+                    else if(result.code == '412'){
+                        // 验证码失效,请重新发送验证码
+                        alert(result.msg);
+                    }else{
+                        // 系统异常
+                        alert(result.msg);
+                    }
+                }
+            });
+        });
+    });
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

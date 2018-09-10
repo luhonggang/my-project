@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renqi.market.dao.TaskWordMapper">
+  <resultMap id="BaseResultMap" type="com.renqi.market.entity.TaskWord">
+    <id column="word_id" jdbcType="INTEGER" property="wordId" />
+    <result column="task_id" jdbcType="INTEGER" property="taskId" />
+    <result column="word_name" jdbcType="VARCHAR" property="wordName" />
+    <result column="task_visitor" jdbcType="INTEGER" property="taskVisitor" />
+    <result column="show_number" jdbcType="INTEGER" property="showNumber" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    word_id, task_id, word_name, task_visitor, show_number, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from task_word
+    where word_id = #{wordId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from task_word
+    where word_id = #{wordId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.renqi.market.entity.TaskWord">
+    insert into task_word (word_id, task_id, word_name, 
+      task_visitor, show_number, create_time, 
+      update_time)
+    values (#{wordId,jdbcType=INTEGER}, #{taskId,jdbcType=INTEGER}, #{wordName,jdbcType=VARCHAR}, 
+      #{taskVisitor,jdbcType=INTEGER}, #{showNumber,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.renqi.market.entity.TaskWord">
+    insert into task_word
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="wordId != null">
+        word_id,
+      </if>
+      <if test="taskId != null">
+        task_id,
+      </if>
+      <if test="wordName != null">
+        word_name,
+      </if>
+      <if test="taskVisitor != null">
+        task_visitor,
+      </if>
+      <if test="showNumber != null">
+        show_number,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="wordId != null">
+        #{wordId,jdbcType=INTEGER},
+      </if>
+      <if test="taskId != null">
+        #{taskId,jdbcType=INTEGER},
+      </if>
+      <if test="wordName != null">
+        #{wordName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskVisitor != null">
+        #{taskVisitor,jdbcType=INTEGER},
+      </if>
+      <if test="showNumber != null">
+        #{showNumber,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.renqi.market.entity.TaskWord">
+    update task_word
+    <set>
+      <if test="taskId != null">
+        task_id = #{taskId,jdbcType=INTEGER},
+      </if>
+      <if test="wordName != null">
+        word_name = #{wordName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskVisitor != null">
+        task_visitor = #{taskVisitor,jdbcType=INTEGER},
+      </if>
+      <if test="showNumber != null">
+        show_number = #{showNumber,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where word_id = #{wordId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.renqi.market.entity.TaskWord">
+    update task_word
+    set task_id = #{taskId,jdbcType=INTEGER},
+      word_name = #{wordName,jdbcType=VARCHAR},
+      task_visitor = #{taskVisitor,jdbcType=INTEGER},
+      show_number = #{showNumber,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where word_id = #{wordId,jdbcType=INTEGER}
+  </update>
+</mapper>
