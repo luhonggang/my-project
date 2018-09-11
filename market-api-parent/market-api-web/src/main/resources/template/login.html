@@ -115,6 +115,14 @@
 
         $("#login_submit").click(function () {
             var customerPhone = $("#phone").val();
+            if(customerPhone == ''){
+                alert("请输入登录手机号");
+               return;
+            }
+            if(customerPwd == ''){
+                alert("请输入登录密码");
+                return;
+            }
             var customerPwd = $("#customer_pwd").val();
             var jsonFrom = '{"phone":"'+customerPhone+'","passWord":"'+customerPwd+'"}';
             console.log("数据格式 ： "+jsonFrom);

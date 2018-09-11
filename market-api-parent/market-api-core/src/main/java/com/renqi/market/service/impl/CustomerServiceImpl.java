@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.renqi.market.common.BaseCustomer;
 import com.renqi.market.common.BaseResultMsg;
 import com.renqi.market.common.CustomerRegister;
+import com.renqi.market.dao.CustomerStateMapper;
 import com.renqi.market.entity.Customer;
 import com.renqi.market.dao.CustomerMapper;
+import com.renqi.market.entity.CustomerState;
 import com.renqi.market.service.CustomerService;
 import com.renqi.market.util.MobileCodeUtil;
 import com.renqi.market.util.ResultMsgUtil;
@@ -31,6 +33,8 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	private CustomerMapper customerMapper;
+	@Autowired
+	private CustomerStateMapper customerStateMapper;
 	@Autowired
 	private ThreadPoolTaskExecutor taskExecutor;
 
@@ -141,14 +145,31 @@ public class CustomerServiceImpl implements CustomerService {
      * @return
      */
     @Override
-    public void registerCustomer(CustomerRegister user) {
-        Customer customer = new Customer();
-        customer.setPhone(user.getPhone());
-        customer.setPassWord(user.getPassWord());
-        customer.setLevelId(1);
-        customer.setShopId(null);
-        customer.setCreateTime(new Date());
-        customerMapper.insert(customer);
+    public void registerCustomer(CustomerRegister user) throws Exception{
+    	try{
+			// 用户进行注册的时候 初始化他的客户状态信息表 -----> 总的流程控制表
+			CustomerState state = new CustomerState();
+			// 只要任务不为 0 说明有任务
+			state.setTotalTask(0);
+			// 是否充值 1 是 0 否
+			state.setIsRecharge(CustomerState.State.IS_RECHARGE_FALSE.getState());
+			// 当前总的充值金额为 0
+			state.setTotalMoney(0.00d);
+			customerStateMapper.insert(state);
+			logger.info("+++++++++++ /market/customerRegister +++++++++++stateId:{}",state.getCustomerStateId());
+
+			Customer customer = new Customer();
+			customer.setCustomerStateId(state.getCustomerStateId());
+			customer.setPhone(user.getPhone());
+			customer.setPassWord(user.getPassWord());
+			customer.setLevelId(1);
+			customer.setShopId(null);
+			customer.setCreateTime(new Date());
+			customerMapper.insert(customer);
+		}catch (Exception e){
+			logger.error(e.getMessage(),"+++++++++++ /market/customerRegister +++++++++++ error");
+			e.printStackTrace();
+		}
     }
 
     /**

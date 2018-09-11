@@ -1,15 +1,33 @@
 package com.renqi.market.entity;
 
 public class CustomerState {
+    /**
+     * 客户状态信息枚举
+     */
+    public enum State{
+        IS_RECHARGE_TRUE(1),
+        IS_RECHARGE_FALSE(0);
+        private Integer state;
+
+        State(Integer state){
+            this.state = state;
+        }
+
+        public Integer getState() {
+            return state;
+        }
+    }
+
     private Integer customerStateId;
 
-    private Integer customerId;
-
     private Integer totalTask;
+
+    private Double totalMoney;
 
     private Integer isRecharge;
 
     private String expiredTime;
+
 
     public Integer getCustomerStateId() {
         return customerStateId;
@@ -19,20 +37,20 @@ public class CustomerState {
         this.customerStateId = customerStateId;
     }
 
-    public Integer getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
-    }
-
     public Integer getTotalTask() {
         return totalTask;
     }
 
     public void setTotalTask(Integer totalTask) {
         this.totalTask = totalTask;
+    }
+
+    public Double getTotalMoney() {
+        return totalMoney;
+    }
+
+    public void setTotalMoney(Double totalMoney) {
+        this.totalMoney = totalMoney;
     }
 
     public Integer getIsRecharge() {

@@ -34,6 +34,7 @@ public class UserLoginController extends GlobalExceptionHandler {
     @Autowired
     private RedisService redisService;
 
+    // token 失效时间 60s
     @Value("${token.expiredTime}")
     private Long expiredTime;
     /**

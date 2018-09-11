@@ -5,6 +5,8 @@ import java.util.Date;
 public class Customer {
     private Integer customerId;
 
+    private Integer customerStateId;
+
     private String phone;
 
     private String passWord;
@@ -29,6 +31,14 @@ public class Customer {
 
     public void setCustomerId(Integer customerId) {
         this.customerId = customerId;
+    }
+
+    public Integer getCustomerStateId() {
+        return customerStateId;
+    }
+
+    public void setCustomerStateId(Integer customerStateId) {
+        this.customerStateId = customerStateId;
     }
 
     public String getPhone() {

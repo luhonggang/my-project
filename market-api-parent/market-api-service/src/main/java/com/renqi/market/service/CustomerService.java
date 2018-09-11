@@ -21,5 +21,5 @@ public interface CustomerService {
 
     BaseResultMsg getIdentiFyingCode(String mobile, Map<String, String> map);
 
-    void registerCustomer(CustomerRegister user);
+    void registerCustomer(CustomerRegister user) throws Exception;
 }

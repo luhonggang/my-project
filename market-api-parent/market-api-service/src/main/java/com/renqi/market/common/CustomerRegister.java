@@ -30,4 +30,46 @@ public class CustomerRegister implements Serializable {
         this.confirmPwd = confirmPwd;
         this.mobileCode = mobileCode;
     }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    @NotNull
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(@NotNull String phone) {
+        this.phone = phone;
+    }
+
+    @NotNull
+    public String getPassWord() {
+        return passWord;
+    }
+
+    public void setPassWord(@NotNull String passWord) {
+        this.passWord = passWord;
+    }
+
+    public String getConfirmPwd() {
+        return confirmPwd;
+    }
+
+    public void setConfirmPwd(String confirmPwd) {
+        this.confirmPwd = confirmPwd;
+    }
+
+    public String getMobileCode() {
+        return mobileCode;
+    }
+
+    public void setMobileCode(String mobileCode) {
+        this.mobileCode = mobileCode;
+    }
 }
