@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost-db
-Source Server Version : 50722
+Source Server         : localhost_3306
+Source Server Version : 50717
 Source Host           : localhost:3306
 Source Database       : taobao_renqi
 
 Target Server Type    : MYSQL
-Target Server Version : 50722
+Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2018-09-11 21:22:00
+Date: 2018-09-16 19:24:15
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -21,23 +21,23 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `customer`;
 CREATE TABLE `customer` (
   `customer_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '客户主键表',
-  `customer_state_id` int(11) NOT NULL COMMENT '客户总的状态ID',
+  `customer_state_id` int(11) DEFAULT NULL COMMENT '客户总的状态ID',
   `phone` varchar(20) NOT NULL COMMENT '手机号码',
   `pass_word` varchar(50) NOT NULL COMMENT '登录密码',
-  `token` varchar(255) NOT NULL COMMENT '用户token',
-  `expire_time` varchar(20) NOT NULL COMMENT 'token过期时间',
+  `token` varchar(255) DEFAULT NULL COMMENT '用户token',
+  `expire_time` varchar(20) DEFAULT NULL COMMENT 'token过期时间',
   `level_id` int(11) NOT NULL DEFAULT '1' COMMENT '用户级别(1 普通会员,2 白银会员, 3 黄金会员, 4钻石会员)',
-  `shop_id` bigint(20) NOT NULL COMMENT '商铺ID',
   `login_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '登录时间',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`customer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='客户信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='客户信息表';
 
 -- ----------------------------
 -- Records of customer
 -- ----------------------------
-INSERT INTO `customer` VALUES ('1', '0', '18589072284', '123456', 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIiwic3ViIjoiMSIsImlhdCI6MTUzNjU3MTE1NSwiaXNzIjoicmVucWkiLCJleHAiOjE1MzY1NzEyMTV9.rum2Y8marUzmpiYxlTv6oOc-rS3tJGseW-USt1-djOc', '1536571215448', '1', '1', '2018-09-10 17:19:15', '2018-09-08 19:15:48', '2018-09-10 17:19:15');
+INSERT INTO `customer` VALUES ('1', '0', '18589072284', '123456', 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIiwic3ViIjoiMSIsImlhdCI6MTUzNjU3MTE1NSwiaXNzIjoicmVucWkiLCJleHAiOjE1MzY1NzEyMTV9.rum2Y8marUzmpiYxlTv6oOc-rS3tJGseW-USt1-djOc', '1536571215448', '1', '2018-09-10 17:19:15', '2018-09-08 19:15:48', '2018-09-10 17:19:15');
+INSERT INTO `customer` VALUES ('3', null, '17717926547', '123456', 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIzIiwic3ViIjoibnVsbCIsImlhdCI6MTUzNzAyNTEwMSwiaXNzIjoicmVucWkiLCJleHAiOjE1MzcwMjUxNjF9.lsd6QZkAbrltWbebZaCJ7xIuz3x-Qb5Lm3QFHUxCinw', '1537025161672', '1', '2018-09-15 23:25:01', '2018-09-14 20:54:51', '2018-09-15 23:25:01');
 
 -- ----------------------------
 -- Table structure for customer_level
@@ -64,7 +64,7 @@ CREATE TABLE `customer_money` (
   `amount_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户账户充值详细表',
   `customer_id` int(11) NOT NULL COMMENT '客户主键ID',
   `amount_money` varchar(255) NOT NULL COMMENT '充值金额',
-  `recharge_state` int(2) NOT NULL COMMENT '充值状态',
+  `recharge_state` int(2) NOT NULL COMMENT '用户的每一笔支付充值记录(0 未充值, 1 充值完成，2 待支付)',
   `level_id` int(11) NOT NULL COMMENT '会员级别',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`amount_id`)
@@ -101,14 +101,16 @@ CREATE TABLE `customer_state` (
   `customer_state_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户流程控制',
   `total_task` int(11) NOT NULL DEFAULT '100' COMMENT '可发布的任务总数(各种类型流量的总和)',
   `total_money` double(20,2) NOT NULL COMMENT '用户充值的总金额',
-  `is_recharge` int(2) NOT NULL DEFAULT '0' COMMENT '是否充值(0 未充值, 1 充值)',
-  `expired_time` varchar(20) NOT NULL COMMENT '会员失效期',
+  `is_recharge` int(2) NOT NULL DEFAULT '0' COMMENT '是否充值(0 未充值, 1 已经充值，2 待支付)',
+  `expired_time` varchar(20) DEFAULT NULL COMMENT '会员失效期',
   PRIMARY KEY (`customer_state_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of customer_state
 -- ----------------------------
+INSERT INTO `customer_state` VALUES ('1', '0', '0.00', '0', null);
+INSERT INTO `customer_state` VALUES ('3', '0', '0.00', '0', null);
 
 -- ----------------------------
 -- Table structure for customer_task
@@ -116,8 +118,9 @@ CREATE TABLE `customer_state` (
 DROP TABLE IF EXISTS `customer_task`;
 CREATE TABLE `customer_task` (
   `task_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '任务主表',
+  `customer_id` int(11) NOT NULL COMMENT '客户主键ID',
   `task_type` varchar(25) NOT NULL COMMENT '任务类型(PC端,手机端)',
-  `task_state` varchar(4) NOT NULL COMMENT '任务的状态(0 未执行，1 进行中 ， 2 已完成， 3 异常)',
+  `task_state` int(2) NOT NULL COMMENT '任务的状态(0 未执行，1 进行中 ， 2 已完成， 3 异常)',
   `good_id` int(11) NOT NULL COMMENT '宝贝的主键',
   `good_link_url` varchar(255) NOT NULL COMMENT '宝贝链接',
   `good_title` varchar(255) NOT NULL COMMENT '宝贝(商品)名称',
@@ -130,6 +133,7 @@ CREATE TABLE `customer_task` (
   `task_begin_miunte` varchar(20) NOT NULL COMMENT '执行任务起始分钟',
   `task_end_miunte` varchar(20) NOT NULL COMMENT '执行任务结束分钟',
   `task_search_scope` varchar(255) NOT NULL COMMENT '搜索范围',
+  `template_id` varchar(25) NOT NULL DEFAULT '1' COMMENT '模板ID组合',
   `create_time` datetime NOT NULL,
   `update_time` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`task_id`)
