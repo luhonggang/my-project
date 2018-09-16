@@ -38,6 +38,7 @@ public class WebForWardInterceptor extends WebMvcConfigurerAdapter /*implements 
 //    }
 
     /**
+     * DefaultErrorViewResolver类自动映射错误的路由到指定的error目录下的静态页面上
      * todo 视图  统一管理
      * 视图控制器配置
      * 最经常用到的就是"/"、"/index"路径请求时不通过@RequestMapping配置，而是直接通过配置文件映射指定请求路径到指定View页面

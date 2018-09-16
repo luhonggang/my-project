@@ -24,7 +24,7 @@ import java.io.PrintWriter;
  * @version 1.8.0
  * @date 2018/9/10 15:53
  */
-@WebFilter(urlPatterns = "*")
+@WebFilter(urlPatterns = "*.json")
 public class TokenHandleFilter implements Filter {
     private final static Logger logger = LoggerFactory.getLogger(TokenHandleFilter.class);
     @Autowired
