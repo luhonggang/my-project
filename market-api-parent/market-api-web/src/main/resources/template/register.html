@@ -69,13 +69,13 @@
 <script th:inline="javascript">
     $(function(){
         // 回车键登录
-        document.onkeyup = function (event) {
-            var e = event || window.event;
-            var keyCode = e.keyCode || e.which;
-            if(keyCode === 13){
-                $("#register_submit").click();
-            }
-        };
+//        document.onkeyup = function (event) {
+//            var e = event || window.event;
+//            var keyCode = e.keyCode || e.which;
+//            if(keyCode === 13){
+//                $("#register_submit").click();
+//            }
+//        };
          // 校验手机号是否正确
          $('#phone').on('blur',function(){
              var myPhone = $('#phone').val();
@@ -170,28 +170,34 @@
             var customerPwd = $("#passWord").val();
             var confirmPwd = $("#confirmPwd").val();
             var mobileCode = $("#mobileCode").val();
+            if(customerPhone == '' || customerPwd == '' || confirmPwd == ''|| mobileCode== '' ){
+                alert("请完善信息");
+                return;
+            }
             if(customerPwd != customerPwd || customerPwd == '' || confirmPwd == ''){
                // 密码有误
                 alert("重新输入密码");
-                return false;
+                return;
             }
             if(customerPhone == '' || mobileCode == '' ){
                 alert("手机号码或验证码为空");
-                return false;
+                return;
             }
-            var jsonFrom = '{"phone":"'+customerPhone+'","passWord":"'+customerPwd+'",' +
+            var jsonRegister = '{"phone":"'+customerPhone+'","passWord":"'+customerPwd+'",' +
                            '"confirmPwd":"'+confirmPwd+'","mobileCode":"'+mobileCode+'"}';
             $.ajax({
                 url:baseUrl+'customer/customerRegister',
                 type:'POST',
-                async:"true", //默认是true,异步
+                async:false, //默认是true,异步
                 dataType:"json",
-                data:jsonFrom,
-                processData:false, //post一个对象需要设置为false
+                data:jsonRegister,
+               // processData:false, //post一个对象需要设置为false
                 contentType:"application/json",
                 success:function(result){
                     console.log(result);
-                    if(result.code=='200' || result.code == '408'){
+                    if(result.code == '200' || result.code == '408'){
+                        $("#mobileCode").val(result.data);
+                        console.log(result.data);
                         alert(result.msg);
                         // 说明注册成功 跳转到登录页面
                         window.location.href = baseUrl+"page/login.html";

@@ -43,8 +43,10 @@ public class TokenHandleFilter implements Filter {
 //            httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
 //            httpServletResponse.setHeader("Access-Control-Allow-Headers", "x-requested-with");
         String url = httpServletRequest.getServletPath();
+        logger.info("+++++++++++ current url +++++++++++ "+url);
         try {
             if(matchTokenUtils.isMactchUrl(url)){
+                logger.info("+++++++++++ current url is need token +++++++++++ 需要token ");
                 // 说明是需要校验token的
                 String token = ((HttpServletRequest) request).getHeader("token");
                 JwtTokenUtil.checkTokenIsExpiredTime(token);

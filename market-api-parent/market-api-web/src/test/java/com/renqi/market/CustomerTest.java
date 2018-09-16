@@ -1,12 +1,14 @@
-package java.com.renqi.market;
+package com.renqi.market;
 
 import com.renqi.market.dao.CustomerStateMapper;
 import com.renqi.market.entity.CustomerState;
+import com.renqi.market.util.redis.RedisService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.logging.Logger;
@@ -20,9 +22,20 @@ import java.util.logging.Logger;
 @SpringBootTest(classes = com.renqi.market.MarketApplication.class)
 @SuppressWarnings("all")
 public class CustomerTest {
-    Logger logger = (Logger) LoggerFactory.getLogger(getClass());
     @Autowired
     CustomerStateMapper customerStateMapper;
+    @Autowired
+    RedisService redisService;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Test
+    public void testCache(){
+        redisService.set("hhhh","1233");
+        System.out.println("获取缓存 ： "+redisService.get("hhh"));
+        stringRedisTemplate.opsForValue().set("aaa", "111");
+        System.out.println(stringRedisTemplate.opsForValue().get("aaa"));
+    }
 
     @Test
     public void test(){
@@ -35,6 +48,6 @@ public class CustomerTest {
         // 当前总的充值金额为 0
         state.setTotalMoney(0.00d);
         customerStateMapper.insert(state);
-        logger.info("+++++++++++ /market/customerRegister +++++++++++stateId:{}"+state.getCustomerStateId());
+        //logger.info("+++++++++++ /market/customerRegister +++++++++++stateId:{}"+state.getCustomerStateId());
     }
 }

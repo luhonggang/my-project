@@ -17,8 +17,6 @@ public class Customer {
 
     private Integer levelId;
 
-    private Long shopId;
-
     private Date loginTime;
 
     private Date createTime;
@@ -79,14 +77,6 @@ public class Customer {
 
     public void setLevelId(Integer levelId) {
         this.levelId = levelId;
-    }
-
-    public Long getShopId() {
-        return shopId;
-    }
-
-    public void setShopId(Long shopId) {
-        this.shopId = shopId;
     }
 
     public Date getLoginTime() {

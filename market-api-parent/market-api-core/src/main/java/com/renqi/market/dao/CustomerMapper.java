@@ -2,6 +2,7 @@ package com.renqi.market.dao;
 
 import com.renqi.market.common.BaseCustomer;
 import com.renqi.market.entity.Customer;
+import com.renqi.market.entity.CustomerTaskInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -32,5 +33,12 @@ public interface CustomerMapper {
 
     void updateCustomerToken(BaseCustomer lognCustomer);
 
-    Integer checkMobileIsRegister(@Param("phone") String phone);
+    int checkMobileIsRegister(@Param("phone") String phone);
+
+    /**
+     * 查询出当前登录用户的支付，个人信息，任务详细总览
+     * @param customerId   客户ID
+     * @return
+     */
+    CustomerTaskInfo queryCustomerMsg(@Param("customerId") String customerId);
 }

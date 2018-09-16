@@ -3,6 +3,9 @@
 <mapper namespace="com.renqi.market.dao.CustomerTaskMapper">
   <resultMap id="BaseResultMap" type="com.renqi.market.entity.CustomerTask">
     <id column="task_id" jdbcType="INTEGER" property="taskId" />
+    <result column="customer_id" jdbcType="INTEGER" property="customerId" />
+    <result column="template_id" jdbcType="VARCHAR" property="templateId" />
+    <result column="task_state" javaType="INTEGER" property="taskState"/>
     <result column="task_type" jdbcType="VARCHAR" property="taskType" />
     <result column="good_id" jdbcType="INTEGER" property="goodId" />
     <result column="good_link_url" jdbcType="VARCHAR" property="goodLinkUrl" />
@@ -19,16 +22,57 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+  <resultMap id="queryCustomerTask" type="com.renqi.market.common.CustomerTaskVo">
+    <id column="task_id" jdbcType="INTEGER" property="taskId" />
+    <result column="customer_id" jdbcType="INTEGER" property="customerId" />
+    <result column="template_id" jdbcType="VARCHAR" property="templateId" />
+    <result column="task_state" javaType="INTEGER" property="taskState"/>
+    <result column="task_type" jdbcType="VARCHAR" property="taskType" />
+    <result column="good_id" jdbcType="INTEGER" property="goodId" />
+    <result column="good_link_url" jdbcType="VARCHAR" property="goodLinkUrl" />
+    <result column="good_title" jdbcType="VARCHAR" property="goodTitle" />
+    <result column="store_name" jdbcType="VARCHAR" property="storeName" />
+    <result column="total_visitor" jdbcType="INTEGER" property="totalVisitor" />
+    <result column="total_number" jdbcType="INTEGER" property="totalNumber" />
+    <result column="task_time" jdbcType="VARCHAR" property="taskTime" />
+    <result column="task_begin_hour" jdbcType="VARCHAR" property="taskBeginHour" />
+    <result column="task_end_hour" jdbcType="VARCHAR" property="taskEndHour" />
+    <result column="task_begin_miunte" jdbcType="VARCHAR" property="taskBeginMiunte" />
+    <result column="task_end_miunte" jdbcType="VARCHAR" property="taskEndMiunte" />
+    <result column="task_search_scope" jdbcType="VARCHAR" property="taskSearchScope" />
+  </resultMap>
+
   <sql id="Base_Column_List">
-    task_id, task_type, good_id, good_link_url, good_title, store_name, total_visitor, 
+    task_id, template_id,task_type, good_id, good_link_url, good_title, store_name, total_visitor,
     total_number, task_time, task_begin_hour, task_end_hour, task_begin_miunte, task_end_miunte, 
     task_search_scope, create_time, update_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from customer_task
-    where task_id = #{taskId,jdbcType=INTEGER}
+
+  <select id="queryCustomerTask" parameterType="com.renqi.market.common.CustomerParamDto" resultMap="queryCustomerTask">
+    SELECT
+    task.*,w.word_name
+    FROM customer_task task INNER JOIN customer cu ON task.customer_id = cu.customer_id
+         LEFT JOIN task_word w ON task.task_id = w.task_id
+    <where>
+      <if test="customerId != null">
+        task.customer_id = #{customerId}
+      </if>
+      <if test="taskType != null and taskType != ''">
+        AND task.task_type = #{taskType}
+      </if>
+      <if test="taskState != null and taskState != ''">
+        AND task.task_state = #{taskState}
+      </if>
+      <if test="beginTime != null and beginTime != ''">
+        AND task.task_time &gt;#{beginTime}
+      </if>
+      <if test="endTime != null and endTime != ''">
+        AND task.task_time &lt; #{endTime}
+      </if>
+      <if test="wordName != null and wordName != ''">
+        AND w.word_name LIKE CONCATE('%',#{wordName})
+      </if>
+    </where>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from customer_task
@@ -48,11 +92,19 @@
       #{taskEndMiunte,jdbcType=VARCHAR}, #{taskSearchScope,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.renqi.market.entity.CustomerTask">
+
+  <!--用户发布任务新增-->
+  <insert id="insertCustomerTask" parameterType="com.renqi.market.common.CustomerTaskDto">
+    <selectKey keyProperty="taskId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into customer_task
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="taskId != null">
         task_id,
+      </if>
+      <if test="templateId != null and templateId != ''">
+        template_id,
       </if>
       <if test="taskType != null">
         task_type,
@@ -103,6 +155,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="taskId != null">
         #{taskId,jdbcType=INTEGER},
+      </if>
+      <if test="templateId != null and templateId != ''">
+        #{templateId},
       </if>
       <if test="taskType != null">
         #{taskType,jdbcType=VARCHAR},

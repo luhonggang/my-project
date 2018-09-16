@@ -6,21 +6,13 @@ import com.aliyuncs.dysmsapi.model.v20170525.QuerySendDetailsRequest;
 import com.aliyuncs.dysmsapi.model.v20170525.QuerySendDetailsResponse;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
-import com.aliyuncs.dysmsapi.transform.v20170525.SendSmsResponseUnmarshaller;
-
 import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.http.FormatType;
-import com.aliyuncs.http.HttpResponse;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
-
-
-import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,78 +23,21 @@ import java.util.regex.Pattern;
  * 工程依赖了2个jar包(存放在工程的libs目录下)
  * 1:aliyun-java-sdk-core.jar
  * 2:aliyun-java-sdk-dysmsapi.jar
- *
  * 备注:Demo工程编码采用UTF-8
  * 国际短信发送请勿参照此DEMO
- */
-
-/**
- * Created on 17/6/7.
- * 短信API产品的DEMO程序,工程中包含了一个SmsDemo类，直接通过
- * 执行main函数即可体验短信产品API功能(只需要将AK替换成开通了云通信-短信产品功能的AK即可)
- * 工程依赖了2个jar包(存放在工程的libs目录下)
- * 1:aliyun-java-sdk-core.jar
- * 2:aliyun-java-sdk-dysmsapi.jar
- *
- * 备注:Demo工程编码采用UTF-8
- * 国际短信发送请勿参照此DEMO
- */
-/**
  * @author luhonggang
  * @date 2018/9/9
  * @since 1.0
  */
 public class MobileCodeUtil {
-//    private static Map<String,String> mobileCode = new HashMap<String,String>();
-//    private static String Url = "http://106.ihuyi.cn/webservice/sms.php?method=Submit";
-//    public static Map getMobileCode(String mobile ,String modelContent){
-//        HttpClient client = new HttpClient();
-//        PostMethod method = new PostMethod(Url);
-//        client.getParams().setContentCharset("UTF-8");
-//        method.setRequestHeader("ContentType","application/x-www-form-urlencoded;charset=UTF-8");
-//        int mobile_code = (int)((Math.random()*9+1)*100000);
-//        String content = "";
-//        // String content = new String("您的验证码是：" + mobile_code + "。请不要把验证码泄露给其他人。");
-//        if(MobileCodeUtil.ContainsStr(modelContent)){// 若包含字母
-//            content = modelContent.replaceAll("ABCD",mobile_code+"");
-//            NameValuePair[] data = {//提交短信
-//                    new NameValuePair("account", "C08711198"), //查看用户名请登录用户中心->验证码、通知短信->帐户及签名设置->APIID
-//                    new NameValuePair("password", "3b052a11b32c6007836f532b60ec0a67"),  //查看密码请登录用户中心->验证码、通知短信->帐户及签名设置->APIKEY
-//                    new NameValuePair("mobile", mobile),
-//                    new NameValuePair("content", content),
-//            };
-//            method.setRequestBody(data);
-//            Document doc = null;
-//            Element root = null;
-//            try {
-//                client.executeMethod(method);
-//                String SubmitResult =method.getResponseBodyAsString();
-//                doc = DocumentHelper.parseText(SubmitResult);
-//                root = doc.getRootElement();
-//            } catch (HttpException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            } catch (DocumentException e) {
-//                e.printStackTrace();
-//            }
-//            mobileCode.put("mobileCode",mobile_code+"");
-//            mobileCode.put("msg",root.elementText("code"));
-//        }else{
-//            mobileCode.put("mobileCode","");
-//            mobileCode.put("msg","模板内容不符合规范,请检查");
-//        }
-//        return  mobileCode;
-//    }
-
     /**
      * 判斷是否包含字母
      * @param strContent
      * @return
      */
     public static boolean ContainsStr(String strContent) {
-        String regex=".*[a-zA-Z]+.*";
-        Matcher m= Pattern.compile(regex).matcher(strContent);
+        String regex = ".*[a-zA-Z]+.*";
+        Matcher m = Pattern.compile(regex).matcher(strContent);
         return m.matches();
     }
 
@@ -112,15 +47,15 @@ public class MobileCodeUtil {
     static final String domain = "dysmsapi.aliyuncs.com";
 
     // TODO 此处需要替换成开发者自己的AK(在阿里云访问控制台寻找)
-    static final String accessKeyId = "";
-    static final String accessKeySecret = "";
+    static final String accessKeyId = "LTAIrFGn3of7tQau";
+    static final String accessKeySecret = "vMyBIv87ghagohlFboqxZtjU6ChOjT";
+    private static Map<String,String> mobileCode = new HashMap<String,String>();
+    public static Map<String,String> sendSms(String mobile,String templateId) throws ClientException {
 
-    public static SendSmsResponse sendSms() throws ClientException {
-
+        int mobile_code = (int)((Math.random()*9+1)*100000);
         //可自助调整超时时间
         System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
         System.setProperty("sun.net.client.defaultReadTimeout", "10000");
-
         //初始化acsClient,暂不支持region化
         IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
         DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
@@ -129,14 +64,17 @@ public class MobileCodeUtil {
         //组装请求对象-具体描述见控制台-文档部分内容
         SendSmsRequest request = new SendSmsRequest();
         //必填:待发送手机号
-        request.setPhoneNumbers("");
+        request.setPhoneNumbers(mobile);
         //必填:短信签名-可在短信控制台中找到
         request.setSignName("海盈");
         //必填:短信模板-可在短信控制台中找到
-        request.setTemplateCode("SMS_77560073");
+        request.setTemplateCode(templateId);
+//        switch (templateId){
+//            case "SMS_77560073":
+//        }
         //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
         // {"name":"Tom", "code":"123"}
-        request.setTemplateParam("{\"code\":\"123456\"}");
+        request.setTemplateParam("{\"code\":\""+mobile_code+"\"}");
 
         //选填-上行短信扩展码(无特殊需求用户请忽略此字段)
         //request.setSmsUpExtendCode("90997");
@@ -146,8 +84,14 @@ public class MobileCodeUtil {
 
         //hint 此处可能会抛出异常，注意catch
         SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
-
-        return sendSmsResponse;
+        if(sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK")) {
+            mobileCode.put("code",mobile_code+"");
+            mobileCode.put("msg","短信发送成功");
+        }else{
+            mobileCode.put("code",null);
+            mobileCode.put("msg","短信发送失败");
+        }
+        return mobileCode;
     }
 
 
@@ -184,19 +128,20 @@ public class MobileCodeUtil {
 
     
     public static void main(String[] args) throws ClientException, InterruptedException {
-
         //发短信
-        SendSmsResponse response = sendSms();
-        System.out.println("短信接口返回的数据----------------");
-        System.out.println("Code=" + response.getCode());
-        System.out.println("Message=" + response.getMessage());
-        System.out.println("RequestId=" + response.getRequestId());
-        System.out.println("BizId=" + response.getBizId());
-
-        Thread.sleep(3000L);
-
-        //查明细
+//        SendSmsResponse response = sendSms("","");
+//        System.out.println("短信接口返回的数据----------------");
+//        System.out.println("Code=" + response.getCode());
+//        System.out.println("Message=" + response.getMessage());
+//        System.out.println("RequestId=" + response.getRequestId());
+//        System.out.println("BizId=" + response.getBizId());
+//
+//        Thread.sleep(3000L);
+//
+//       // 查明细
 //        if(response.getCode() != null && response.getCode().equals("OK")) {
+//            //mobileCode.put("mobileCode",mobile_code+"");
+//            mobileCode.put("msg",response.getCode());
 //            QuerySendDetailsResponse querySendDetailsResponse = querySendDetails(response.getBizId());
 //            System.out.println("短信明细查询接口返回数据----------------");
 //            System.out.println("Code=" + querySendDetailsResponse.getCode());
@@ -218,10 +163,5 @@ public class MobileCodeUtil {
 //            System.out.println("RequestId=" + querySendDetailsResponse.getRequestId());
 //        }
 
-    }
-
-
-    public static Map<String,String> getMobileCode(String mobile, String template) {
-        return new HashMap<>();
     }
 }

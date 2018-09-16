@@ -16,11 +16,6 @@
     </build>
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <artifactId>market-api-service</artifactId>
             <groupId>com.renqi.market</groupId>
             <version>0.0.1-SNAPSHOT</version>
@@ -29,6 +24,17 @@
             <artifactId>market-api-core</artifactId>
             <groupId>com.renqi.market</groupId>
             <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <!-- servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>${jsp-api.version}</version>
         </dependency>
     </dependencies>
 </project>

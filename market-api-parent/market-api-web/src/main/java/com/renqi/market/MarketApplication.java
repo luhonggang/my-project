@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * 配置启动类
  * @author luhonggang
  */
-@SpringBootApplication(scanBasePackages ={"com.renqi.market"})
+@SpringBootApplication(scanBasePackages ={"com.renqi.market.*"})
 @EnableTransactionManagement
 public class MarketApplication extends SpringBootServletInitializer {
 	public static void main(String[] args) {

@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.renqi.market.entity.CustomerShop">
     <id column="shop_id" jdbcType="INTEGER" property="shopId" />
     <result column="shop_name" jdbcType="VARCHAR" property="shopName" />
-    <result column="customer_id" jdbcType="INTEGER" property="customerId" />
+    <!--<result column="customer_id" jdbcType="INTEGER" property="customerId" />-->
     <result column="shop_no" jdbcType="VARCHAR" property="shopNo" />
     <result column="credit_score" jdbcType="INTEGER" property="creditScore" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />

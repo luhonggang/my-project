@@ -48,9 +48,9 @@ public class WebForWardInterceptor extends WebMvcConfigurerAdapter /*implements 
     public void addViewControllers(ViewControllerRegistry registry) {
         super.addViewControllers(registry);
         registry.addViewController("/").setViewName("/index");
-        registry.addViewController("/page/login.html").setViewName("/login");
-        registry.addViewController("/page/register.html").setViewName("/register");
-        registry.addViewController("/page/index.html").setViewName("/index");
+        registry.addViewController("/page/login.html").setViewName("login");
+        registry.addViewController("/page/register.html").setViewName("register");
+        registry.addViewController("/page/index.html").setViewName("index");
 
     }
 

@@ -3,7 +3,34 @@ package com.renqi.market.entity;
 import java.util.Date;
 
 public class CustomerTask {
+
+    /**
+     * 0 未执行，1 进行中 ， 2 已完成， 3 异常)
+     */
+    public enum TaskState{
+        TASK_INCOMPLETED(0),
+        TASK_CONTINUE(1),
+        TASK_COMPLETED(2),
+        TASK_EXCEPTION(3),
+        TASK_WAITING(4);
+        private Integer state;
+
+        TaskState(Integer state){
+            this.state = state;
+        }
+
+        public Integer getState() {
+            return state;
+        }
+    }
+
     private Integer taskId;
+
+    private Integer customerId;
+
+    private String templateId;
+
+    private Integer taskState;
 
     private String taskType;
 
@@ -35,12 +62,36 @@ public class CustomerTask {
 
     private Date updateTime;
 
+    public String getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(String templateId) {
+        this.templateId = templateId;
+    }
+
     public Integer getTaskId() {
         return taskId;
     }
 
     public void setTaskId(Integer taskId) {
         this.taskId = taskId;
+    }
+
+    public Integer getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
+    }
+
+    public Integer getTaskState() {
+        return taskState;
+    }
+
+    public void setTaskState(Integer taskState) {
+        this.taskState = taskState;
     }
 
     public String getTaskType() {

@@ -13,16 +13,6 @@
   <sql id="Base_Column_List">
     word_id, task_id, word_name, task_visitor, show_number, create_time, update_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from task_word
-    where word_id = #{wordId,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from task_word
-    where word_id = #{wordId,jdbcType=INTEGER}
-  </delete>
   <insert id="insert" parameterType="com.renqi.market.entity.TaskWord">
     insert into task_word (word_id, task_id, word_name, 
       task_visitor, show_number, create_time, 
@@ -31,7 +21,7 @@
       #{taskVisitor,jdbcType=INTEGER}, #{showNumber,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.renqi.market.entity.TaskWord">
+  <insert id="insertTaskWord" parameterType="com.renqi.market.common.TaskWordDto">
     insert into task_word
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="wordId != null">

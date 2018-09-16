@@ -9,7 +9,6 @@
     <result column="token" jdbcType="VARCHAR" property="token" />
     <result column="expire_time" jdbcType="VARCHAR" property="expireTime" />
     <result column="level_id" jdbcType="INTEGER" property="levelId" />
-    <result column="shop_id" jdbcType="BIGINT" property="shopId" />
     <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -23,17 +22,68 @@
     <result column="token" jdbcType="VARCHAR" property="token" />
     <result column="expire_time" jdbcType="VARCHAR" property="expireTime" />
     <result column="level_id" jdbcType="INTEGER" property="levelId" />
-    <result column="shop_id" jdbcType="BIGINT" property="shopId" />
     <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    customer_id, customer_state_id, phone, pass_word, token, expire_time, level_id, shop_id,
+    customer_id, customer_state_id, phone, pass_word, token, expire_time, level_id,
     login_time, create_time, update_time
   </sql>
   <select id="selectCustomerByPhonePwd" parameterType="java.lang.String" resultMap="BaseCustomerMap">
-    SELECT customer_id,phone, pass_word, token, expire_time, level_id, shop_id, login_time FROM customer
+    SELECT customer_id,phone, pass_word, token, expire_time, level_id, login_time FROM customer
     WHERE phone = #{phone} AND pass_word = #{passWord}
   </select>
+
+  <!-- 多个对象关联查询的结果集-->
+  <resultMap id="customerPersonalAndTask" type="com.renqi.market.entity.CustomerTaskInfo">
+    <id column="customer_id" jdbcType="INTEGER" property="customerId" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="customer_state_id" jdbcType="INTEGER" property="customerStateId" />
+    <result column="level_id" jdbcType="INTEGER" property="levelId" />
+   <!-- <result column="pass_word" jdbcType="VARCHAR" property="passWord" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="expire_time" jdbcType="VARCHAR" property="expireTime" />-->
+    <association property="customerState" javaType="com.renqi.market.entity.CustomerState">
+      <result column="customer_id" jdbcType="INTEGER" property="customerId" />
+      <result column="total_task" jdbcType="INTEGER" property="totalTask" />
+      <result column="total_money" jdbcType="DOUBLE" property="totalMoney" />
+      <result column="is_recharge" jdbcType="INTEGER" property="isRecharge" />
+      <result column="expired_time" jdbcType="VARCHAR" property="expiredTime" />
+    </association>
+    <association property="customerLevel" javaType="com.renqi.market.entity.CustomerLevel">
+      <!--<id column="level_id" jdbcType="INTEGER" property="levelId" />-->
+      <result column="customer_id" jdbcType="INTEGER" property="customerId" />
+      <result column="level_name" jdbcType="VARCHAR" property="levelName" />
+      <result column="level_desc" jdbcType="VARCHAR" property="levelDesc" />
+    </association>
+    <collection property="customerShop" javaType="com.renqi.market.entity.CustomerShop">
+      <id column="shop_id" jdbcType="INTEGER" property="shopId" />
+      <result column="customer_id" jdbcType="INTEGER" property="customerId" />
+      <result column="shop_name" jdbcType="VARCHAR" property="shopName" />
+      <result column="shop_no" jdbcType="VARCHAR" property="shopNo" />
+    </collection>
+    <collection property="taskList" ofType="com.renqi.market.entity.CustomerTask">
+      <id column="task_id" jdbcType="INTEGER" property="taskId" />
+      <result column="customer_id" jdbcType="INTEGER" property="customerId" />
+      <result column="task_state" javaType="INTEGER" property="taskState"/>
+      <result column="task_type" jdbcType="VARCHAR" property="taskType" />
+      <result column="good_id" jdbcType="INTEGER" property="goodId" />
+    </collection>
+  </resultMap>
+  <!--查询出个人信息，商铺信息，任务充值信息-->
+  <select id="queryCustomerMsg" parameterType="String" resultMap="customerPersonalAndTask">
+    SELECT
+        cu.customer_id,cu.phone,cu.customer_state_id,cu.level_id,
+        state.total_task,state.total_money,state.is_recharge,state.expired_time,
+        lev.level_name,lev.level_desc,shop.shop_name,shop.shop_no,
+        task.task_id,task.task_type,task.task_state,task.good_id
+    FROM customer cu
+    INNER JOIN customer_state state ON cu.customer_state_id = state.customer_state_id
+    INNER JOIN customer_level lev   ON cu.level_id = lev.level_id
+    LEFT  JOIN customer_shop shop   ON cu.customer_id = shop.customer_id
+    LEFT  JOIN customer_task task   ON cu.customer_id = task.customer_id
+    WHERE cu.customer_id = #{customerId}
+  </select>
+
 
   <update id="updateCustomerToken" parameterType="com.renqi.market.common.BaseCustomer">
     UPDATE customer
@@ -54,12 +104,12 @@
     WHERE customer_id = #{customerId}
   </update>
   <!-- 检查手机号码 是否注册过-->
-  <select id="checkMobileIsRegister" parameterType="java.lang.String" resultType="java.lang.Integer">
+  <select id="checkMobileIsRegister" parameterType="java.lang.String" resultType="int">
     SELECT  COUNT(*) as number FROM `customer` WHERE phone = #{phone}
   </select>
 
   <select id="selectCustomerList" resultMap="BaseResultMap">
-    SELECT  customer_id, phone, pass_word, token, expire_time, level_id, shop_id, login_time,
+    SELECT  customer_id, phone, pass_word, token, expire_time, level_id, login_time,
     create_time, update_time FROM  customer
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -73,6 +123,9 @@
     where customer_id = #{customerId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.renqi.market.entity.Customer">
+    <selectKey keyProperty="customerId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into customer (customer_id, customer_state_id, phone,
       pass_word, token, expire_time,
       level_id, shop_id, login_time,

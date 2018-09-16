@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,6 +34,8 @@ public class UserLoginController extends GlobalExceptionHandler {
 
     @Autowired
     private RedisService redisService;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     // token 失效时间 60s
     @Value("${token.expiredTime}")
@@ -86,10 +89,10 @@ public class UserLoginController extends GlobalExceptionHandler {
                 return ResultMsgUtil.setCodeMsg(base,SystemCode.SYSTEM_SUCCESS.getCode(),"您已注册,请登录");
             }
             // 若存在说明验证码有效的，否则无效
-            if(redisService.exists("register_"+user.getPhone()+"_"+user.getMobileCode())){
-               customerService.registerCustomer(user);
+            if(stringRedisTemplate.hasKey("register_"+user.getPhone()+"_"+user.getMobileCode())){
+                base = customerService.registerCustomer(user);
             }else{
-                if(!redisService.exists("register_"+user.getPhone()+"_HAVE_CODE")){
+                if(!stringRedisTemplate.hasKey("register_"+user.getPhone()+"_HAVE_CODE")){
                     return ResultMsgUtil.setCodeMsg(base,SystemCode.INPUT_CODE_ERROR.getCode(),SystemCode.INPUT_CODE_ERROR.getMsg());
                 }
                return ResultMsgUtil.setCodeMsg(base,SystemCode.MOBILE_EXPIRED.getCode(),SystemCode.MOBILE_EXPIRED.getMsg());
@@ -121,22 +124,22 @@ public class UserLoginController extends GlobalExceptionHandler {
             String type = "register";
             if(StringUtils.isNotBlank(mobileCode)){
               // 1. 说明是校验验证码是否正确
-                if(redisService.exists(type+"_"+phone+"_"+mobileCode)){
+                if(stringRedisTemplate.hasKey(type+"_"+phone+"_"+mobileCode)){
                   // 存在该值说明输入的验证码是正确的 否则是输入有误
                     return ResultMsgUtil.setCodeMsg(base,SystemCode.SYSTEM_SUCCESS.getCode(),SystemCode.SYSTEM_SUCCESS.getMsg());
                 }
                     return ResultMsgUtil.setCodeMsg(base,SystemCode.INPUT_CODE_ERROR.getCode(),SystemCode.INPUT_CODE_ERROR.getMsg());
             }
             // 2.说明是获取验证码 注册过的不再发送验证码
-            if(customerService.checkMobileIsRegister(phone)){
+            boolean flag = customerService.checkMobileIsRegister(phone);
+            if(!flag){
                 // 3.说明手机号未注册
-                if(redisService.exists(type+"_"+phone)){
+                if(stringRedisTemplate.hasKey(type+"_"+phone)){
                     return ResultMsgUtil.setCodeMsg(base,SystemCode.MOBILE_IS_EXIST.getCode(),SystemCode.MOBILE_IS_EXIST.getMsg());
                 }
-                String template = new String("您的验证码是：ABCD。请不要把验证码泄露给其他人。");
                 Map<String,String> map = new HashMap<>();
                 map.put("type",type);
-                map.put("template",template);
+                map.put("template","SMS_77560073");
                 return  customerService.getIdentiFyingCode(phone,map);
             }else{
                 return ResultMsgUtil.setCodeMsg(base,SystemCode.MOBILE_IS_REGISTER.getCode(),SystemCode.MOBILE_IS_REGISTER.getMsg());

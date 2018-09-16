@@ -1,6 +1,7 @@
 package com.renqi.market.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.aliyuncs.exceptions.ClientException;
 import com.renqi.market.common.BaseCustomer;
 import com.renqi.market.common.BaseResultMsg;
 import com.renqi.market.common.CustomerRegister;
@@ -17,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.Jedis;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @SuppressWarnings("all")
@@ -37,6 +40,9 @@ public class CustomerServiceImpl implements CustomerService {
 	private CustomerStateMapper customerStateMapper;
 	@Autowired
 	private ThreadPoolTaskExecutor taskExecutor;
+
+	@Autowired
+	private StringRedisTemplate redisTemplate;
 
 	@Autowired
 	private RedisService redisService;
@@ -96,9 +102,9 @@ public class CustomerServiceImpl implements CustomerService {
 		boolean flag = true;
 		try {
 		    String ywType = map.get("type");
-			if (redisService.exists(ywType+"_"+mobile+"_"+map.get("mobileCode"))) {
+			if (redisTemplate.hasKey(ywType+"_"+mobile+"_"+map.get("mobileCode"))) {
                // 比较用户输入的验证码和 是否是发送的验证码
-				if(!map.get("mobileCode").equals(redisService.get(ywType+"_"+mobile+"_"+map.get("mobileCode")))) {
+				if(!map.get("mobileCode").equals(redisTemplate.opsForValue().get(ywType+"_"+mobile+"_"+map.get("mobileCode")))) {
 					flag = false;
 				}
 			} else {
@@ -114,11 +120,16 @@ public class CustomerServiceImpl implements CustomerService {
 	/**
 	 * 检查当前手机号码是否注册过
 	 * @param mobile 手机号码
-	 * @return true  没注册过 否则已注册
+	 * @return true  注册过 否则没注册
 	 */
 	@Override
 	public boolean checkMobileIsRegister(String mobile) {
-		return  customerMapper.checkMobileIsRegister(mobile) != 0 ? true : false;
+		boolean flag = false;
+		int count = customerMapper.checkMobileIsRegister(mobile);
+		if(count > 0){
+			flag = true;
+		}
+		return  flag;
 	}
 
 	/**
@@ -132,20 +143,24 @@ public class CustomerServiceImpl implements CustomerService {
 		BaseResultMsg base = new BaseResultMsg("200", "成功获取验证码信息");
 		try {
 				base = getMobileCodeAndMsg(mobile,map);
-		}catch (Exception e ){
+		}catch (ClientException e ){
+			logger.error("++++++++++ 验证码发送异常 ++++++++++",e.getErrMsg());
+            return ResultMsgUtil.setCodeMsg(base,SystemCode.MOBILE_SEND_ERROR.getCode(),SystemCode.MOBILE_SEND_ERROR.getMsg());
+		}catch (Exception e){
 			logger.error("++++++++++ 验证码已经生成过,2分钟内不可重复生成 ++++++++++");
-            return ResultMsgUtil.setCodeMsg(base,SystemCode.SYSTEM_ERROR.getCode(),SystemCode.SYSTEM_ERROR.getMsg());
+			return ResultMsgUtil.setCodeMsg(base,SystemCode.SYSTEM_ERROR.getCode(),SystemCode.SYSTEM_ERROR.getMsg());
 		}
 		return base;
 	}
 
     /**
-     * 注册用户
+     * 注册用户 每一个用户都有一个且只能有一个总的状态存在于我们系统中
      * @param user
      * @return
      */
     @Override
-    public void registerCustomer(CustomerRegister user) throws Exception{
+	@Transactional(rollbackFor = Exception.class)
+    public BaseResultMsg registerCustomer(CustomerRegister user) throws Exception{
     	try{
 			// 用户进行注册的时候 初始化他的客户状态信息表 -----> 总的流程控制表
 			CustomerState state = new CustomerState();
@@ -157,19 +172,20 @@ public class CustomerServiceImpl implements CustomerService {
 			state.setTotalMoney(0.00d);
 			customerStateMapper.insert(state);
 			logger.info("+++++++++++ /market/customerRegister +++++++++++stateId:{}",state.getCustomerStateId());
-
 			Customer customer = new Customer();
 			customer.setCustomerStateId(state.getCustomerStateId());
 			customer.setPhone(user.getPhone());
 			customer.setPassWord(user.getPassWord());
 			customer.setLevelId(1);
-			customer.setShopId(null);
 			customer.setCreateTime(new Date());
 			customerMapper.insert(customer);
+			logger.info("+++++++++++ /market/customerRegister +++++++++++ customerId:{}",customer.getCustomerId());
 		}catch (Exception e){
 			logger.error(e.getMessage(),"+++++++++++ /market/customerRegister +++++++++++ error");
+			ResultMsgUtil.setCodeMsg(new BaseResultMsg(),SystemCode.SYSTEM_ERROR.getCode(),SystemCode.SYSTEM_ERROR.getMsg());
 			e.printStackTrace();
 		}
+		return ResultMsgUtil.setCodeMsg(new BaseResultMsg(),SystemCode.SYSTEM_SUCCESS.getCode(),SystemCode.SYSTEM_SUCCESS.getMsg());
     }
 
     /**
@@ -178,18 +194,19 @@ public class CustomerServiceImpl implements CustomerService {
 	 * @param typeAndTemplate
 	 * @return
 	 */
-	public  BaseResultMsg getMobileCodeAndMsg(String mobile,Map<String,String> typeAndTemplate){
+	public  BaseResultMsg getMobileCodeAndMsg(String mobile,Map<String,String> typeAndTemplate) throws ClientException {
             BaseResultMsg base = new BaseResultMsg("200", "成功获取验证码信息");
-            Map<String,String> map = MobileCodeUtil.getMobileCode(mobile,typeAndTemplate.get("template"));
+            Map<String,String> map = MobileCodeUtil.sendSms(mobile,typeAndTemplate.get("template"));
 			String ywType = typeAndTemplate.get("type");
+			String mobileCode = map.get("code");
 			if(StringUtils.isNotBlank(ywType)){
-				if ("2".equals(map.get("msg"))){
-					redisService.set(ywType+"_"+mobile,120L);
+				if (StringUtils.isNotBlank(mobileCode)){
+					redisTemplate.opsForValue().set(ywType+"_"+mobile,mobile,120L, TimeUnit.SECONDS);
 					// 记录验证码并设置失效时间
-					redisService.set(ywType+"_"+mobile+"_"+map.get("mobileCode"),300L);
+					redisTemplate.opsForValue().set(ywType+"_"+mobile+"_"+mobileCode,mobileCode,300L,TimeUnit.SECONDS);
 					// 记录当前注册的手机号是点击了发送验证码按钮
-					redisService.set(ywType+"_"+mobile+"_HAVE_CODE",300L);
-					base.setData(map.get("mobileCode"));
+					redisTemplate.opsForValue().set(ywType+"_"+mobile+"_HAVE_CODE",mobile+"_HAVE_CODE",300L,TimeUnit.SECONDS);
+					base.setData(mobileCode);
 					return base;
 				}else {
                     return ResultMsgUtil.setCodeMsg(base,SystemCode.MOBILE_SEND_ERROR.getCode(),SystemCode.MOBILE_SEND_ERROR.getMsg());

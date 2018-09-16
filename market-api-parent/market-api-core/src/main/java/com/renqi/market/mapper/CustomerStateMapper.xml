@@ -3,13 +3,14 @@
 <mapper namespace="com.renqi.market.dao.CustomerStateMapper">
   <resultMap id="BaseResultMap" type="com.renqi.market.entity.CustomerState">
     <id column="customer_state_id" jdbcType="INTEGER" property="customerStateId" />
+    <!--<result column="customer_id" jdbcType="INTEGER" property="customerId" />-->
     <result column="total_task" jdbcType="INTEGER" property="totalTask" />
     <result column="total_money" jdbcType="DOUBLE" property="totalMoney" />
     <result column="is_recharge" jdbcType="INTEGER" property="isRecharge" />
     <result column="expired_time" jdbcType="VARCHAR" property="expiredTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    customer_state_id, total_task, total_money, is_recharge, expired_time
+    customer_state_id,customer_id, total_task, total_money, is_recharge, expired_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -22,13 +23,11 @@
     where customer_state_id = #{customerStateId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.renqi.market.entity.CustomerState">
-    <selectKey keyProperty="customer_state_id" order="BEFORE" resultType="java.lang.Integer">
+    <selectKey keyProperty="customerStateId" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into customer_state (customer_state_id, total_task, total_money, 
-      is_recharge, expired_time)
-    values (#{customerStateId,jdbcType=INTEGER}, #{totalTask,jdbcType=INTEGER}, #{totalMoney,jdbcType=DOUBLE}, 
-      #{isRecharge,jdbcType=INTEGER}, #{expiredTime,jdbcType=VARCHAR})
+    insert into customer_state (customer_id,total_task, total_money,is_recharge, expired_time)
+    values (#{customerId},#{totalTask,jdbcType=INTEGER}, #{totalMoney,jdbcType=DOUBLE},#{isRecharge,jdbcType=INTEGER}, #{expiredTime,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.renqi.market.entity.CustomerState">
     insert into customer_state

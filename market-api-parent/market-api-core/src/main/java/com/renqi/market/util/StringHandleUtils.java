@@ -165,7 +165,39 @@ public class StringHandleUtils {
         }
     }
 
+    public static boolean isEmpty(Collection  list){
+        if(null == list || list.size() == 0){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 获取字符拼接后的字符
+     * @param str
+     * @return
+     */
+    public static  String concatArrayStr(String str){
+        String[] arrayStr = null;
+        String concatStr = "'";
+        if(StringUtils.isNotBlank(str)){
+            if(str.indexOf(",") != -1){
+                arrayStr = str.split(",");
+            }else {
+                return "'"+str+"'";
+            }
+        }
+        for (int i=0 ;i<arrayStr.length;i++){
+            concatStr +=arrayStr[i]+"',";
+        }
+
+        return concatStr.substring(0,concatStr.length()-1);
+    }
+
     public static void main(String[] args) {
+
+        String array = "1,2,3";
+        System.out.println("拼接的结果 ： "+concatArrayStr(array));
 //        String domainUrl = "http://image.51huihuahua.com/images/bank/zg_bank@";
 //        System.out.println(StringHandleUtils.getDomainAddress("www.taobao.com", domainUrl));
 //        System.out.println(prefixHttp.length() +" 截取 ："+prefixHttp.substring(prefixHttp.length()));

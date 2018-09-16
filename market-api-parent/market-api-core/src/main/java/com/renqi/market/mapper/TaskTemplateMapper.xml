@@ -9,20 +9,32 @@
     <result column="require_name" jdbcType="VARCHAR" property="requireName" />
     <result column="task_type" jdbcType="VARCHAR" property="taskType" />
   </resultMap>
+  <resultMap id="customerTaskTempalte" type="com.renqi.market.common.TaskTemplateVo">
+    <id column="template_id" jdbcType="INTEGER" property="templateId" />
+    <result column="task_begin_browse" jdbcType="VARCHAR" property="taskBeginBrowse" />
+    <result column="task_end_browse" jdbcType="VARCHAR" property="taskEndBrowse" />
+    <result column="task_browse_second" jdbcType="VARCHAR" property="taskBrowseSecond" />
+    <result column="require_name" jdbcType="VARCHAR" property="requireName" />
+    <result column="task_type" jdbcType="VARCHAR" property="taskType" />
+  </resultMap>
+
   <sql id="Base_Column_List">
     template_id, task_begin_browse, task_end_browse, task_browse_second, require_name, 
     task_type
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="queryTemplate" parameterType="java.lang.String" resultMap="customerTaskTempalte">
     select 
-    <include refid="Base_Column_List" />
+     *
     from task_template
-    where template_id = #{templateId,jdbcType=INTEGER}
+    WHERE
+    <if test="taskType != null and taskType != ''">
+      task_type = #{taskType}
+    </if>
+    <if test="arrayStr != null and arrayStr != ''">
+      template_id IN (${arrayStr})
+    </if>
+    ORDER BY template_id DESC
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from task_template
-    where template_id = #{templateId,jdbcType=INTEGER}
-  </delete>
   <insert id="insert" parameterType="com.renqi.market.entity.TaskTemplate">
     insert into task_template (template_id, task_begin_browse, task_end_browse, 
       task_browse_second, require_name, task_type
@@ -74,27 +86,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.renqi.market.entity.TaskTemplate">
-    update task_template
-    <set>
-      <if test="taskBeginBrowse != null">
-        task_begin_browse = #{taskBeginBrowse,jdbcType=VARCHAR},
-      </if>
-      <if test="taskEndBrowse != null">
-        task_end_browse = #{taskEndBrowse,jdbcType=VARCHAR},
-      </if>
-      <if test="taskBrowseSecond != null">
-        task_browse_second = #{taskBrowseSecond,jdbcType=VARCHAR},
-      </if>
-      <if test="requireName != null">
-        require_name = #{requireName,jdbcType=VARCHAR},
-      </if>
-      <if test="taskType != null">
-        task_type = #{taskType,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where template_id = #{templateId,jdbcType=INTEGER}
-  </update>
+
   <update id="updateByPrimaryKey" parameterType="com.renqi.market.entity.TaskTemplate">
     update task_template
     set task_begin_browse = #{taskBeginBrowse,jdbcType=VARCHAR},

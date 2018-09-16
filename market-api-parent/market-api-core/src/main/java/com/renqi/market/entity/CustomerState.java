@@ -17,7 +17,6 @@ public class CustomerState {
             return state;
         }
     }
-
     private Integer customerStateId;
 
     private Integer totalTask;
@@ -28,7 +27,6 @@ public class CustomerState {
 
     private String expiredTime;
 
-
     public Integer getCustomerStateId() {
         return customerStateId;
     }
@@ -36,6 +34,7 @@ public class CustomerState {
     public void setCustomerStateId(Integer customerStateId) {
         this.customerStateId = customerStateId;
     }
+
 
     public Integer getTotalTask() {
         return totalTask;

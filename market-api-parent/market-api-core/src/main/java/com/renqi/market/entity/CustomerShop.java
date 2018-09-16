@@ -7,8 +7,6 @@ public class CustomerShop {
 
     private String shopName;
 
-    private Integer customerId;
-
     private String shopNo;
 
     private Integer creditScore;
@@ -31,14 +29,6 @@ public class CustomerShop {
 
     public void setShopName(String shopName) {
         this.shopName = shopName;
-    }
-
-    public Integer getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
     }
 
     public String getShopNo() {
