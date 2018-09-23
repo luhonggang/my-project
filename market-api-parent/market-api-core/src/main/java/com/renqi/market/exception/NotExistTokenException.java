@@ -1,7 +1,5 @@
 package com.renqi.market.exception;
 
-import com.renqi.market.util.SystemCode;
-
 /**
  * @author luhonggang
  * @version 1.8.0
@@ -12,7 +10,7 @@ public class NotExistTokenException extends GlobalException {
 
     public NotExistTokenException() {}
         @Override
-    public SystemCode getCode() {
+    public String getCode() {
         return null;
     }
 

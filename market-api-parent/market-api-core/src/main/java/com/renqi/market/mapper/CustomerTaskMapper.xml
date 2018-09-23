@@ -103,8 +103,14 @@
       <if test="taskId != null">
         task_id,
       </if>
+      <if test="customerId != null and customerId != 0">
+        customer_id,
+      </if>
       <if test="templateId != null and templateId != ''">
         template_id,
+      </if>
+      <if test="taskState != null and taskState != ''">
+        task_state,
       </if>
       <if test="taskType != null">
         task_type,
@@ -112,13 +118,13 @@
       <if test="goodId != null">
         good_id,
       </if>
-      <if test="goodLinkUrl != null">
+      <if test="goodLinkUrl != null and goodLinkUrl != '' ">
         good_link_url,
       </if>
-      <if test="goodTitle != null">
+      <if test="goodTitle != null and goodTitle != ''">
         good_title,
       </if>
-      <if test="storeName != null">
+      <if test="storeName != null and storeName != ''">
         store_name,
       </if>
       <if test="totalVisitor != null">
@@ -127,7 +133,7 @@
       <if test="totalNumber != null">
         total_number,
       </if>
-      <if test="taskTime != null">
+      <if test="taskTime != null and taskTime != ''">
         task_time,
       </if>
       <if test="taskBeginHour != null">
@@ -156,22 +162,28 @@
       <if test="taskId != null">
         #{taskId,jdbcType=INTEGER},
       </if>
+      <if test="customerId != null and customerId != 0">
+        #{customerId,jdbcType=INTEGER},
+      </if>
       <if test="templateId != null and templateId != ''">
         #{templateId},
       </if>
-      <if test="taskType != null">
+      <if test="taskState != null and taskState != ''">
+        #{taskState},
+      </if>
+      <if test="taskType != null and taskType != '' ">
         #{taskType,jdbcType=VARCHAR},
       </if>
       <if test="goodId != null">
         #{goodId,jdbcType=INTEGER},
       </if>
-      <if test="goodLinkUrl != null">
+      <if test="goodLinkUrl != null and goodLinkUrl != ''">
         #{goodLinkUrl,jdbcType=VARCHAR},
       </if>
-      <if test="goodTitle != null">
+      <if test="goodTitle != null and goodTitle != '' ">
         #{goodTitle,jdbcType=VARCHAR},
       </if>
-      <if test="storeName != null">
+      <if test="storeName != null and storeName != ''">
         #{storeName,jdbcType=VARCHAR},
       </if>
       <if test="totalVisitor != null">
@@ -180,22 +192,22 @@
       <if test="totalNumber != null">
         #{totalNumber,jdbcType=INTEGER},
       </if>
-      <if test="taskTime != null">
+      <if test="taskTime != null and taskTime != '' ">
         #{taskTime,jdbcType=VARCHAR},
       </if>
-      <if test="taskBeginHour != null">
+      <if test="taskBeginHour != null and taskBeginHour != ''">
         #{taskBeginHour,jdbcType=VARCHAR},
       </if>
-      <if test="taskEndHour != null">
+      <if test="taskEndHour != null and taskEndHour != ''">
         #{taskEndHour,jdbcType=VARCHAR},
       </if>
-      <if test="taskBeginMiunte != null">
+      <if test="taskBeginMiunte != null and taskBeginMiunte != ''">
         #{taskBeginMiunte,jdbcType=VARCHAR},
       </if>
-      <if test="taskEndMiunte != null">
+      <if test="taskEndMiunte != null and taskEndMiunte != ''">
         #{taskEndMiunte,jdbcType=VARCHAR},
       </if>
-      <if test="taskSearchScope != null">
+      <if test="taskSearchScope != null and taskSearchScope != ''">
         #{taskSearchScope,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">

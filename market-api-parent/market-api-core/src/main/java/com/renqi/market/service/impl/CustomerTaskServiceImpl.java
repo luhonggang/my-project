@@ -125,7 +125,7 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
         }catch (Exception e){
             e.printStackTrace();
             logger.error("++++++++++++ /task/saveCustomerTask +++++++++++",e.getMessage());
-            msg.setMsg(SystemCode.SYSTEM_ERROR.getCode());
+            msg.setCode(SystemCode.SYSTEM_ERROR.getCode());
             msg.setMsg(SystemCode.SYSTEM_ERROR.getMsg());
         }
         return msg;

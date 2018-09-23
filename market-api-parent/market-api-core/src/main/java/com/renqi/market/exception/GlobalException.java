@@ -1,7 +1,5 @@
 package com.renqi.market.exception;
 
-import com.renqi.market.util.SystemCode;
-
 /**
  * @author luhonggang
  * @date 2018/9/9
@@ -22,6 +20,6 @@ public abstract class GlobalException extends RuntimeException{
     public GlobalException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
-    public abstract SystemCode getCode();
+    public abstract String getCode();
     public abstract String getErrorMessage();
 }

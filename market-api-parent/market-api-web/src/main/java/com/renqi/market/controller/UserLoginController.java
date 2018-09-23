@@ -38,7 +38,7 @@ public class UserLoginController extends GlobalExceptionHandler {
     private StringRedisTemplate stringRedisTemplate;
 
     // token 失效时间 60s
-    @Value("${token.expiredTime}")
+    @Value("${login.token.expiredTime}")
     private Long expiredTime;
     /**
      * 用户登录接口

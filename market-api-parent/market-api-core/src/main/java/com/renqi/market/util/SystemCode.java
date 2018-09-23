@@ -23,6 +23,7 @@ public enum SystemCode {
     MOBILE_SEND_ERROR("410","验证码发送失败,请稍后再试"),
     INPUT_CODE_ERROR("411","验证码输入有误"),
     MOBILE_EXPIRED("412","验证码失效,请重新发送验证码"),
+    PARAM_VALID_EXCEPTION("413","参数校验异常"),
     SYSTEM_ERROR("500","系统异常"),
     UNKNOW_EXCEPTION("500","未知异常");
 

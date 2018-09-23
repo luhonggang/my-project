@@ -12,7 +12,7 @@ public class MobileCodeException extends GlobalException {
     public MobileCodeException() {}
 
     @Override
-    public SystemCode getCode() {
+    public String getCode() {
         return null;
     }
 

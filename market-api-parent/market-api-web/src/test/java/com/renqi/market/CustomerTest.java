@@ -2,6 +2,7 @@ package com.renqi.market;
 
 import com.renqi.market.dao.CustomerStateMapper;
 import com.renqi.market.entity.CustomerState;
+import com.renqi.market.util.JwtTokenUtil;
 import com.renqi.market.util.redis.RedisService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +36,22 @@ public class CustomerTest {
         System.out.println("获取缓存 ： "+redisService.get("hhh"));
         stringRedisTemplate.opsForValue().set("aaa", "111");
         System.out.println(stringRedisTemplate.opsForValue().get("aaa"));
+    }
+
+    /**
+     * token 生成测试
+     */
+    @Test
+    public void testToken(){
+        String customerId = "1";
+        String issue = "renqi";
+        String subjectIsShopId = "1";
+        // 毫秒
+        long expiredTime = 24*24*1*60*60*1000;
+        // 生成token
+        String token = JwtTokenUtil.createJWT(customerId,issue,
+                subjectIsShopId,expiredTime,null);
+        System.out.println("生成的token ： "+token);
     }
 
     @Test

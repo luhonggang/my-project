@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 public class CustomerTaskInfo implements Serializable {
     private Integer customerId;
-    private Integer phone;
+    private String phone;
     private CustomerState customerState;
     private CustomerLevel customerLevel;
     private CustomerShop customerShop;
@@ -28,7 +28,7 @@ public class CustomerTaskInfo implements Serializable {
 
     }
 
-    public CustomerTaskInfo(Integer customerId, Integer phone, CustomerState customerState, CustomerLevel customerLevel, CustomerShop customerShop, List<CustomerTask> taskList, Integer totalTask, Integer taskIsDoing, Integer taskIsComplete, Integer taskIsException) {
+    public CustomerTaskInfo(Integer customerId, String phone, CustomerState customerState, CustomerLevel customerLevel, CustomerShop customerShop, List<CustomerTask> taskList, Integer totalTask, Integer taskIsDoing, Integer taskIsComplete, Integer taskIsException) {
         this.customerId = customerId;
         this.phone = phone;
         this.customerState = customerState;

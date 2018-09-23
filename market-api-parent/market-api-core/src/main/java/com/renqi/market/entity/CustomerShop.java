@@ -5,6 +5,8 @@ import java.util.Date;
 public class CustomerShop {
     private Integer shopId;
 
+    private Integer customerId;
+
     private String shopName;
 
     private String shopNo;
@@ -14,6 +16,14 @@ public class CustomerShop {
     private Date createTime;
 
     private Date update;
+
+    public Integer getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
+    }
 
     public Integer getShopId() {
         return shopId;

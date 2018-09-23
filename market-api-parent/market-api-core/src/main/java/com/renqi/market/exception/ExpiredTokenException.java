@@ -12,8 +12,8 @@ public class ExpiredTokenException extends GlobalException {
     private static final long serialVersionUID = -7051836414685780479L;
 
     @Override
-    public SystemCode getCode() {
-        return SystemCode.EXPIRED_TOKEN;
+    public String getCode() {
+        return SystemCode.EXPIRED_TOKEN.getCode();
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.renqi.market.common;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -28,6 +30,12 @@ public class CustomerTaskDto implements Serializable {
      */
     @NotBlank(message = "宝贝链接不能为空")
     private String goodLinkUrl;
+
+    /**
+     * 宝贝ID
+     */
+    @NotNull(message = "宝贝ID")
+    private Integer goodId;
 
     /**
      * 关键词集合
@@ -107,10 +115,9 @@ public class CustomerTaskDto implements Serializable {
      * task_begin_browse  浏览时长开始秒
      * task_end_browse    浏览时长结束秒
      */
-    @NotNull( message = "浏览控制 参数不能为空")
+    @NotNull( message = "浏览控制 参数不能为空 (参数格式 5,6,7)")
     private String templateId;
 //    private List<String> templateList;
-
 
     private Date createTime;
 
