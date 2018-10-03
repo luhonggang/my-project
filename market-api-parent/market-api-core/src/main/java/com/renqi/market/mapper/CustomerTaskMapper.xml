@@ -3,6 +3,7 @@
 <mapper namespace="com.renqi.market.dao.CustomerTaskMapper">
   <resultMap id="BaseResultMap" type="com.renqi.market.entity.CustomerTask">
     <id column="task_id" jdbcType="INTEGER" property="taskId" />
+    <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
     <result column="customer_id" jdbcType="INTEGER" property="customerId" />
     <result column="template_id" jdbcType="VARCHAR" property="templateId" />
     <result column="task_state" javaType="INTEGER" property="taskState"/>
@@ -24,6 +25,7 @@
   </resultMap>
   <resultMap id="queryCustomerTask" type="com.renqi.market.common.CustomerTaskVo">
     <id column="task_id" jdbcType="INTEGER" property="taskId" />
+    <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
     <result column="customer_id" jdbcType="INTEGER" property="customerId" />
     <result column="template_id" jdbcType="VARCHAR" property="templateId" />
     <result column="task_state" javaType="INTEGER" property="taskState"/>
@@ -103,6 +105,9 @@
       <if test="taskId != null">
         task_id,
       </if>
+      <if test="orderNo != null and orderNo != ''">
+        order_no,
+      </if>
       <if test="customerId != null and customerId != 0">
         customer_id,
       </if>
@@ -161,6 +166,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="taskId != null">
         #{taskId,jdbcType=INTEGER},
+      </if>
+      <if test="orderNo != null and orderNo != ''">
+        #{orderNo},
       </if>
       <if test="customerId != null and customerId != 0">
         #{customerId,jdbcType=INTEGER},

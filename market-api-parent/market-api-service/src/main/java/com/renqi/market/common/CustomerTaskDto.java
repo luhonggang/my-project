@@ -20,6 +20,8 @@ import java.util.List;
 public class CustomerTaskDto implements Serializable {
 
     private Integer taskId;
+
+    private String orderNo;
     /**
      * 客户主键
      */
@@ -40,8 +42,14 @@ public class CustomerTaskDto implements Serializable {
     /**
      * 关键词集合
      */
+//    @NotNull(message = "关键词集合")
+//    private List<TaskWordDto> wordDtoList;
+
+    /**
+     * 关键词集合
+     */
     @NotNull(message = "关键词集合")
-    private List<TaskWordDto> wordDtoList;
+    private String wordList;
     /**
      * 宝贝标题
      */

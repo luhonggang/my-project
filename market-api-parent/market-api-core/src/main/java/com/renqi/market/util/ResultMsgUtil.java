@@ -1,6 +1,7 @@
 package com.renqi.market.util;
 
 import com.renqi.market.common.BaseCustomer;
+import com.renqi.market.common.BaseResult;
 import com.renqi.market.common.BaseResultMsg;
 import java.io.Serializable;
 
@@ -36,5 +37,18 @@ public class ResultMsgUtil<T> implements Serializable {
         resultMsg.setCode(code);
         resultMsg.setMsg(msg);
         return  resultMsg;
+    }
+
+    /**
+     * 返回消息
+     * @param result 返回给客户端的信息对象
+     * @param code   返回码
+     * @param msg    返回消息
+     * @return
+     */
+    public static BaseResult setCodeMsg(BaseResult result,String code, String msg){
+        result.setCode(code);
+        result.setMsg(msg);
+        return  result;
     }
 }

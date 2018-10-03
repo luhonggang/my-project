@@ -43,7 +43,7 @@
     <result column="token" jdbcType="VARCHAR" property="token" />
     <result column="expire_time" jdbcType="VARCHAR" property="expireTime" />-->
     <association property="customerState" javaType="com.renqi.market.entity.CustomerState">
-      <result column="customer_state_id" jdbcType="INTEGER" property="customerStateId" />
+      <id column="customer_state_id" jdbcType="INTEGER" property="customerStateId" />
       <result column="total_task" jdbcType="INTEGER" property="totalTask" />
       <result column="total_money" jdbcType="DOUBLE" property="totalMoney" />
       <result column="is_recharge" jdbcType="INTEGER" property="isRecharge" />
@@ -63,6 +63,7 @@
    <collection property="taskList" ofType="com.renqi.market.entity.CustomerTask">
       <id column="task_id" jdbcType="INTEGER" property="taskId" />
       <!--<result column="customer_id" jdbcType="INTEGER" property="customerId" />-->
+     <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
       <result column="task_state" javaType="INTEGER" property="taskState"/>
       <result column="task_type" jdbcType="VARCHAR" property="taskType" />
       <result column="good_id" jdbcType="INTEGER" property="goodId" />
@@ -71,12 +72,23 @@
   <!--查询出个人信息，商铺信息，任务充值信息-->
   <select id="queryCustomerMsg" parameterType="String" resultMap="customerPersonalAndTask">
     SELECT
-        cu.customer_id,cu.phone,
-        cu.customer_state_id,cu.level_id,
-        state.total_task,state.total_money,state.is_recharge,state.expired_time,
-        lev.level_name,lev.level_desc,
-        shop.shop_id,shop.shop_name,shop.shop_no,
-        task.task_id,task.task_type,task.task_state,task.good_id
+        cu.customer_id,
+        cu.phone,
+        cu.customer_state_id,
+        state.total_task AS total_task,
+        state.total_money AS total_money,
+        state.is_recharge AS is_recharge,
+        state.expired_time AS expired_time,
+        cu.level_id,
+        lev.level_name,
+        lev.level_desc,
+        shop.shop_id,
+        shop.shop_name,
+        shop.shop_no,
+        task.task_id,
+        task.task_type,
+        task.task_state,
+        task.good_id
     FROM customer cu
     INNER JOIN customer_state state ON cu.customer_state_id = state.customer_state_id
     INNER JOIN customer_level lev   ON cu.level_id = lev.level_id

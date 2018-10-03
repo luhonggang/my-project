@@ -61,7 +61,7 @@ public class CustomerTest {
         // 只要任务不为 0 说明有任务
         state.setTotalTask(0);
         // 是否充值 1 是 0 否
-        state.setIsRecharge(CustomerState.State.IS_RECHARGE_FALSE.getState());
+        //state.setIsRecharge(CustomerState.State.IS_RECHARGE_FALSE.getState());
         // 当前总的充值金额为 0
         state.setTotalMoney(0.00d);
         customerStateMapper.insert(state);

@@ -14,14 +14,14 @@ import java.util.Date;
  */
 @Data
 public class TaskWordDto {
-    @NotNull(message = "taskId不能为空")
+    //@NotNull(message = "taskId不能为空")
     private Integer taskId;
     private Integer wordId;
     @NotBlank(message = "关键词不能为空")
     private String wordName;
-    @NotNull(message = "taskVisitor 总的访问数不能为空")
+    //@NotNull(message = "taskVisitor 总的访问数不能为空")
     private Integer taskVisitor;
-    @NotNull(message = "showNumber 展现数不能为空")
+    //@NotNull(message = "showNumber 展现数不能为空")
     private Integer showNumber;
 
     private Date createTime;

@@ -14,6 +14,7 @@ import java.util.List;
 @Data
 public class CustomerTaskVo {
     private Integer taskId;
+    private String orderNo;
     /**
      * 客户主键
      */

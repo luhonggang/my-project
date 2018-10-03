@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/x-icon" href="../favicon.ico">
-    <link rel="stylesheet" href="assets/css/renqitong/login.css">
+    <link rel="stylesheet" href="market/css/login.css">
     <title>欢迎登录人气通，国内最顶尖的人气提升平台</title>
     <script type="text/javascript">
         /* 窗口尺寸改变的事件 */
@@ -24,7 +24,7 @@
     <style type="text/css">
         body{
             margin: 0;
-            background-image: url("assets/login/images/ld-bg.jpg");
+            background-image: url("market/images/login/ld-bg.jpg");
             background-repeat: no-repeat;
             overflow: hidden;
         }
@@ -42,7 +42,7 @@
         <!--logo-->
         <div class="div_boss">
         <div class="logo_img">
-            <img src="assets/login/images/ld-bg1.png">
+            <img src="market/images/login/ld-bg1.png">
             <div class="login_text1">
                 网店提升专家<br/>
                <span> RENQITONG</span>
@@ -64,14 +64,14 @@
             <div class="phone">
                 <input id ="phone" type="text" name="phone" placeholder="请输入您的手机号码"/>
                 <div class="phone_div">
-                    <img src="assets/login/images/user-c1.png">
+                    <img src="market/images/login/user-c1.png">
                 </div>
 
             </div>
             <div class="pwd">
                 <input id="customer_pwd" type="password" name="passWord" placeholder="请输入您的用户密码"/>
                 <div class="pwd_div">
-                    <img src="assets/login/images/password-c1.png">
+                    <img src="market/images/login/password-c1.png">
                 </div>
             </div>
             <div class="login_btn">
@@ -93,8 +93,8 @@
     </div>
   </div>
 </body>
-<script th:src="@{assets/login/base.js}" type="text/javascript"></script>
-<script th:src="@{jquery-3.1.1.js}" type="text/javascript"></script>
+<script th:src="@{market/js/base.js}" type="text/javascript"></script>
+<script th:src="@{market/js/jquery-3.1.1.js}" type="text/javascript"></script>
 <script th:inline="javascript">
     $(function(){
         // 回车键登录
@@ -144,9 +144,9 @@
 //                    location.href = 'login.html'
                         var localCache = window.localStorage;
                         localCache.setItem('TOKEN',result.data.token);
-                        localCache.setItem('customerName',result.data.phone);
+                        localCache.setItem('customerId',result.data.customerId);
                         localCache.setItem('domainName',baseUrl);
-                        window.location.href = baseUrl+"page/index.html";
+                        window.location.href = baseUrl+"page/customerInfo.html";
                     }else if(result.code=="201"){
                         alert(result.msg);
                         // $("#tick").text(data.message).css("color", "red");
