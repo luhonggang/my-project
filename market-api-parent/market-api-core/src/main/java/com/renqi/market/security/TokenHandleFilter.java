@@ -54,7 +54,7 @@ public class TokenHandleFilter implements Filter {
                 logger.info("+++++++++++ current url is need token +++++++++++ 需要token ");
                 // 说明是需要校验token的
                 String token = ((HttpServletRequest) request).getHeader("token");
-                if (StringUtils.isEmpty(token)) {
+                if (StringUtils.isEmpty(token) || "null".equals(token)) {
                     throw new NotExistTokenException();
                 }
                 JwtTokenUtil.checkTokenIsExpiredTime(token);
