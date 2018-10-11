@@ -22,6 +22,6 @@ public class Constants {
 
         LocalTime hour = LocalTime.now().withNano(0).withMinute(0);
         System.out.println("当前几点 ： "+hour);
-        System.out.println("2018-08-12".compareTo("2018-08-11"));
+        System.out.println("2018-08-12".equals("2018-08-12"));
     }
 }

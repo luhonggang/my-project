@@ -57,8 +57,8 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
             int taskCom = 0;
             int taskContinue = 0;
             int taskException = 0;
-            customer.setTotalTask(0);
             if(null != customer){
+                customer.setTotalTask(0);
                 List<CustomerTask> taskList = customer.getTaskList();
                 if(null != taskList && taskList.size() > 0){
                     customer.setTotalTask(taskList.size());

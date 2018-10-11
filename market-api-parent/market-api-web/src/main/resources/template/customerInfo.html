@@ -95,13 +95,13 @@
     <span>
         <img style="height:60px;width:130px;" src="market/images/customer/logo198.png"/>
     </span>
-    <span class="header_nav_text">网店排名提升，就用人气通</span>
+        <span class="header_nav_text">网店排名提升，就用人气通</span>
     </span>
     <span class="header_nav_posi2">
-    <span><a href="javascript:void(0)" class="md-trigger" data-modal="modal-1">电脑端流量</a></span>
-    <span><a href="javascript:void(0)" class="md-trigger" data-modal="modal-2">手机端流量</a></span>
-    <span><a href="javascript:void(0)" class="md-trigger" data-modal="modal-3">其他流量</a></span>
-    <span><a href="javascript:void(0)" class="md-trigger" data-modal="modal-4">收藏加购</a></span>
+        <span><a href="javascript:void(0)" class="md-trigger" data-modal="modal-1">电脑端流量</a></span>
+        <span><a href="javascript:void(0)" class="md-trigger" data-modal="modal-2">手机端流量</a></span>
+        <span><a href="javascript:void(0)" class="md-trigger" data-modal="modal-3">其他流量</a></span>
+        <span><a href="javascript:void(0)" class="md-trigger" data-modal="modal-4">收藏加购</a></span>
     </span>
 </div>
 
@@ -188,44 +188,44 @@
         <div style="font-size: 0.9em;margin-top: 0px;" class="pcll_zhuti">
             <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">PC匿名流量创建-基本信息</p>
             <div>
-                宝贝链接：<input class="pcll_input" type="text" placeholder="请输入淘宝或天猫宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫淘宝地址)"/>
+                宝贝链接：<input name="goodLinkUrl" id="nmrw_good_url" class="pcll_input" type="text" placeholder="请输入淘宝或天猫宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫淘宝地址)"/>
             </div>
             <div style="margin-top: 1em;">
-                关键词：<input style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="请输入一个或者多个关键词&nbsp;&nbsp;(以逗号隔开)"/>
+                关键词：<input name="wordList" id="nmrw_word_name" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="请输入一个或者多个关键词&nbsp;&nbsp;(以逗号隔开)"/>
             </div>
             <div style="margin-top: 1em;">
-                访客量：<input style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="访客量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
+                访客量：<input name="totalVisitor" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="访客量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
             </div>
             <div style="margin-top: 1em;">
-                浏览量：<input style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="浏览量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
+                浏览量：<input name="totalNumber" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="浏览量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
             </div>
             <div class="riqi">
                 <div style="float: left;text-align: center;" class="date_dt">
                     <div class="date_ts">日期<br/><span style="color:#FF0000;font-size: 0.8em;">(可提前发布7天任务)</span></div>
-                    投放时间：<input type="date" id="startDate_pcll_nm">
+                    投放时间：<input name="taskTime" type="date" id="startDate_pcll_nm">
                 </div>
                 <div style="float: left;text-align: center;margin-left: 1em;" class="date_shiduan">
                     <div class="date_ts">时段<br/><span style="color:#FF0000;font-size: 0.8em;">(尽量扩大时间范围)</span></div>
-                    <input type="text"/>&nbsp;点-&nbsp;<input type="text"/>点
+                    <input name="taskBeginHour" type="text"/>&nbsp;点-&nbsp;<input name="taskEndHour" type="text"/>点
                 </div>
                 <div style="float: left;text-align: center" class="date_jianduan">
                     <div class="date_ts">任务发布间隔时间(分)<br/><span style="color:#FF0000;font-size: 0.8em;">(系统会将发布任务的间隔时间随机分配)</span></div>
-                    <input type="text"/>&nbsp;-&nbsp;<input type="text"/>
+                    <input name="taskBeginMiunte" type="text"/>&nbsp;-&nbsp;<input name="taskEndMiunte" type="text"/>
                 </div>
             </div>
 
             <div style="float: left">
                 <span>搜索范围：</span>
                 <div class="pretty info circle a-jelly">
-                    <input name="hjk" type="radio" checked="checked">
+                    <input name="taskSearchScope" type="radio" checked="checked">
                     <label><i class="mdi mdi-check"></i> 前10页</label>
                 </div>
                 <div class="pretty info circle a-jelly">
-                    <input name="hjk" type="radio">
+                    <input name="taskSearchScope" type="radio">
                     <label><i class="mdi mdi-check"></i> 前20页</label>
                 </div>
                 <div class="pretty info circle a-jelly">
-                    <input name="hjk" type="radio">
+                    <input name="taskSearchScope" type="radio">
                     <label><i class="mdi mdi-check"></i> 前30页</label>
                 </div>
             </div>
@@ -250,7 +250,7 @@
                 </div>
             </div>
             <div style="margin-top: 1em;margin: auto;width: 300px;margin-bottom: 1em;">
-                <input class="fbrw" type="button" value="发布任务"/>
+                <input class="fbrw nmrw_fbrw" type="button" value="发布任务"/>
             </div>
             <div style="margin-top: 1em;margin: auto;width: 60%;margin-bottom: 1em;text-align: center;font-size: 0.9em;">
                 <span>您目前会员等级为：<span style="color:red;">体验会员</span>，享<span style="color:red;">9.8折</span></span><br/>
@@ -1102,6 +1102,14 @@
     </div>
 </div>
 <script type="text/javascript">
+
+      $('.nmrw_fbrw').on('click',function () {
+         alert("点击发布任务");
+          var goodUrl = $("#pcll_nmrw input[name='goodLinkUrl']").val();
+          var wordName = $("#pcll_nmrw input[name='wordName']").val();
+          alert("url "+goodUrl +" 关键词 ： "+wordName);
+      });
+
     /*PC端流量的任务栏弹框隐藏显示的js*/
         $("#pc_btn1").click(function(){
             $("#pcll_nmrw").show();
