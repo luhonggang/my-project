@@ -25,7 +25,7 @@ $(function () {
                 $("#taskIsDoing").html(result.data.taskIsDoing);
             }else if(result.code=="500"){
                 alert("系统繁忙稍后再试");
-            }else if(result.code == '401'){
+            }else if(result.code == '401' || result.code == '402'){
                 // token 失效 直接跳转登录页
                 window.location.href = baseUrl+"page/login.html";
             }
