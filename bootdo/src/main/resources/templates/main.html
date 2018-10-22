@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>任务管理</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <meta charset="utf-8">
+    <head th:include="include :: header"></head>
+</head>
+<body>
+<body class="gray-bg">
+<div class="wrapper wrapper-content ">
+    <div class="col-sm-12">
+        <div class="ibox">
+            <div class="ibox-body">
+                <div class="fixed-table-toolbar">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-addon">开始时间：</span>
+                                <input type="text" class="form-control" aria-label="...">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-addon">结束时间：</span>
+                                <input type="text" class="form-control" aria-label="...">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <!--<span class="input-group-addon">任务类型：</span>-->
+                            <select data-placeholder="任务类型" class="form-control chosen-select"
+                                    tabindex="2" style="width: 100%">
+                                <option value="">选择任务类型</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <!--<span class="input-group-addon">任务状态：</span>-->
+                            <select data-placeholder="任务状态" class="form-control chosen-select"
+                                    tabindex="2" style="width: 100%">
+                                <option value="">选择任务状态</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 20px">
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-addon">宝贝ID&nbsp;&nbsp;：</span>
+                                <input type="text" class="form-control" aria-label="...">
+                            </div>
+                        </div>
+                        <div class="columns col-md-3" style="margin:0px">
+                            <button class="btn btn-success" onclick="reLoad()">查询</button>
+                        </div>
+                    </div>
+                </div>
+                <table id="exampleTable" data-mobile-responsive="true">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!--shiro控制bootstraptable行内按钮看见性 来自bootdo的创新方案 -->
+<div>
+    <script type="text/javascript">
+        var s_edit_h = 'hidden';
+        var s_remove_h = 'hidden';
+        var s_resetPwd_h = 'hidden';
+    </script>
+</div>
+<div shiro:hasPermission="common:dict:edit">
+    <script type="text/javascript">
+        s_edit_h = '';
+    </script>
+</div>
+<div shiro:hasPermission="common:dict:remove">
+    <script type="text/javascript">
+        var s_remove_h = '';
+    </script>
+</div>
+<div shiro:hasPermission="common:dict:add">
+    <script type="text/javascript">
+        var s_add_h = '';
+    </script>
+</div>
+
+</div>
+<div th:include="include :: footer"></div>
+<script type="text/javascript"
+        src="/js/appjs/common/dict/dict.js"></script>
+</body>
+</html>

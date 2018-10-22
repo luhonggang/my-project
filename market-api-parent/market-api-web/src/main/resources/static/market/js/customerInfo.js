@@ -1,7 +1,7 @@
-$(function () {
     // 加载用户的数据
     var token = localStorage.getItem("TOKEN");
     var customerId = localStorage.getItem("customerId");
+$(function () {
     // 加载数据
     $.ajax({
         url:baseUrl+'task/queryCustomerMsg.json?customerId='+customerId,
