@@ -3,16 +3,13 @@ package com.renqi.market;
 import com.renqi.market.dao.CustomerStateMapper;
 import com.renqi.market.entity.CustomerState;
 import com.renqi.market.util.JwtTokenUtil;
-import com.renqi.market.util.redis.RedisService;
+import com.renqi.market.util.RedisService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.logging.Logger;
 
 /**
  * @author luhonggang

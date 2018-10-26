@@ -1,5 +1,6 @@
 package com.bootdo.common.service;
 
+import com.bootdo.common.domain.CustomerTask;
 import com.bootdo.common.domain.DictDO;
 import com.bootdo.system.domain.UserDO;
 
@@ -14,10 +15,10 @@ import java.util.Map;
  * @date 2017-09-29 18:28:07
  */
 public interface DictService {
+
+	CustomerTask get(Long id);
 	
-	DictDO get(Long id);
-	
-	List<DictDO> list(Map<String, Object> map);
+	List<CustomerTask> list(Map<String, Object> map);
 	
 	int count(Map<String, Object> map);
 	
@@ -38,19 +39,19 @@ public interface DictService {
 	 * @return
      * @param userDO
 	 */
-	List<DictDO> getHobbyList(UserDO userDO);
+	List<CustomerTask> getHobbyList(UserDO userDO);
 
 	/**
 	 * 获取性别列表
  	 * @return
 	 */
-	List<DictDO> getSexList();
+	List<CustomerTask> getSexList();
 
 	/**
 	 * 根据type获取数据
 	 * @param map
 	 * @return
 	 */
-	List<DictDO> listByType(String type);
+	List<CustomerTask> listByType(String type);
 
 }

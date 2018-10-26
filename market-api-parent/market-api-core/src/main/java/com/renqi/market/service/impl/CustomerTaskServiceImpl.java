@@ -22,10 +22,10 @@ import java.util.List;
  * @date 2018/9/15
  * @since 1.0
  */
+@SuppressWarnings("all")
 @Service
 public class CustomerTaskServiceImpl implements CustomerTaskService {
     private final static Logger logger = LoggerFactory.getLogger(CustomerTaskServiceImpl.class);
-
 
     @Autowired
     CustomerStateMapper customerStateMapper;
@@ -63,11 +63,11 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
                 if(null != taskList && taskList.size() > 0){
                     customer.setTotalTask(taskList.size());
                     for (CustomerTask task : taskList) {
-                        if(CustomerTask.TaskState.TASK_INCOMPLETED.getState()== task.getTaskState()){
+                        if(CustomerTask.TaskState.TASK_INCOMPLETED.getState().equals(task.getTaskState())){
                             taskInCom++;
-                        }else if(CustomerTask.TaskState.TASK_COMPLETED.getState() == task.getTaskState()){
+                        }else if(CustomerTask.TaskState.TASK_COMPLETED.getState().equals(task.getTaskState())){
                             taskCom++;
-                        }else if(CustomerTask.TaskState.TASK_CONTINUE.getState() == task.getTaskState()){
+                        }else if(CustomerTask.TaskState.TASK_CONTINUE.getState().equals(task.getTaskState())){
                             taskContinue++;
                         }else {
                             taskException++;

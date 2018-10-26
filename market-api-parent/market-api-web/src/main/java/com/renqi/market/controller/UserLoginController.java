@@ -6,7 +6,6 @@ import com.renqi.market.common.CustomerRegister;
 import com.renqi.market.exception.GlobalExceptionHandler;
 import com.renqi.market.service.CustomerService;
 import com.renqi.market.util.*;
-import com.renqi.market.util.redis.RedisService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

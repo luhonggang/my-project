@@ -65,21 +65,21 @@ public class NotifyController extends BaseController {
 		return "oa/notify/add";
 	}
 
-	@GetMapping("/edit/{id}")
-	@RequiresPermissions("oa:notify:edit")
-	String edit(@PathVariable("id") Long id, Model model) {
-		NotifyDO notify = notifyService.get(id);
-		List<DictDO> dictDOS = dictService.listByType("oa_notify_type");
-		String type = notify.getType();
-		for (DictDO dictDO:dictDOS){
-			if(type.equals(dictDO.getValue())){
-				dictDO.setRemarks("checked");
-			}
-		}
-		model.addAttribute("oaNotifyTypes",dictDOS);
-		model.addAttribute("notify", notify);
-		return "oa/notify/edit";
-	}
+//	@GetMapping("/edit/{id}")
+//	@RequiresPermissions("oa:notify:edit")
+//	String edit(@PathVariable("id") Long id, Model model) {
+//		NotifyDO notify = notifyService.get(id);
+//		List<DictDO> dictDOS = dictService.listByType("oa_notify_type");
+//		String type = notify.getType();
+//		for (DictDO dictDO:dictDOS){
+//			if(type.equals(dictDO.getValue())){
+//				dictDO.setRemarks("checked");
+//			}
+//		}
+//		model.addAttribute("oaNotifyTypes",dictDOS);
+//		model.addAttribute("notify", notify);
+//		return "oa/notify/edit";
+//	}
 
 	/**
 	 * 保存

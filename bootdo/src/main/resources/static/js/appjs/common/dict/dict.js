@@ -1,50 +1,51 @@
-
-var prefix = "/common/dict"
+var prefix = "/common/dict";
 $(function() {
-	
-	//	var config = {
-	//		'.chosen-select' : {},
-	//		'.chosen-select-deselect' : {
-	//			allow_single_deselect : true
-	//		},
-	//		'.chosen-select-no-single' : {
-	//			disable_search_threshold : 10
-	//		},
-	//		'.chosen-select-no-results' : {
-	//			no_results_text : '没有数据'
-	//		},
-	//		'.chosen-select-width' : {
-	//			width : "95%"
-	//		}
-	//	}
-	//	for (var selector in config) {
-	//		$(selector).chosen(config[selector]);
-	//	}
 	load();
 });
 function selectLoad() {
-	var html = "";
+	var htmlType = "";
+	var htmlState = "";
 	$.ajax({
 		url : '/common/dict/type',
 		success : function(data) {
-			//加载数据
-			for (var i = 0; i < data.length; i++) {
-				html += '<option value="' + data[i].type + '">' + data[i].description + '</option>'
+			// 1. 任务类型列表
+			for (var i = 0; i < data.type.length; i++) {
+                htmlType += '<option value="' + data.type[i].type + '">' + data.type[i].description + '</option>'
 			}
-			$(".chosen-select").append(html);
+			$(".chosen-select").append(htmlType);
 			$(".chosen-select").chosen({
 				maxHeight : 200
 			});
 			//点击事件
 			$('.chosen-select').on('change', function(e, params) {
-				console.log("输出的值 ： "+params.selected);
+				console.log("输出的任务类型值 ： "+params.selected);
 				var opt = {
 					query : {
-						type : params.selected,
+                        taskType : params.selected,
 					}
 				}
 				$('#exampleTable').bootstrapTable('refresh', opt);
 			});
+
+			// 2. 任务状态列表
+            for (var i = 0; i < data.state.length; i++) {
+                htmlState += '<option value="' + data.state[i].state + '">' + data.state[i].description + '</option>'
+            }
+            $(".chosen-select-state").append(htmlState);
+            $(".chosen-select-state").chosen({
+                maxHeight : 200
+            });
+            //点击事件
+            $('.chosen-select-state').on('change', function(e, params) {
+                console.log("输出的状态值 ： "+params.selected);
+                var opt = {
+                    query : {
+                        taskState : params.selected,
+                    }
+                }
+                $('#exampleTable').bootstrapTable('refresh', opt);
+            });
+
 		}
 	});
 }
@@ -79,7 +80,7 @@ function load() {
 						limit : params.limit,
 						offset : params.offset,
 						// name:$('#searchName').val(),
-						type : $('#searchName').val(),
+                        taskType : $('#searchName').val(),
 					};
 				},
 				// //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果
@@ -93,76 +94,76 @@ function load() {
 						checkbox : true
 					},
 					{
-						field : 'id',
+						field : 'taskId',
 						title : '任务编号'
 					},
 					{
-						field : 'type',
+						field : 'taskType',
 						title : '任务类型'
 					},
 					{
-						field : 'value',
+						field : 'goodId',
 						title : '宝贝ID',
 						width : '100px'
 					},
 					{
-						field : 'type',
+						field : 'taskTime',
 						title : '执行时间'
 					},
 					{
-						field : 'description',
-						title : '关键词'
+						field : 'goodLinkUrl',
+						title : '宝贝链接'
 					},
-					{
-						visible : false,
-						field : 'sort',
-						title : '排序（升序）'
-					},
-					{
-						visible : false,
-						field : 'parentId',
-						title : '父级编号'
-					},
-					{
-						visible : false,
-						field : 'createBy',
-						title : '创建者'
-					},
-					{
-						visible : false,
-						field : 'createDate',
-						title : '创建时间'
-					},
-					{
-						visible : false,
-						field : 'updateBy',
-						title : '更新者'
-					},
-					{
-						visible : false,
-						field : 'updateDate',
-						title : '更新时间'
-					},
-					{
-						visible : false,
-						field : 'remarks',
-						title : '备注信息'
-					},
-					{
-						visible : false,
-						field : 'delFlag',
-						title : '删除标记'
-					},
+					// {
+					// 	visible : false,
+					// 	field : 'sort',
+					// 	title : '排序（升序）'
+					// },
+					// {
+					// 	visible : false,
+					// 	field : 'parentId',
+					// 	title : '父级编号'
+					// },
+					// {
+					// 	visible : false,
+					// 	field : 'createBy',
+					// 	title : '创建者'
+					// },
+					// {
+					// 	visible : false,
+					// 	field : 'createDate',
+					// 	title : '创建时间'
+					// },
+					// {
+					// 	visible : false,
+					// 	field : 'updateBy',
+					// 	title : '更新者'
+					// },
+					// {
+					// 	visible : false,
+					// 	field : 'updateDate',
+					// 	title : '更新时间'
+					// },
+					// {
+					// 	visible : false,
+					// 	field : 'remarks',
+					// 	title : '备注信息'
+					// },
+					// {
+					// 	visible : false,
+					// 	field : 'delFlag',
+					// 	title : '删除标记'
+					// },
 					{
 						title : '操作',
-						field : 'id',
+						field : 'taskId',
 						align : 'center',
 						formatter : function(value, row, index) {
 							var e = '<a class="btn btn-primary btn-sm ' + s_edit_h + '" href="#" mce_href="#" title="编辑" onclick="edit(\''
-								+ row.id
+								+ row.taskId
 								+ '\')"><i class="fa fa-edit"></i></a> ';
 							var d = '<a class="btn btn-warning btn-sm ' + s_remove_h + '" href="#" title="删除"  mce_href="#" onclick="remove(\''
-								+ row.id
+								+ row.taskId
 								+ '\')"><i class="fa fa-remove"></i></a> ';
 							// var f = '<a class="btn btn-success btn-sm ' + s_add_h + '" href="#" title="增加"  mce_href="#" onclick="addD(\''
 							// 	+ row.type +'\',\''+row.description
@@ -175,7 +176,12 @@ function load() {
 function reLoad() {
 	var opt = {
 		query : {
-			type : $('.chosen-select').val(),
+			taskBeginTime:$('#beginTime').val(),
+			taskEndTime:$('#endTime').val(),
+            taskType : $('.chosen-select').val(),
+            taskState: $('.chosen-select-state').val(),
+			goodId : $('#goodId').val(),
+
 		}
 	}
 	$('#exampleTable').bootstrapTable('refresh', opt);
@@ -190,14 +196,15 @@ function add() {
 		content : prefix + '/add' // iframe的url
 	});
 }
-function edit(id) {
+function edit(taskId) {
+	alert("任务主键 "+ taskId);
 	layer.open({
 		type : 2,
 		title : '编辑',
 		maxmin : true,
 		shadeClose : false, // 点击遮罩关闭层
 		area : [ '800px', '520px' ],
-		content : prefix + '/edit/' + id // iframe的url
+		content : prefix + '/edit/' + taskId // iframe的url
 	});
 }
 function remove(id) {

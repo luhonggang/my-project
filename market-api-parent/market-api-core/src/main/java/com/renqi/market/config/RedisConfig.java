@@ -1,4 +1,4 @@
-package com.renqi.market.util.redis;
+package com.renqi.market.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -20,6 +20,9 @@ import java.lang.reflect.Method;
 
 /**
  * Redis 集成实现
+ * @author luhonggang
+ * @version 1.8.0
+ * @date 2018/10/26 10:40
  */
 @Configuration
 @EnableCaching

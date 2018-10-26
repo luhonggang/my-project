@@ -1,5 +1,6 @@
 package com.bootdo.common.dao;
 
+import com.bootdo.common.domain.CustomerTask;
 import com.bootdo.common.domain.DictDO;
 
 import java.util.List;
@@ -17,9 +18,9 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface DictDao {
 
-	DictDO get(Long id);
+	CustomerTask get(Long taskId);
 
-	List<DictDO> list(Map<String, Object> map);
+	List<CustomerTask> list(Map<String, Object> map);
 
 	int count(Map<String, Object> map);
 

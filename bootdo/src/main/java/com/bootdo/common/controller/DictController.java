@@ -1,17 +1,23 @@
 package com.bootdo.common.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.bootdo.common.config.Constant;
+import com.bootdo.common.domain.CustomerTask;
 import com.bootdo.common.domain.DictDO;
 import com.bootdo.common.service.DictService;
 import com.bootdo.common.utils.PageUtils;
 import com.bootdo.common.utils.Query;
 import com.bootdo.common.utils.R;
+import com.bootdo.system.common.TaskState;
+import com.bootdo.system.common.TaskType;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +47,7 @@ public class DictController extends BaseController {
 	public PageUtils list(@RequestParam Map<String, Object> params) {
 		// 查询列表数据
 		Query query = new Query(params);
-		List<DictDO> dictList = dictService.list(query);
+		List<CustomerTask> dictList = dictService.list(query);
 		int total = dictService.count(query);
 		PageUtils pageUtils = new PageUtils(dictList, total);
 		return pageUtils;
@@ -53,10 +59,10 @@ public class DictController extends BaseController {
 		return "common/dict/add";
 	}
 
-	@GetMapping("/edit/{id}")
+	@GetMapping("/edit/{taskId}")
 	@RequiresPermissions("common:dict:edit")
-	String edit(@PathVariable("id") Long id, Model model) {
-		DictDO dict = dictService.get(id);
+	String edit(@PathVariable("taskId") Long id, Model model) {
+		CustomerTask dict = dictService.get(id);
 		model.addAttribute("dict", dict);
 		return "common/dict/edit";
 	}
@@ -127,8 +133,29 @@ public class DictController extends BaseController {
 	 */
 	@GetMapping("/type")
 	@ResponseBody
-	public List<DictDO> listType() {
-		return dictService.listType();
+	public /*List<DictDO>*/ JSONObject listType() {
+		JSONArray array = new JSONArray();
+		JSONObject typeVo = new JSONObject();
+		List<JSONObject> typeList = new ArrayList<>();
+		List<JSONObject> stateList = new ArrayList<>();
+		for (int i = 0; i < TaskType.values().length; i++) {
+			JSONObject obj = new JSONObject();
+			obj.put("type",TaskType.values()[i].getValue());
+			obj.put("description", TaskType.values()[i].getTypeName());
+			typeList.add(obj);
+
+		}
+		for (int i = 0; i < 4; i++) {
+			JSONObject obj = new JSONObject();
+			obj.put("state",TaskState.values()[i].getState());
+			obj.put("description", TaskState.values()[i].getStateName());
+			stateList.add(obj);
+
+		}
+		typeVo.put("type",typeList);
+		typeVo.put("state",stateList);
+		return typeVo;
+//		dictService.listType();
 	};
 
 	// 类别已经指定增加
@@ -141,12 +168,12 @@ public class DictController extends BaseController {
 	}
 
 	@ResponseBody
-	@GetMapping("/list/{type}")
-	public List<DictDO> listByType(@PathVariable("type") String type) {
+	@GetMapping("/list/{taskType}")
+	public List<CustomerTask> listByType(@PathVariable("taskType") String type) {
 		// 查询列表数据
 		Map<String, Object> map = new HashMap<>(16);
-		map.put("type", type);
-		List<DictDO> dictList = dictService.list(map);
+		map.put("taskType", type);
+		List<CustomerTask> dictList = dictService.list(map);
 		return dictList;
 	}
 }

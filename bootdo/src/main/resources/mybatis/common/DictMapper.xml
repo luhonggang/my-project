@@ -3,13 +3,40 @@
 
 <mapper namespace="com.bootdo.common.dao.DictDao">
 
-	<select id="get" resultType="com.bootdo.common.domain.DictDO">
-		select
-		`id`,`name`,`value`,`type`,`description`,`sort`,`parent_id`,`create_by`,`create_date`,`update_by`,`update_date`,`remarks`,`del_flag`
-		from sys_dict where id = #{value}
+	<select id="get" resultType="com.bootdo.common.domain.CustomerTask">
+		SELECT  task_id, template_id,task_type, task_state,good_id, good_link_url, good_title, store_name, total_visitor,
+				total_number, task_time, task_begin_hour, task_end_hour, task_begin_miunte, task_end_miunte,
+				task_search_scope, create_time, update_time
+		FROM `customer_task` where task_id = #{taskId}
 	</select>
 
-	<select id="list" resultType="com.bootdo.common.domain.DictDO">
+	<select id="list" resultType="com.bootdo.common.domain.CustomerTask">
+		SELECT  task_id, template_id,task_type, task_state,good_id, good_link_url, good_title, store_name, total_visitor,
+				total_number, task_time, task_begin_hour, task_end_hour, task_begin_miunte, task_end_miunte,
+				task_search_scope, create_time, update_time
+		FROM `customer_task`
+		<where>
+			<if test="taskBeginTime != null and taskBeginTime != ''"> and task_time &gt;= #{taskBeginTime} </if>
+			<if test="taskEndTime != null and taskEndTime != ''"> and task_time &lt;= #{taskEndTime} </if>
+			<if test="taskType != null and taskType != ''"> and task_type = #{taskType} </if>
+			<if test="taskState != null and taskState != ''"> and task_state = #{taskState} </if>
+			<if test="goodId != null and goodId != ''"> and good_id = #{goodId} </if>
+		</where>
+		<!--<choose>
+			<when test="taskEndTime != null and taskEndTime.trim() != ''">
+				order by ${sort} ${order}
+			</when>
+			<otherwise>
+				order by task_id DESC
+			</otherwise>
+		</choose>-->
+		ORDER BY task_id DESC
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<!--<select id="list" resultType="com.bootdo.common.domain.DictDO">
 		select
 		`id`,`name`,`value`,`type`,`description`,`sort`,`parent_id`,`create_by`,`create_date`,`update_by`,`update_date`,`remarks`,`del_flag`
 		from sys_dict
@@ -39,25 +66,19 @@
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
-	</select>
+	</select>-->
 
 	<select id="count" resultType="int">
-		select count(*) from sys_dict
+		SELECT  COUNT(*)
+		FROM `customer_task`
 		<where>
-			<if test="id != null and id != ''"> and id = #{id} </if>
-			<if test="name != null and name != ''"> and name = #{name} </if>
-			<if test="value != null and value != ''"> and value = #{value} </if>
-			<if test="type != null and type != ''"> and type = #{type} </if>
-			<if test="description != null and description != ''"> and description = #{description} </if>
-			<if test="sort != null and sort != ''"> and sort = #{sort} </if>
-			<if test="parentId != null and parentId != ''"> and parent_id = #{parentId} </if>
-			<if test="createBy != null and createBy != ''"> and create_by = #{createBy} </if>
-			<if test="createDate != null and createDate != ''"> and create_date = #{createDate} </if>
-			<if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy} </if>
-			<if test="updateDate != null and updateDate != ''"> and update_date = #{updateDate} </if>
-			<if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
-			<if test="delFlag != null and delFlag != ''"> and del_flag = #{delFlag} </if>
+			<if test="taskBeginTime != null and taskBeginTime != ''"> and task_time &gt;= #{taskBeginTime} </if>
+			<if test="taskEndTime != null and taskEndTime != ''"> and task_time &lt;= #{taskEndTime} </if>
+			<if test="taskType != null and taskType != ''"> and task_type = #{taskType} </if>
+			<if test="taskState != null and taskState != ''"> and task_state = #{taskState} </if>
+			<if test="goodId != null and goodId != ''"> and good_id = #{goodId} </if>
 		</where>
+
 	</select>
 
 	<insert id="save" parameterType="com.bootdo.common.domain.DictDO"

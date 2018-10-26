@@ -1,15 +1,15 @@
-<!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>任务管理</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!--link rel="stylesheet" href="css/layui/css/layui.css" media="all" />-->
+    <!--<link rel="stylesheet" href="css/layui/css/modules/default/laydate.css" media="all" />-->
     <meta charset="utf-8">
     <head th:include="include :: header"></head>
 </head>
-<body>
 <body class="gray-bg">
 <div class="wrapper wrapper-content ">
     <div class="col-sm-12">
@@ -20,13 +20,13 @@
                         <div class="col-md-3">
                             <div class="input-group">
                                 <span class="input-group-addon">开始时间：</span>
-                                <input type="text" class="form-control" aria-label="...">
+                                <input type="text"  id="beginTime" class="form-control" aria-label="...">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="input-group">
                                 <span class="input-group-addon">结束时间：</span>
-                                <input type="text" class="form-control" aria-label="...">
+                                <input type="text" id="endTime" class="form-control" aria-label="...">
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -38,7 +38,7 @@
                         </div>
                         <div class="col-md-3">
                             <!--<span class="input-group-addon">任务状态：</span>-->
-                            <select data-placeholder="任务状态" class="form-control chosen-select"
+                            <select data-placeholder="任务状态" class="form-control chosen-select-state"
                                     tabindex="2" style="width: 100%">
                                 <option value="">选择任务状态</option>
                             </select>
@@ -48,7 +48,7 @@
                         <div class="col-md-3">
                             <div class="input-group">
                                 <span class="input-group-addon">宝贝ID&nbsp;&nbsp;：</span>
-                                <input type="text" class="form-control" aria-label="...">
+                                <input id="goodId" type="text" class="form-control" aria-label="...">
                             </div>
                         </div>
                         <div class="columns col-md-3" style="margin:0px">
@@ -88,7 +88,30 @@
 
 </div>
 <div th:include="include :: footer"></div>
-<script type="text/javascript"
-        src="/js/appjs/common/dict/dict.js"></script>
+<script type="text/javascript" src="/js/appjs/common/dict/dict.js"></script>
+<script type="text/javascript" src="/js/laydate/laydate.js"></script>
+<script type="text/javascript">
+    // 具体使用参考官网:https://www.layui.com/laydate/
+    laydate.render({
+        elem:"#beginTime"
+        ,type: 'date' //默认，可不填
+        ,done: function(value, date, endDate) {
+            endLayDate.config.max = {
+                year: date.year,
+                month: 11,
+                date: 31
+            };
+            endLayDate.config.min = {
+                year: date.year,
+                month: date.month - 1,
+                date: date.date
+            };
+        },
+
+    });
+    var endLayDate = laydate.render({
+        elem:"#endTime"
+    });
+</script>
 </body>
 </html>

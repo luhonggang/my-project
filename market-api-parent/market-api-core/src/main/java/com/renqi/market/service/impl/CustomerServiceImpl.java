@@ -13,7 +13,7 @@ import com.renqi.market.service.CustomerService;
 import com.renqi.market.util.MobileCodeUtil;
 import com.renqi.market.util.ResultMsgUtil;
 import com.renqi.market.util.SystemCode;
-import com.renqi.market.util.redis.RedisService;
+import com.renqi.market.util.RedisService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import redis.clients.jedis.Jedis;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
