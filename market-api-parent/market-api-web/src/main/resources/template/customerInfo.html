@@ -38,7 +38,6 @@
         document.getElementById('startDate_sjll_nm').valueAsDate=new Date();
         document.getElementById('startDate_sjll_sm').valueAsDate=new Date();
         document.getElementById('startDate_sjll_tmapp').valueAsDate=new Date();
-        document.getElementById('startDate_sjll_tkl').valueAsDate=new Date();
 
         /*给其他流量input的date控件添加默认值*/
         document.getElementById('startDate_qtll_jdapp').valueAsDate=new Date();
@@ -464,7 +463,7 @@
         <button class="pcll_btn" id="sj_btn1">手机流量(匿名访问)<br/>(0.60TB/条)</button>
         <button class="pcll_btn" id="sj_btn2">手机流量(实名访问)<br/>(0.60TB/条)</button>
         <button class="pcll_btn" id="sj_btn3">天猫APP流量<br/>(0.80TB/条)</button>
-        <button class="pcll_btn" id="sj_btn4">淘口令流量<br/>(0.55TB/条)</button>
+
         <button style="margin: 0;float: right;margin-right: 0.5em;" class="md-close">X</button>
         <!--手机流量匿名访问任务栏-->
         <div id="sjll_nmrw" style="margin: auto;width: 90%;">
@@ -687,57 +686,6 @@
             </div>
         </div>
         <!--手机淘口令提醒任务栏-->
-        <div id="sjll_tkl" style="margin: auto;width: 90%;display: none">
-            <div style="font-size: 0.9em;margin-top: 0px;" class="pcll_zhuti">
-                <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">手机淘口令流量任务（仅支持直接访问宝贝的淘口令）</p>
-                <div>
-                    宝贝链接：<input style="width: 60%;" class="pcll_input" type="text" placeholder="请输入淘宝或天猫宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫淘宝地址)"/>
-                </div>
-                <div style="margin-left: -1.05em;margin-top: 1em;">
-                    手机淘口令：<input style="width: 58.7%;" class="pcll_input" type="text" placeholder="请输入宝贝的手机淘口令文本&nbsp;&nbsp;(使用Ctrl+V粘贴淘口令文本)"/>
-                </div>
-                <div style="margin-top: 1em;">
-                    <span>任务数量：</span><input style="padding-left: 0;width: 8%;" class="jhs_rnum" type="text" placeholder="0"/>&nbsp;&nbsp;个
-                </div>
-                <div class="riqi">
-                    <div style="float: left;text-align: center;" class="date_dt">
-                        <div class="date_ts">日期<br/><span style="color:#FF0000;font-size: 0.8em;">(可提前发布7天任务)</span></div>
-                        投放时间：<input type="date" id="startDate_sjll_tkl">
-                    </div>
-                    <div style="float: left;text-align: center;margin-left: 1em;" class="date_shiduan">
-                        <div class="date_ts">时段<br/><span style="color:#FF0000;font-size: 0.8em;">(尽量扩大时间范围)</span></div>
-                        <input type="text"/>&nbsp;点-&nbsp;<input type="text"/>点
-                    </div>
-                    <div style="float: left;text-align: center" class="date_jianduan">
-                        <div class="date_ts">任务发布间隔时间(分)<br/><span style="color:#FF0000;font-size: 0.8em;">(系统会将发布任务的间隔时间随机分配)</span></div>
-                        <input type="text"/>&nbsp;-&nbsp;<input type="text"/>
-                    </div>
-                </div>
-                <div style="float: left;margin-top: -10px;">
-                    <p style="font-size: 0.9em;">浏览控制：浏览时长&nbsp;&nbsp;<span class="llsc">80</span>&nbsp;秒&nbsp;-&nbsp;<span class="llsc">120</span>&nbsp;秒&nbsp;&nbsp;<span style="font-size: 0.9em">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span></p>
-
-                    <div class="pretty success">
-                        <input type="checkbox" checked="checked" disabled="">
-                        <label><i class="mdi mdi-check"></i> 浏览商品详情页</label>
-                    </div>
-                    <div class="pretty info circle a-jelly">
-                        <input type="checkbox">
-                        <label><i class="mdi mdi-check"></i> 浏览商品评价</label>
-                    </div>
-                    <div class="pretty info circle a-jelly">
-                        <input type="checkbox">
-                        <label><i class="mdi mdi-check"></i> 浏览关联商品</label>
-                    </div>
-                </div>
-                <div style="margin-top: 1em;margin: auto;width: 250px;margin-bottom: 1em;">
-                    <input class="fbrw" type="button" value="发布任务"/>
-                </div>
-                <div style="margin-top: 1em;margin: auto;width: 60%;margin-bottom: 1em;text-align: center;font-size: 0.9em;">
-                    <span>您目前会员等级为：<span style="color:red;">体验会员</span>，享<span style="color:red;">9.8折</span></span><br/>
-                    <span>本次发布任务共<span style="color:red;">888.00</span>&nbsp;TB，折后实际消耗<span style="color:red;">666.00</span>&nbsp;TB</span>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -1139,6 +1087,7 @@
             $("#pcll_nmrw").hide();
         });
 
+
     /*手机端流量的任务栏弹框隐藏显示的js*/
     $("#sj_btn1").click(function(){
         $("#sjll_nmrw").show();
@@ -1161,12 +1110,6 @@
         $("#sjll_tkl").hide();
     });
 
-    $("#sj_btn4").click(function(){
-        $("#sjll_tkl").show();
-        $("#sjll_tmapp").hide();
-        $("#sjll_smrw").hide();
-        $("#sjll_nmrw").hide();
-    });
 
     /*其他流量的任务栏弹框隐藏显示的js*/
     $("#qt_btn2").click(function(){
