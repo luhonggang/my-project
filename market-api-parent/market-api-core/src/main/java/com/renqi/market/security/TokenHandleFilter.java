@@ -82,40 +82,6 @@ public class TokenHandleFilter implements Filter {
 
     }
 
-//    public void doCheckToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-//                             boolean flag) throws IOException {
-//        // 获取请求Header头 指定的 token值
-//        String token = httpServletRequest.getHeader("auth");
-//        logger.info(this + ":toke is " + token + " , flag is " + flag);
-//        if(flag){// 表示需要进行token验签
-//            if(StringUtils.isBlank(token)){
-//                throw  new NotExistTokenException();// token不存在
-//            }
-//            try {
-//                // 依据token查询token以及用户的信息
-//                UserToken user = userService.getUserByToKen(token);
-//                if (null != user) {
-//                    logger.debug(this + ":token is not null");
-//                    if (!"0".equals(user.getState())) {
-//                        // 报token 失效
-//                        logger.info("token 无效--" + " status is " +user.getState() );
-//                        throw new ExpiredTokenException();
-//                    }
-//
-//                } else {
-//                    throw new NotLoginException();// 用户没有登录
-//                }
-//            }catch(Exception e){
-//                e.printStackTrace();
-//                logger.error(this+ ":系统异常:", e);
-//                throw  e;
-//            }
-//        }else{
-//            return;
-//        }
-//
-//    }
-
     /**
      * 返回的信息
      *

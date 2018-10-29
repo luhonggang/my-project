@@ -19,6 +19,9 @@ import java.util.List;
 @Data
 public class CustomerTaskDto implements Serializable {
 
+    public CustomerTaskDto() {
+    }
+
     private Integer taskId;
 
     private String orderNo;
@@ -36,14 +39,14 @@ public class CustomerTaskDto implements Serializable {
     /**
      * 宝贝ID
      */
-    @NotNull(message = "宝贝ID")
+//    @NotNull(message = "宝贝ID")
     private Integer goodId;
 
     /**
      * 关键词集合
      */
-//    @NotNull(message = "关键词集合")
-//    private List<TaskWordDto> wordDtoList;
+    @NotNull(message = "关键词集合")
+    private List<TaskWordDto> wordDtoList;
 
     /**
      * 关键词集合
@@ -73,13 +76,13 @@ public class CustomerTaskDto implements Serializable {
      * 总的访客数量
      */
     @NotNull(message = "总的访客数量不能0")
-    private Integer totalVisitor;
+    private String totalVisitor;
 
     /**
      * 总的展现数量
      */
     @NotNull(message = "总的展现数不能0")
-    private Integer totalNumber;
+    private String totalNumber;
 
     /**
      * 任务投放时间

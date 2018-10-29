@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="market/css/pretty.min.css">
     <link rel="stylesheet" type="text/css" href="market/css/demo.css">
     <link async rel="stylesheet" href="https://cdn.materialdesignicons.com/1.8.36/css/materialdesignicons.min.css"/>
+    <!--<script src="market/js/bootstrapValidator.js"></script>-->
 </head>
 <script type="text/javascript">
     /* 窗口尺寸改变的事件 */
@@ -193,10 +194,10 @@
                 关键词：<input name="wordList" id="nmrw_word_name" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="请输入一个或者多个关键词&nbsp;&nbsp;(以逗号隔开)"/>
             </div>
             <div style="margin-top: 1em;">
-                访客量：<input name="totalVisitor" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="访客量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
+                访客量：<input name="totalVisitor" id="nmrw_total_visitor" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="访客量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
             </div>
             <div style="margin-top: 1em;">
-                浏览量：<input name="totalNumber" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="浏览量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
+                浏览量：<input name="totalNumber" id="nmrw_total_number" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="浏览量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
             </div>
             <div class="riqi">
                 <div style="float: left;text-align: center;" class="date_dt">
@@ -230,30 +231,29 @@
             </div>
             <div style="float: left;margin-top: -10px;">
                 <p style="font-size: 0.9em;">浏览控制：浏览时长&nbsp;&nbsp;<span class="llsc">50</span>&nbsp;秒&nbsp;-&nbsp;<span class="llsc">80</span>&nbsp;秒&nbsp;&nbsp;<span style="font-size: 0.9em;">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span></p>
-
                 <div style="padding-top: -15px;" class="pretty success">
                     <input type="checkbox" name="nmxqy" checked="checked" disabled="">
-                    <label><i class="mdi mdi-check"></i> 浏览商品详情页</label>
+                    <label><i class="mdi mdi-check" value="5"></i> 浏览商品详情页</label>
                 </div>
                 <div class="pretty info circle a-jelly">
-                    <input type="checkbox" name="nmhb">
+                    <input type="checkbox" name="nmhb" value="6">
                     <label><i class="mdi mdi-check"></i> 货比三家</label>
                 </div>
                 <div class="pretty info circle a-jelly">
-                    <input type="checkbox" name="nmpj">
+                    <input type="checkbox" name="nmpj" value="7">
                     <label><i class="mdi mdi-check"></i> 浏览商品评价</label>
                 </div>
                 <div class="pretty info circle a-jelly">
-                    <input type="checkbox" name="nmgl">
+                    <input type="checkbox" name="nmgl" value="8">
                     <label><i class="mdi mdi-check"></i> 浏览关联商品</label>
                 </div>
             </div>
             <div style="margin-top: 1em;margin: auto;width: 300px;margin-bottom: 1em;">
                 <input class="fbrw nmrw_fbrw" type="button" value="发布任务"/>
             </div>
-            <div style="margin-top: 1em;margin: auto;width: 60%;margin-bottom: 1em;text-align: center;font-size: 0.9em;">
-                <span>您目前会员等级为：<span style="color:red;">体验会员</span>，享<span style="color:red;">9.8折</span></span><br/>
-                <span>本次发布任务共<span style="color:red;">888.00</span>&nbsp;TB，折后实际消耗<span style="color:red;">666.00</span>&nbsp;TB</span>
+            <div id="nmfw_last_tip" style="margin-top: 1em;margin: auto;width: 60%;margin-bottom: 1em;text-align: center;font-size: 0.9em;">
+                <em>您目前会员等级为：<span id='nmfw_vip_name' style="color:red;">体验会员</span>，享<span id="nmfw_rebate" style="color:red;">9.8折</span></em><br/>
+                <em>本次发布任务共<span id='nmfw_total_money' style="color:red;">888.00</span>&nbsp;TB，折后实际消耗<span id="nmfw_actually_money" style="color:red;">666.00</span>&nbsp;TB</em>
             </div>
         </div>
         </div>
@@ -1050,12 +1050,152 @@
     </div>
 </div>
 <script type="text/javascript">
+      var currPageVMoney = 0;
+      var currPageNMoney = 0;
+
+      /**
+       *  校验是否为正整数
+       **/
+      function checkIsNumber(val){
+          var regex = '/^\\+?[1-9][0-9]*$/';
+          return regex.test(val);
+
+      }
+      // 关键词校验
+      $('#nmrw_word_name').on('blur',function () {
+          var wordList = $("#pcll_nmrw input[name='wordList']").val();
+          // 数组
+          if('' === wordList && wordList.length == 0){
+              alert("请输入关键词");
+              return;
+          }
+      });
+
+      // 校验访客量是否为空并计算金额
+      $('#nmrw_total_visitor').on('blur',function () {
+          var totalVisitor = $("#pcll_nmrw input[name='totalVisitor']").val();
+          // 数组
+          if('' === totalVisitor && totalVisitor.length == 0){
+              alert("请输入访客量");
+              return;
+          }
+          if(totalVisitor.indexOf(',') != -1 && totalVisitor.indexOf('，') != -1){
+              alert("访客量格式有误");
+              return;
+          }
+          var tvMoney = 0;
+          var rate = 0.60;
+          if(totalVisitor.indexOf(',') != -1){
+              var vList = totalVisitor.split(',');
+              var currenVal = 0;
+              for (var i = 0; i < vList.length; i++){
+                  currenVal = vList[i];
+                  if(checkIsNumber(currenVal)){
+                    tvMoney += (currenVal*rate).toFixed(2);
+                  }
+              }
+          }
+          if(totalVisitor.indexOf('，') != -1){
+              var vList = totalVisitor.split('，');
+              var currenVal = 0;
+              for (var i = 0; i < vList.length; i++){
+                  currenVal = vList[i];
+                  if(checkIsNumber(currenVal)){
+                      tvMoney += (currenVal*rate).toFixed(2);
+                  }
+              }
+          }
+          currPageVMoney = tvMoney;
+      });
+      // 校验浏览量是否为空并计算金额
+      $('#nmrw_total_number').on('blur',function () {
+          var totalNumber = $("#pcll_nmrw input[name='totalNumber']").val();
+          // 数组
+          if('' === totalNumber && totalNumber.length == 0){
+              alert("请输入浏览量");
+              return;
+          }
+          if(totalNumber.indexOf(',') != -1 && totalNumber.indexOf('，') != -1){
+              alert("浏览量格式有误");
+              return;
+          }
+          var tvMoney = 0;
+          var rate = 0.60;
+          if(totalNumber.indexOf(',') != -1){
+              var vList = totalNumber.split(',');
+              var currenVal = 0;
+              for (var i = 0; i < vList.length; i++){
+                  currenVal = vList[i];
+                  if(checkIsNumber(currenVal)){
+                      tvMoney += (currenVal*rate).toFixed(2);
+                  }
+              }
+          }
+          if(totalNumber.indexOf('，') != -1){
+              var vList = totalNumber.split('，');
+              var currenVal = 0;
+              for (var i = 0; i < vList.length; i++){
+                  currenVal = vList[i];
+                  if(checkIsNumber(currenVal)){
+                      tvMoney += (currenVal*rate).toFixed(2);
+                  }
+              }
+          }
+          currPageNMoney = tvMoney;
+      });
+
+      // function checkWord(word){
+      //     var re = /[,，]/gi;
+      //     if (re.test(word)) {
+      //         return true;
+      //     }else {
+      //         return false;
+      //     }
+      // }
 
       $('.nmrw_fbrw').on('click',function () {
-         alert("点击发布任务");
           var goodUrl = $("#pcll_nmrw input[name='goodLinkUrl']").val();
-          var wordName = $("#pcll_nmrw input[name='wordName']").val();
-          alert("url "+goodUrl +" 关键词 ： "+wordName);
+          var wordList = $("#pcll_nmrw input[name='wordList']").val();
+          var totalVisitor = $("#pcll_nmrw input[name='totalVisitor']").val();
+          var totalNumber = $("#pcll_nmrw input[name='totalNumber']").val();
+          // 获取到总的计算金额
+          var totalMoney = (currPageVMoney+currPageNMoney)*parseFloat($('').val());
+          var taskTime = $("#pcll_nmrw input[name='taskTime']").val();
+          var taskBeginHour = $("#pcll_nmrw input[name='taskBeginHour']").val();
+          var taskEndHour = $("#pcll_nmrw input[name='taskEndHour']").val();
+          var taskBeginMiunte = $("#pcll_nmrw input[name='taskBeginMiunte']").val();
+          var taskEndMiunte = $("#pcll_nmrw input[name='taskEndMiunte']").val();
+          var taskSearchScope = '';
+          var obj = document.getElementsByTagName("taskSearchScope");
+          for(var i=0; i<obj.length; i ++){
+              if(obj[i].checked){
+                  alert(obj[i].value);
+                  taskSearchScope = obj[i].value;
+              }
+          };
+
+          // 模板ID组合 多选框的值
+          var templateId = '5,';
+          $("#pcll_nmrw input[type='checkbox']").each(function () {
+              if ($(this).is(":checked")) {
+                  if('on' === $(this).val()){
+                      return;
+                  }else{
+                      templateId +=$(this).val()+",";
+                      console.log($(this).val())
+                  }
+              }
+          });
+
+          if(null != templateId && templateId != ''){
+              templateId = templateId.substring(0,templateId.length);
+          }
+
+          // 任务保存
+          saveTask(goodUrl,taskType,wordList,totalVisitor,totalNumber,taskTime,taskBeginHour,taskEndHour,taskBeginMiunte,
+              taskEndMiunte,taskSearchScope,templateId);
+
+          alert("url "+goodUrl +" 关键词 ： "+wordList);
       });
 
     /*PC端流量的任务栏弹框隐藏显示的js*/
@@ -1140,6 +1280,45 @@
         $("#scjg_sj").show();
         $("#scjg_pc").hide();
     });
+
+    // 任务保存
+    function saveTask(goodUrl,taskType,wordList,totalVisitor,totalNumber,taskTime,taskBeginHour,taskEndHour,taskBeginMiunte,
+                      taskEndMiunte,taskSearchScope,templateId) {
+        var taskParams = {"customerId":customerId,"goodLinkUrl":goodUrl,"taskType":taskType,"wordList":wordList,
+            "totalVisitor":totalVisitor,"totalNumber":totalNumber,"taskTime":taskTime,
+            "taskBeginHour":taskBeginHour,"taskEndHour":taskEndHour,"taskBeginMiunte":taskBeginMiunte,
+            "taskEndMiunte":taskEndMiunte,"taskSearchScope":taskSearchScope,"templateId":templateId};
+        var jsonParams = JSON.stringify(taskParams);
+        console.log("格式化的参数是 ： "+jsonParams);
+
+        console.log("当前用户的ID ： "+customerId+ " 当前用户的token ： "+token);
+
+        $.ajax({
+            url:baseUrl+'task/saveCustomerTask.json',
+            type:'POST',
+            beforeSend: function (XMLHttpRequest) {
+                XMLHttpRequest.setRequestHeader("token", token);
+            },
+            async:"true", //默认是true,异步
+            dataType:"json",
+            data:jsonParams,
+            contentType:"application/json",
+            success:function(result){
+                console.log(result);
+                if(result.code=="200"){
+
+                }else if(result.code=="500"){
+                    alert("系统繁忙稍后再试");
+                }else if(result.code == '401' || result.code == '402'){
+                    // token 失效 直接跳转登录页
+                    window.location.href = baseUrl+"page/login.html";
+                }
+            }
+        });
+
+    }
+
+    // 单选框被选中的值
 </script>
 
 

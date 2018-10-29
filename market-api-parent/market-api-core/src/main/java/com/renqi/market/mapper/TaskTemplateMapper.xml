@@ -31,8 +31,11 @@
       task_type = #{taskType}
     </if>
     <if test="arrayStr != null and arrayStr != ''">
-      template_id IN (${arrayStr})
+      AND template_id IN (${arrayStr})
     </if>
+    <!--<if test="customerId ！= null and customerId != ''">
+      AND
+    </if>-->
     ORDER BY template_id DESC
   </select>
   <insert id="insert" parameterType="com.renqi.market.entity.TaskTemplate">

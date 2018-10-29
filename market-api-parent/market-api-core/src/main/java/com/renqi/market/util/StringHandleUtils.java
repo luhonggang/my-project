@@ -27,6 +27,8 @@ public class StringHandleUtils {
      */
     private static final String NO_AREA_REGEX_NUMBER = "^[1-9]{1}[0-9]{5,8}$";
 
+    private static final String[] CHAR_EN_CH = new String[]{",","，"};
+
     /**
      * 返回给定的字符的匹配的字串的长度
      *
@@ -192,6 +194,60 @@ public class StringHandleUtils {
         }
 
         return concatStr.substring(0,concatStr.length()-1);
+    }
+
+
+    /**
+     * 计算总的值
+     * @param charStr
+     * @return
+     */
+    public static String calculateTotalVal(String charStr){
+        if(charStr.startsWith(CHAR_EN_CH[0]) || charStr.startsWith(CHAR_EN_CH[1])){
+            return null;
+        }
+        if(charStr.endsWith(CHAR_EN_CH[0]) || charStr.endsWith(CHAR_EN_CH[1])){
+            return null;
+        }
+
+        Integer totalVal = 0;
+        if(charStr.contains(CHAR_EN_CH[0])){
+            String[] array = charStr.split(CHAR_EN_CH[0]);
+            for(String s : array){
+                totalVal +=Integer.parseInt(StringUtils.isEmpty(s) ? "0" : s);
+            }
+        }
+        if(charStr.contains(CHAR_EN_CH[1])){
+            String[] array = charStr.split(CHAR_EN_CH[1]);
+            for(String s : array){
+                totalVal +=Integer.parseInt(StringUtils.isEmpty(s) ? "0" : s);
+            }
+        }
+        return totalVal+"";
+    }
+
+    /**
+     * 获取到按照逗号字符拆分的数组
+     * @param arrayStr 原始数组
+     * @return         目标数组
+     */
+    public static String[] getStrArray(String arrayStr){
+        if(arrayStr.startsWith(CHAR_EN_CH[0]) || arrayStr.startsWith(CHAR_EN_CH[1])){
+            return null;
+        }
+        if(arrayStr.endsWith(CHAR_EN_CH[0]) || arrayStr.endsWith(CHAR_EN_CH[1])){
+            return null;
+        }
+        if(arrayStr.contains(CHAR_EN_CH[0])){
+            String[] array = arrayStr.split(CHAR_EN_CH[0]);
+            return  array;
+        }
+        if(arrayStr.contains(CHAR_EN_CH[1])){
+            String[] array = arrayStr.split(CHAR_EN_CH[1]);
+            return array;
+        }
+        return null;
+
     }
 
     public static void main(String[] args) {

@@ -24,6 +24,7 @@ public enum SystemCode {
     INPUT_CODE_ERROR("411","验证码输入有误"),
     MOBILE_EXPIRED("412","验证码失效,请重新发送验证码"),
     PARAM_VALID_EXCEPTION("413","参数校验异常"),
+    TASK_TYPE_EXCEPTION("414","任务类型异常"),
     SYSTEM_ERROR("500","系统异常"),
     UNKNOW_EXCEPTION("500","未知异常"),
     GOOD_LINKURL_ERROR("501", "宝贝链接有误");

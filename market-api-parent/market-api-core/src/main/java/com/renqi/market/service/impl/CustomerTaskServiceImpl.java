@@ -100,7 +100,14 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
         BaseResult msg = new BaseResult(SystemCode.SYSTEM_SUCCESS.getCode(),SystemCode.SYSTEM_SUCCESS.getMsg());
         String taskType = task.getTaskType();
         try{
-            if("mobile".endsWith(taskType)){
+            // 校验任务类型
+            if(null == TaskType.values()[Integer.parseInt(taskType) - 1] || StringUtils.isEmpty(TaskType.values()[Integer.parseInt(taskType) - 1].getValue())){
+                return ResultMsgUtil.setCodeMsg(msg,SystemCode.TASK_TYPE_EXCEPTION.getCode(),SystemCode.TASK_TYPE_EXCEPTION.getMsg());
+            }
+
+            String[] mobileType = new String[]{"5","6","7"};
+            // 手机端 发布任务设置宝贝ID
+            if(StringHandleUtils.containsStr(taskType,mobileType)){
               // 需要获取旺旺名称 httpClient 调用
                 String wwName = "";
                 //手机端流量任务发布 就需要获取宝贝的ID
@@ -120,16 +127,34 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
             task.setCreateTime(new Date());
             // 任务默认是 等待中的 状态
             task.setTaskState(CustomerTask.TaskState.TASK_WAITING.getState());
+            // 新增关键词信息
+            String[] wordList = StringHandleUtils.getStrArray(task.getWordList());
+            String[] vistorList = StringHandleUtils.getStrArray(task.getTotalVisitor());
+            String[] numberList = StringHandleUtils.getStrArray(task.getTotalNumber());
+            if(null == wordList || vistorList == null || numberList == null){
+                return ResultMsgUtil.setCodeMsg(msg,SystemCode.PARAM_VALID_EXCEPTION.getCode(),SystemCode.PARAM_VALID_EXCEPTION.getMsg());
+            }
+            // 总的访客数和总的浏览量
+            task.setTotalVisitor(StringHandleUtils.calculateTotalVal(task.getTotalVisitor()));
+            task.setTotalNumber(StringHandleUtils.calculateTotalVal(task.getTotalNumber()));
+
             customerTaskMapper.insertCustomerTask(task);
             int taskId = task.getTaskId();
             logger.info("++++++++++++ /task/saveCustomerTask +++++++++++ : taskId :{}",taskId);
-            // 新增关键词信息
-            String[] wordList = task.getWordList().split(",");
-            for (String word:wordList) {
+
+            // 获取的每一个关键词对应的 访客数 和 浏览量 并组装成对象保存
+            /**
+             *  正常的数据格式     关键词： 淘宝,天猫
+             *                  访客量： 100,200
+             *                  浏览量： 200，200
+             */
+            for (int i = 0; i< wordList.length; i++) {
                 TaskWordDto dto = new TaskWordDto();
                 dto.setTaskId(taskId);
-                dto.setWordName(word);
-                dto.setTaskVisitor(0);
+                dto.setWordName(wordList[i]);
+                dto.setTaskVisitor(Integer.parseInt(StringUtils.isNotEmpty(vistorList[i]) ? vistorList[i] : "0"));
+                dto.setShowNumber(Integer.parseInt(StringUtils.isNotEmpty(numberList[i]) ? numberList[i] : "0"));
+
                 dto.setShowNumber(0);
                 dto.setCreateTime(new Date());
                 taskWordMapper.insertTaskWord(dto);
