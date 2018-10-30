@@ -1117,6 +1117,7 @@
        * 格式校验
        * */
       function checkValFormat($id,val,tips){
+          alert(val)
           var wordName = $(""+$id+"input[name='wordList']").val();;
           var prefix = val.substr(0,2);
           var suffix = val.charAt(val.length - 1);
@@ -1162,20 +1163,31 @@
           }
 
           if(!checkIsNumber(val)){
-              alert(tips+'格式有误');
+              console.log(" 当前参数校验有误");
               return false;
           }
       }
+      // 宝贝链接校验
+      $('#nmrw_good_url').on('blur',function () {
+          var goodLinkUrl = $("#pcll_nmrw input[name='goodLinkUrl']").val();
+          // 数组
+          if('' == goodLinkUrl || goodLinkUrl.length == 0){
+              console.log("请输入关键词");
+              return;
+          }
+          if(!isRightURL(goodLinkUrl)){
+              console.log("宝贝链接格式有误");
+              $("#pcll_nmrw input[name='goodLinkUrl']").val("");
+              return;
+          }
+      });
+
       // 关键词校验
       $('#nmrw_word_name').on('blur',function () {
           var wordList = $("#pcll_nmrw input[name='wordList']").val();
           // 数组
-          if('' === wordList || wordList.length == 0){
+          if('' == wordList || wordList.length == 0){
               console.log("请输入关键词");
-              return;
-          }
-          if(!isRightURL(wordList)){
-              console.log("宝贝链接格式有误");
               return;
           }
       });
@@ -1184,12 +1196,13 @@
       $('#nmrw_total_visitor').on('blur',function () {
           var totalVisitor = $("#pcll_nmrw input[name='totalVisitor']").val();
           // 数组
-          if('' === totalVisitor && totalVisitor.length == 0){
+          if('' == totalVisitor && totalVisitor.length == 0){
               console.log("请输入访客量");
               return;
           }
-          if(!checkValFormat(totalVisitor.trim(),"访客量")){
+          if(!checkValFormat("#wordList",totalVisitor.trim(),"访客量")){
               console.log("访客量格式有误");
+              $("#pcll_nmrw input[name='totalVisitor']").val("");
               return;
           };
           // 计算访客量
@@ -1204,8 +1217,9 @@
               console.log("请输入浏览量");
               return;
           }
-          if(!checkValFormat(totalNumber.trim(),"浏览量")){
+          if(!checkValFormat("#wordList",totalNumber.trim(),"浏览量")){
               console.log("浏览量格式有误");
+              $("#pcll_nmrw input[name='totalNumber']").val("");
               return;
           };
 

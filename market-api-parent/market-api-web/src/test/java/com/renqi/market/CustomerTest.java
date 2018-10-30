@@ -53,15 +53,19 @@ public class CustomerTest {
 
     @Test
     public void test(){
+        // 替换参数
+        String str = "123,456，,";
+        System.out.println("可以的 ： " + str.substring(0,str.length()-1));
+        System.out.println("替换结果 ： "+str.replaceAll("，","").replaceAll(",",""));
         // 用户进行注册的时候 初始化他的客户状态信息表 -----> 总的流程控制表
-        CustomerState state = new CustomerState();
-        // 只要任务不为 0 说明有任务
-        state.setTotalTask(0);
-        // 是否充值 1 是 0 否
-        //state.setIsRecharge(CustomerState.State.IS_RECHARGE_FALSE.getState());
-        // 当前总的充值金额为 0
-        state.setTotalMoney(0.00d);
-        customerStateMapper.insert(state);
+//        CustomerState state = new CustomerState();
+//        // 只要任务不为 0 说明有任务
+//        state.setTotalTask(0);
+//        // 是否充值 1 是 0 否
+//        //state.setIsRecharge(CustomerState.State.IS_RECHARGE_FALSE.getState());
+//        // 当前总的充值金额为 0
+//        state.setTotalMoney(0.00d);
+//        customerStateMapper.insert(state);
         //logger.info("+++++++++++ /market/customerRegister +++++++++++stateId:{}"+state.getCustomerStateId());
     }
 }
