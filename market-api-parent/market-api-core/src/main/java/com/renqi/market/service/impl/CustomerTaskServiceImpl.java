@@ -137,7 +137,8 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
             // 总的访客数和总的浏览量
             task.setTotalVisitor(StringHandleUtils.calculateTotalVal(task.getTotalVisitor()));
             task.setTotalNumber(StringHandleUtils.calculateTotalVal(task.getTotalNumber()));
-
+            // 设置模板组合ID
+            task.setTemplateId(task.getTemplateId().substring(0,task.getTemplateId().length()-1));
             customerTaskMapper.insertCustomerTask(task);
             int taskId = task.getTaskId();
             logger.info("++++++++++++ /task/saveCustomerTask +++++++++++ : taskId :{}",taskId);
@@ -154,11 +155,12 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
                 dto.setWordName(wordList[i]);
                 dto.setTaskVisitor(Integer.parseInt(StringUtils.isNotEmpty(vistorList[i]) ? vistorList[i] : "0"));
                 dto.setShowNumber(Integer.parseInt(StringUtils.isNotEmpty(numberList[i]) ? numberList[i] : "0"));
-
-                dto.setShowNumber(0);
                 dto.setCreateTime(new Date());
                 taskWordMapper.insertTaskWord(dto);
             }
+            // 发布任务后扣除用户充值的总金额
+            customerStateMapper.updateByCustomerStateId(task.getCustomerStateId()+"",(task.getAccountMoney() - task.getTotalMoney())+"");
+
 //            List<TaskWordDto> wordDtoList = task.getWordDtoList();
 //            if(null != wordDtoList && wordDtoList.size() >0 )
 //            for (TaskWordDto dto:task.getWordDtoList()) {

@@ -46,6 +46,7 @@
       <id column="customer_state_id" jdbcType="INTEGER" property="customerStateId" />
       <result column="total_task" jdbcType="INTEGER" property="totalTask" />
       <result column="total_money" jdbcType="DOUBLE" property="totalMoney" />
+      <result column="discount" jdbcType="DOUBLE" property="discount" />
       <result column="is_recharge" jdbcType="INTEGER" property="isRecharge" />
       <result column="expired_time" jdbcType="VARCHAR" property="expiredTime" />
     </association>
@@ -77,6 +78,7 @@
         cu.customer_state_id,
         state.total_task AS total_task,
         state.total_money AS total_money,
+        state.discount AS discount,
         state.is_recharge AS is_recharge,
         state.expired_time AS expired_time,
         cu.level_id,

@@ -2,6 +2,7 @@ package com.renqi.market.dao;
 
 import com.renqi.market.entity.CustomerState;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface CustomerStateMapper {
@@ -15,5 +16,5 @@ public interface CustomerStateMapper {
 
     int updateByPrimaryKeySelective(CustomerState record);
 
-    int updateByPrimaryKey(CustomerState record);
+    void updateByCustomerStateId(@Param("customerStateId") String customerStateId, @Param("money") String money);
 }

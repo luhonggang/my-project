@@ -223,7 +223,7 @@ public class StringHandleUtils {
                 totalVal +=Integer.parseInt(StringUtils.isEmpty(s) ? "0" : s);
             }
         }
-        return totalVal+"";
+        return totalVal == 0 ? charStr : totalVal+"";
     }
 
     /**
@@ -232,6 +232,7 @@ public class StringHandleUtils {
      * @return         目标数组
      */
     public static String[] getStrArray(String arrayStr){
+        List<String> arrayList = new ArrayList<>();
         if(arrayStr.startsWith(CHAR_EN_CH[0]) || arrayStr.startsWith(CHAR_EN_CH[1])){
             return null;
         }
@@ -246,7 +247,8 @@ public class StringHandleUtils {
             String[] array = arrayStr.split(CHAR_EN_CH[1]);
             return array;
         }
-        return null;
+        arrayList.add(arrayStr);
+        return arrayList.toArray(new String[arrayList.size()]);
 
     }
 

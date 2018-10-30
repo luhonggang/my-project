@@ -1,5 +1,8 @@
 package com.renqi.market.entity;
 
+import lombok.Data;
+
+@Data
 public class CustomerState {
     /**
      * 客户状态信息枚举
@@ -25,46 +28,10 @@ public class CustomerState {
 
     private Integer isRecharge;
 
+    /**
+     * 折扣
+     */
+    private Double discount;
+
     private String expiredTime;
-
-    public Integer getCustomerStateId() {
-        return customerStateId;
-    }
-
-    public void setCustomerStateId(Integer customerStateId) {
-        this.customerStateId = customerStateId;
-    }
-
-
-    public Integer getTotalTask() {
-        return totalTask;
-    }
-
-    public void setTotalTask(Integer totalTask) {
-        this.totalTask = totalTask;
-    }
-
-    public Double getTotalMoney() {
-        return totalMoney;
-    }
-
-    public void setTotalMoney(Double totalMoney) {
-        this.totalMoney = totalMoney;
-    }
-
-    public Integer getIsRecharge() {
-        return isRecharge;
-    }
-
-    public void setIsRecharge(Integer isRecharge) {
-        this.isRecharge = isRecharge;
-    }
-
-    public String getExpiredTime() {
-        return expiredTime;
-    }
-
-    public void setExpiredTime(String expiredTime) {
-        this.expiredTime = expiredTime;
-    }
 }

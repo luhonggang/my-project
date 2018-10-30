@@ -76,6 +76,7 @@
       </if>
     </where>
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from customer_task
     where task_id = #{taskId,jdbcType=INTEGER}

@@ -167,6 +167,8 @@ public class CustomerServiceImpl implements CustomerService {
 			state.setTotalTask(0);
 			// 是否充值 1 是 0 否
 			state.setIsRecharge(CustomerState.State.IS_RECHARGE_FALSE.getState());
+			// 默认的折扣是1.00 不打折
+            state.setDiscount(1.00d);
 			// 当前总的充值金额为 0
 			state.setTotalMoney(0.00d);
 			customerStateMapper.insert(state);

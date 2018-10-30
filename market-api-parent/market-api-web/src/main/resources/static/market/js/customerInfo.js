@@ -23,6 +23,10 @@ $(function () {
                 $("#expiredTime").html("到期时间："+result.data.customerState.expiredTime);
                 $("#completeTask").html(result.data.taskIsComplete);
                 $("#taskIsDoing").html(result.data.taskIsDoing);
+                // 当前用户的折扣率
+                $('#discount').val(result.data.customerState.discount);
+                $('#customerStateId').val(result.data.customerState.customerStateId);
+                //showVipRate('nmfw_last_tip',false,0,0);
             }else if(result.code=="500"){
                 alert("系统繁忙稍后再试");
             }else if(result.code == '401' || result.code == '402'){

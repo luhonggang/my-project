@@ -22,6 +22,8 @@ public class CustomerTaskDto implements Serializable {
     public CustomerTaskDto() {
     }
 
+    private Double totalMoney;
+
     private Integer taskId;
 
     private String orderNo;
@@ -30,24 +32,28 @@ public class CustomerTaskDto implements Serializable {
      */
     @NotNull(message = "客户主键不能为空")
     private Integer customerId;
+
+    /**
+     * 客户状态主键
+     */
+    @NotNull(message = "客户状态主键ID不可为空")
+    private Integer customerStateId;
+
+    /**
+     * 客户状态主键
+     */
+    @NotNull(message = "客户状态主键ID不可为空")
+    private Double accountMoney;
+
     /**
      * 宝贝链接
      */
     @NotBlank(message = "宝贝链接不能为空")
     private String goodLinkUrl;
-
     /**
      * 宝贝ID
      */
-//    @NotNull(message = "宝贝ID")
     private Integer goodId;
-
-    /**
-     * 关键词集合
-     */
-    @NotNull(message = "关键词集合")
-    private List<TaskWordDto> wordDtoList;
-
     /**
      * 关键词集合
      */
@@ -56,7 +62,6 @@ public class CustomerTaskDto implements Serializable {
     /**
      * 宝贝标题
      */
-    //@NotBlank(message = "宝贝标题不能为空")
     private String goodTitle;
 
     /**
@@ -75,13 +80,13 @@ public class CustomerTaskDto implements Serializable {
     /**
      * 总的访客数量
      */
-    @NotNull(message = "总的访客数量不能0")
+    @NotNull(message = "总的访客数量不能是0")
     private String totalVisitor;
 
     /**
      * 总的展现数量
      */
-    @NotNull(message = "总的展现数不能0")
+    @NotNull(message = "总的展现数不能是0")
     private String totalNumber;
 
     /**
