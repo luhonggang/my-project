@@ -75,6 +75,7 @@
         AND w.word_name LIKE CONCATE('%',#{wordName})
       </if>
     </where>
+    ORDER BY task.create_time DESC
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">

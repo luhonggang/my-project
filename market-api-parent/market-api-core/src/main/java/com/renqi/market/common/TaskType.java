@@ -6,6 +6,7 @@ package com.renqi.market.common;
  * @date 2018/10/26
  * @since 1.0
  */
+@SuppressWarnings("all")
 public enum TaskType {
     PC_ANONYMOUS_ACCESS("1","PC端匿名访问"),
     PC_REALNAME_ACCESS("2","PC端实名访问"),

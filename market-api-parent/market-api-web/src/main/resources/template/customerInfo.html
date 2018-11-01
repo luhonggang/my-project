@@ -19,7 +19,6 @@
 </head>
 <script type="text/javascript">
     //加载层
-
     // var index = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
     // //loading层
     //
@@ -34,7 +33,9 @@
         var zt_width = $("#zt").width();
         var zt_height = $("#zt").height();
         $("#three").width(zt_width*0.8).height(zt_height*0.8);
-
+        // 设置默认的div内容
+        var clickDivId = "pcll_nmrw";
+        $('#pcll_nmrw').html($('#pc_rwfb_div').html());
         /*任务栏弹框隐藏*/
         $("#pcll_smrw").hide();
         $("#pcll_ztcrw").hide();
@@ -42,8 +43,6 @@
 
         /*给PC流量input的date控件添加默认值*/
         document.getElementById('startDate_pcll_nm').valueAsDate=new Date();
-        document.getElementById('startDate_pcll_sm').valueAsDate=new Date();
-        document.getElementById('startDate_pcll_ztc').valueAsDate=new Date();
         document.getElementById('startDate_pcll_jhc').valueAsDate=new Date();
 
         /*给手机流量input的date控件添加默认值*/
@@ -72,6 +71,43 @@
         /* 把得到的窗口宽高给到body的背景图片 */
         document.body.style.backgroundSize = w+"px "+h+"px";
     }
+    // 加载数据
+    $.ajax({
+        url:baseUrl+'task/queryCustomerMsg.json?customerId='+customerId,
+        type:'GET',
+        beforeSend: function (XMLHttpRequest) {
+            XMLHttpRequest.setRequestHeader("token", token);
+        },
+        async:"true", //默认是true,异步
+        dataType:"json",
+        contentType:"application/json",
+        success:function(result){
+            console.log(result);
+            if(result.code=="200"){
+                console.log(result.data.customerState);
+                $("#topCustomerPhone").html(result.data.phone+"&nbsp;");
+                $("#customerPhone").html(result.data.phone+"，欢迎您");
+                $("#accountMoney").html("￥"+result.data.customerState.totalMoney);
+                $("#levelName").html(result.data.customerLevel.levelName);
+                $("#expiredTime").html("到期时间："+result.data.customerState.expiredTime);
+                $("#completeTask").html(result.data.taskIsComplete);
+                $("#taskIsDoing").html(result.data.taskIsDoing);
+                // 当前用户的折扣率
+                $('#discount').val(result.data.customerState.discount);
+                $('#customerStateId').val(result.data.customerState.customerStateId);
+                //showVipRate('nmfw_last_tip',false,0,0);
+                if(result.data.taskId !='' ){
+                    $('.runnable').show();
+                    // todo 获取数据
+                }
+            }else if(result.code=="500"){
+                alert("系统繁忙稍后再试");
+            }else if(result.code == '401' || result.code == '402'){
+                // token 失效 直接跳转登录页
+                window.location.href = baseUrl+"page/login.html";
+            }
+        }
+    });
 </script>
 <style type="text/css">
     body{
@@ -159,13 +195,13 @@
     </div>
 </div>
 
-<script src="market/js/customerInfo.js"></script>
+<!--<script src="market/js/customerInfo.js"></script>-->
 
 <!--我的任务-->
-<div class="runnable">
+<div class="runnable" style="display: none">
     <p style="padding-bottom: 1em;padding-top: 1em">
     <span class="run_span1">我的任务</span>
-    <Span class="run_span2"><a href="javascript:void(0)">查看全部任务</a></Span>
+    <span class="run_span2"><a href="javascript:void(0)">查看全部任务</a></span>
     </p>
     <!--任务记录-->
     <div class="quest_log">
@@ -174,9 +210,9 @@
             <span class="quest_log_zf">√&nbsp;已支付</span>
         </p>
         <p class="quest_log_xx">
-            <span class="xx_span1">计划名称：</span><span>我的任务！</span>
-            <span class="xx_span2">状态：<span>进行中</span></span>
-            <span class="xx_span3">已完成任务进度：<span>88%</span></span>
+            <span class="xx_span1">任务类型：</span><span id="taskType"></span>
+            <span class="xx_span2">状态：<span id="taskState"></span></span>
+            <span class="xx_span3">已完成任务进度：<span id="taskProgess">0%</span></span>
             <hr/>
         </p>
     </div>
@@ -195,250 +231,107 @@
         <button class="pcll_btn" id="pc_btn3">PC直通车流量<br/>(0.73TB/条)</button>
         <button class="pcll_btn" id="pc_btn4">聚划算开团提醒<br/>(2.00TB/条)</button>
         <button style="margin: 0;float: right;margin-right: 0.5em;" class="md-close">X</button>
+        <div id="pc_rwfb_div" style="display: none">
+            <div style="font-size: 0.9em;margin-top: 0px;" class="pcll_zhuti">
+                <p id="task_tips" style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">PC匿名流量创建-基本信息</p>
+                <div>
+                    宝贝链接：<input name="goodLinkUrl" id="nmrw_good_url" class="pcll_input" type="text" placeholder="请输入淘宝或天猫宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫淘宝地址)"/>
+                </div>
+                <div style="margin-top: 1em;">
+                    关键词：<input name="wordList" id="nmrw_word_name" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="请输入一个或者多个关键词&nbsp;&nbsp;(以逗号隔开)"/>
+                </div>
+                <div style="margin-top: 1em;">
+                    访客量：<input name="totalVisitor" id="nmrw_total_visitor" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="访客量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
+                </div>
+                <div style="margin-top: 1em;">
+                    浏览量：<input name="totalNumber" id="nmrw_total_number" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="浏览量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
+                </div>
+                <div class="riqi">
+                    <div style="float: left;text-align: center;" class="date_dt">
+                        <div class="date_ts">日期<br/><span style="color:#FF0000;font-size: 0.8em;">(可提前发布7天任务)</span></div>
+                        投放时间：<input name="taskTime" type="date" id="startDate_pcll_nm">
+                    </div>
+                    <div style="float: left;text-align: center;margin-left: 1em;" class="date_shiduan">
+                        <div class="date_ts">时段<br/><span style="color:#FF0000;font-size: 0.8em;">(尽量扩大时间范围)</span></div>
+                        <input name="taskBeginHour" type="text"/>&nbsp;点-&nbsp;<input name="taskEndHour" type="text"/>点
+                    </div>
+                    <div style="float: left;text-align: center" class="date_jianduan">
+                        <div class="date_ts">任务发布间隔时间(分)<br/><span style="color:#FF0000;font-size: 0.8em;">(系统会将发布任务的间隔时间随机分配)</span></div>
+                        <input name="taskBeginMiunte" type="text"/>&nbsp;-&nbsp;<input name="taskEndMiunte" type="text"/>
+                    </div>
+                </div>
+
+                <div style="float: left" id="rw_scope">
+                    <span>搜索范围：</span>
+                    <div class="pretty info circle a-jelly">
+                        <input name="taskSearchScope" type="radio" value="前10页" checked="checked">
+                        <label><i class="mdi mdi-check"></i> 前10页</label>
+                    </div>
+                    <div class="pretty info circle a-jelly">
+                        <input name="taskSearchScope" type="radio" value="前20页">
+                        <label><i class="mdi mdi-check"></i> 前20页</label>
+                    </div>
+                    <div class="pretty info circle a-jelly">
+                        <input name="taskSearchScope" type="radio" value="前30页">
+                        <label><i class="mdi mdi-check"></i> 前30页</label>
+                    </div>
+                </div>
+                <div style="float: left;margin-top: -10px;">
+                    <p style="font-size: 0.9em;">浏览控制：浏览时长&nbsp;&nbsp;<span class="llsc">50</span>&nbsp;秒&nbsp;-&nbsp;<span class="llsc">80</span>&nbsp;秒&nbsp;&nbsp;<span style="font-size: 0.9em;">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span></p>
+                    <div style="padding-top: -15px;" class="pretty success">
+                        <input type="checkbox" name="nmxqy" checked="checked" disabled="">
+                        <label><i class="mdi mdi-check" value="5"></i> 浏览商品详情页</label>
+                    </div>
+                    <div class="pretty info circle a-jelly">
+                        <input type="checkbox" name="nmhb" value="6">
+                        <label><i class="mdi mdi-check"></i> 货比三家</label>
+                    </div>
+                    <div class="pretty info circle a-jelly">
+                        <input type="checkbox" name="nmpj" value="7">
+                        <label><i class="mdi mdi-check"></i> 浏览商品评价</label>
+                    </div>
+                    <div class="pretty info circle a-jelly">
+                        <input type="checkbox" name="nmgl" value="8">
+                        <label><i class="mdi mdi-check"></i> 浏览关联商品</label>
+                    </div>
+                </div>
+                <div style="margin-top: 1em;margin: auto;width: 300px;margin-bottom: 1em;">
+                    <input class="fbrw nmrw_fbrw" type="button" value="发布任务"/>
+                </div>
+                <div id="nmfw_last_tip" style="margin-top: 1em;margin: auto;width: 60%;margin-bottom: 1em;text-align: center;font-size: 0.9em;">
+                    <em>您目前会员等级为：<span id='nmfw_vip_name' style="color:red;">体验会员</span>，享<span id="nmfw_rebate" style="color:red;">9.8折</span></em><br/>
+                    <em style="display: none">本次发布任务共<span id='nmfw_total_money' style="color:red;">888.00</span>&nbsp;TB，折后实际消耗<span id="nmfw_actually_money" style="color:red;">666.00</span>&nbsp;TB</em>
+                </div>
+            </div>
+        </div>
         <!--PC流量匿名访问任务栏-->
-        <div id="pcll_nmrw" style="margin: auto;width: 90%;">
-        <div style="font-size: 0.9em;margin-top: 0px;" class="pcll_zhuti">
-            <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">PC匿名流量创建-基本信息</p>
-            <div>
-                宝贝链接：<input name="goodLinkUrl" id="nmrw_good_url" class="pcll_input" type="text" placeholder="请输入淘宝或天猫宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫淘宝地址)"/>
-            </div>
-            <div style="margin-top: 1em;">
-                关键词：<input name="wordList" id="nmrw_word_name" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="请输入一个或者多个关键词&nbsp;&nbsp;(以逗号隔开)"/>
-            </div>
-            <div style="margin-top: 1em;">
-                访客量：<input name="totalVisitor" id="nmrw_total_visitor" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="访客量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
-            </div>
-            <div style="margin-top: 1em;">
-                浏览量：<input name="totalNumber" id="nmrw_total_number" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="浏览量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
-            </div>
-            <div class="riqi">
-                <div style="float: left;text-align: center;" class="date_dt">
-                    <div class="date_ts">日期<br/><span style="color:#FF0000;font-size: 0.8em;">(可提前发布7天任务)</span></div>
-                    投放时间：<input name="taskTime" type="date" id="startDate_pcll_nm">
-                </div>
-                <div style="float: left;text-align: center;margin-left: 1em;" class="date_shiduan">
-                    <div class="date_ts">时段<br/><span style="color:#FF0000;font-size: 0.8em;">(尽量扩大时间范围)</span></div>
-                    <input name="taskBeginHour" type="text"/>&nbsp;点-&nbsp;<input name="taskEndHour" type="text"/>点
-                </div>
-                <div style="float: left;text-align: center" class="date_jianduan">
-                    <div class="date_ts">任务发布间隔时间(分)<br/><span style="color:#FF0000;font-size: 0.8em;">(系统会将发布任务的间隔时间随机分配)</span></div>
-                    <input name="taskBeginMiunte" type="text"/>&nbsp;-&nbsp;<input name="taskEndMiunte" type="text"/>
-                </div>
-            </div>
-
-            <div style="float: left">
-                <span>搜索范围：</span>
-                <div class="pretty info circle a-jelly">
-                    <input name="taskSearchScope" type="radio" value="前10页" checked="checked">
-                    <label><i class="mdi mdi-check"></i> 前10页</label>
-                </div>
-                <div class="pretty info circle a-jelly">
-                    <input name="taskSearchScope" type="radio" value="前20页">
-                    <label><i class="mdi mdi-check"></i> 前20页</label>
-                </div>
-                <div class="pretty info circle a-jelly">
-                    <input name="taskSearchScope" type="radio" value="前30页">
-                    <label><i class="mdi mdi-check"></i> 前30页</label>
-                </div>
-            </div>
-            <div style="float: left;margin-top: -10px;">
-                <p style="font-size: 0.9em;">浏览控制：浏览时长&nbsp;&nbsp;<span class="llsc">50</span>&nbsp;秒&nbsp;-&nbsp;<span class="llsc">80</span>&nbsp;秒&nbsp;&nbsp;<span style="font-size: 0.9em;">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span></p>
-                <div style="padding-top: -15px;" class="pretty success">
-                    <input type="checkbox" name="nmxqy" checked="checked" disabled="">
-                    <label><i class="mdi mdi-check" value="5"></i> 浏览商品详情页</label>
-                </div>
-                <div class="pretty info circle a-jelly">
-                    <input type="checkbox" name="nmhb" value="6">
-                    <label><i class="mdi mdi-check"></i> 货比三家</label>
-                </div>
-                <div class="pretty info circle a-jelly">
-                    <input type="checkbox" name="nmpj" value="7">
-                    <label><i class="mdi mdi-check"></i> 浏览商品评价</label>
-                </div>
-                <div class="pretty info circle a-jelly">
-                    <input type="checkbox" name="nmgl" value="8">
-                    <label><i class="mdi mdi-check"></i> 浏览关联商品</label>
-                </div>
-            </div>
-            <div style="margin-top: 1em;margin: auto;width: 300px;margin-bottom: 1em;">
-                <input class="fbrw nmrw_fbrw" type="button" value="发布任务"/>
-            </div>
-            <div id="nmfw_last_tip" style="margin-top: 1em;margin: auto;width: 60%;margin-bottom: 1em;text-align: center;font-size: 0.9em;">
-                <em>您目前会员等级为：<span id='nmfw_vip_name' style="color:red;">体验会员</span>，享<span id="nmfw_rebate" style="color:red;">9.8折</span></em><br/>
-                <em style="display: none">本次发布任务共<span id='nmfw_total_money' style="color:red;">888.00</span>&nbsp;TB，折后实际消耗<span id="nmfw_actually_money" style="color:red;">666.00</span>&nbsp;TB</em>
-            </div>
-        </div>
-        </div>
+        <div id="pcll_nmrw" style="margin: auto;width: 90%;"></div>
         <!--PC流量实名访问任务栏-->
-        <div id="pcll_smrw" style="margin: auto;width: 90%;">
-            <div style="font-size: 0.9em;margin-top: 0px;" class="pcll_zhuti">
-                <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">PC实名流量创建-基本信息</p>
-                <div>
-                    宝贝链接：<input class="pcll_input" type="text" placeholder="请输入淘宝或天猫宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫淘宝地址)"/>
-                </div>
-                <div style="margin-top: 1em;">
-                    关键词：<input style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="请输入一个或者多个关键词&nbsp;&nbsp;(以逗号隔开)"/>
-                </div>
-                <div style="margin-top: 1em;">
-                    访客量：<input style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="访客量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
-                </div>
-                <div style="margin-top: 1em;">
-                    浏览量：<input style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="浏览量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
-                </div>
-                <div class="riqi">
-                    <div style="float: left;text-align: center;" class="date_dt">
-                        <div class="date_ts">日期<br/><span style="color:#FF0000;font-size: 0.8em;">(可提前发布7天任务)</span></div>
-                        投放时间：<input type="date" id="startDate_pcll_sm">
-                    </div>
-                    <div style="float: left;text-align: center;margin-left: 1em;" class="date_shiduan">
-                        <div class="date_ts">时段<br/><span style="color:#FF0000;font-size: 0.8em;">(尽量扩大时间范围)</span></div>
-                        <input type="text"/>&nbsp;点-&nbsp;<input type="text"/>点
-                    </div>
-                    <div style="float: left;text-align: center" class="date_jianduan">
-                        <div class="date_ts">任务发布间隔时间(分)<br/><span style="color:#FF0000;font-size: 0.8em;">(系统会将发布任务的间隔时间随机分配)</span></div>
-                        <input type="text"/>&nbsp;-&nbsp;<input type="text"/>
-                    </div>
-                </div>
-                <div style="float: left">
-                    <span>搜索范围：</span>
-                    <div class="pretty info circle a-jelly">
-                        <input name="ewq" type="radio" checked="checked">
-                        <label><i class="mdi mdi-check"></i> 前10页</label>
-                    </div>
-                    <div class="pretty info circle a-jelly">
-                        <input name="ewq" type="radio">
-                        <label><i class="mdi mdi-check"></i> 前20页</label>
-                    </div>
-                    <div class="pretty info circle a-jelly">
-                        <input name="ewq" type="radio">
-                        <label><i class="mdi mdi-check"></i> 前30页</label>
-                    </div>
-                </div>
-                <div style="float: left;margin-top: -10px;">
-                    <p style="font-size: 0.9em;">浏览控制：浏览时长&nbsp;&nbsp;<span class="llsc">50</span>&nbsp;秒&nbsp;-&nbsp;<span class="llsc">80</span>&nbsp;秒&nbsp;&nbsp;<span style="font-size: 0.9em">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span></p>
-
-                    <div class="pretty success">
-                        <input type="checkbox" checked="checked" disabled="">
-                        <label><i class="mdi mdi-check"></i> 浏览商品详情页</label>
-                    </div>
-                    <div class="pretty info circle a-jelly">
-                        <input type="checkbox">
-                        <label><i class="mdi mdi-check"></i> 货比三家</label>
-                    </div>
-                    <div class="pretty info circle a-jelly">
-                        <input type="checkbox">
-                        <label><i class="mdi mdi-check"></i> 浏览商品评价</label>
-                    </div>
-                    <div class="pretty info circle a-jelly">
-                        <input type="checkbox">
-                        <label><i class="mdi mdi-check"></i> 浏览关联商品</label>
-                    </div>
-                </div>
-                <div style="margin-top: 1em;margin: auto;width: 300px;margin-bottom: 1em;">
-                    <input class="fbrw" type="button" value="发布任务"/>
-                </div>
-                <div style="margin-top: 1em;margin: auto;width: 60%;margin-bottom: 1em;text-align: center;font-size: 0.9em;">
-                    <span>您目前会员等级为：<span style="color:red;">体验会员</span>，享<span style="color:red;">9.8折</span></span><br/>
-                    <span>本次发布任务共<span style="color:red;">888.00</span>&nbsp;TB，折后实际消耗<span style="color:red;">666.00</span>&nbsp;TB</span>
-                </div>
-            </div>
-        </div>
+        <div id="pcll_smrw" style="margin: auto;width: 90%;"></div>
         <!--PC流量直通车任务栏-->
-        <div id="pcll_ztcrw" style="margin: auto;width: 90%;">
-            <div style="font-size: 0.9em;margin-top: 0px;" class="pcll_zhuti">
-                <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">PC端直通车流量创建-基本信息</p>
-                <div>
-                    宝贝链接：<input class="pcll_input" type="text" placeholder="请输入淘宝或天猫宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫淘宝地址)"/>
-                </div>
-                <div style="margin-top: 1em;">
-                    关键词：<input style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="请输入一个或者多个关键词&nbsp;&nbsp;(以逗号隔开)"/>
-                </div>
-                <div style="margin-top: 1em;">
-                    访客量：<input style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="访客量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
-                </div>
-                <div style="margin-top: 1em;">
-                    浏览量：<input style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="浏览量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
-                </div>
-                <div class="riqi">
-                    <div style="float: left;text-align: center;" class="date_dt">
-                        <div class="date_ts">日期<br/><span style="color:#FF0000;font-size: 0.8em;">(可提前发布7天任务)</span></div>
-                        投放时间：<input type="date" id="startDate_pcll_ztc">
-                    </div>
-                    <div style="float: left;text-align: center;margin-left: 1em;" class="date_shiduan">
-                        <div class="date_ts">时段<br/><span style="color:#FF0000;font-size: 0.8em;">(尽量扩大时间范围)</span></div>
-                        <input type="text"/>&nbsp;点-&nbsp;<input type="text"/>点
-                    </div>
-                    <div style="float: left;text-align: center" class="date_jianduan">
-                        <div class="date_ts">任务发布间隔时间(分)<br/><span style="color:#FF0000;font-size: 0.8em;">(系统会将发布任务的间隔时间随机分配)</span></div>
-                        <input type="text"/>&nbsp;-&nbsp;<input type="text"/>
-                    </div>
-                </div>
-                <div style="float: left">
-                    <span>搜索范围：</span>
-                    <div class="pretty info circle a-jelly">
-                        <input name="wqe" type="radio" checked="checked">
-                        <label><i class="mdi mdi-check"></i> 前10页</label>
-                    </div>
-                    <div class="pretty info circle a-jelly">
-                        <input name="wqe" type="radio">
-                        <label><i class="mdi mdi-check"></i> 前20页</label>
-                    </div>
-                    <div class="pretty info circle a-jelly">
-                        <input name="wqe" type="radio">
-                        <label><i class="mdi mdi-check"></i> 前30页</label>
-                    </div>
-                </div>
-                <div style="float: left;margin-top: -10px;">
-                    <p style="font-size: 0.9em;">浏览控制：浏览时长&nbsp;&nbsp;<span class="llsc">50</span>&nbsp;秒&nbsp;-&nbsp;<span class="llsc">80</span>&nbsp;秒&nbsp;&nbsp;<span style="font-size: 0.9em">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span></p>
-
-                    <div class="pretty success">
-                        <input type="checkbox" checked="checked" disabled="">
-                        <label><i class="mdi mdi-check"></i> 浏览商品详情页</label>
-                    </div>
-                    <div class="pretty info circle a-jelly">
-                        <input type="checkbox">
-                        <label><i class="mdi mdi-check"></i> 货比三家</label>
-                    </div>
-                    <div class="pretty info circle a-jelly">
-                        <input type="checkbox">
-                        <label><i class="mdi mdi-check"></i> 浏览商品评价</label>
-                    </div>
-                    <div class="pretty info circle a-jelly">
-                        <input type="checkbox">
-                        <label><i class="mdi mdi-check"></i> 浏览关联商品</label>
-                    </div>
-                </div>
-                <div style="margin-top: 1em;margin: auto;width: 300px;margin-bottom: 1em;">
-                    <input class="fbrw" type="button" value="发布任务"/>
-                </div>
-                <div style="margin-top: 1em;margin: auto;width: 60%;margin-bottom: 1em;text-align: center;font-size: 0.9em;">
-                    <span>您目前会员等级为：<span style="color:red;">体验会员</span>，享<span style="color:red;">9.8折</span></span><br/>
-                    <span>本次发布任务共<span style="color:red;">888.00</span>&nbsp;TB，折后实际消耗<span style="color:red;">666.00</span>&nbsp;TB</span>
-                </div>
-            </div>
-        </div>
+        <div id="pcll_ztcrw" style="margin: auto;width: 90%;"></div>
         <!--PC流量聚划算开通提醒任务栏-->
         <div id="pcll_jhsrw" style="margin: auto;width: 90%">
             <div style="font-size: 0.9em;margin-top: 0px;" class="pcll_zhuti">
                 <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">聚划算明日开团提醒任务创建-基本信息</p>
                 <div>
-                    宝贝链接：<input style="width: 60%;" class="pcll_input" type="text" placeholder="请输入淘宝或天猫宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫淘宝地址)"/>
+                    宝贝链接：<input name="goodLinkUrl" id="jhsrw_good_url" style="width: 60%;" class="pcll_input" type="text" placeholder="请输入淘宝或天猫宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫淘宝地址)"/>
                 </div>
                 <div style="margin-top: 1em;">
-                    <span>任务数量：</span><input class="jhs_rnum" type="text"/>&nbsp;&nbsp;个
+                    <span>任务数量：</span><input name="taskTotalNumber" id="jhsrw_task" class="jhs_rnum" type="text"/>&nbsp;&nbsp;个
                 </div>
                 <div class="riqi">
                     <div style="float: left;text-align: center;" class="date_dt">
                         <div class="date_ts">日期<br/><span style="color:#FF0000;font-size: 0.8em;">(可提前发布7天任务)</span></div>
-                        投放时间：<input type="date" id="startDate_pcll_jhc">
+                        投放时间：<input name="taskTime" type="date" id="startDate_pcll_jhc">
                     </div>
                     <div style="float: left;text-align: center;margin-left: 1em;" class="date_shiduan">
                         <div class="date_ts">时段<br/><span style="color:#FF0000;font-size: 0.8em;">(尽量扩大时间范围)</span></div>
-                        <input type="text"/>&nbsp;点-&nbsp;<input type="text"/>点
+                        <input name="taskBeginHour"  type="text"/>&nbsp;点-&nbsp;<input name="taskEndHour" type="text"/>点
                     </div>
                     <div style="float: left;text-align: center" class="date_jianduan">
                         <div class="date_ts">任务发布间隔时间(分)<br/><span style="color:#FF0000;font-size: 0.8em;">(系统会将发布任务的间隔时间随机分配)</span></div>
-                        <input type="text"/>&nbsp;-&nbsp;<input type="text"/>
+                        <input name="taskBeginMiunte" type="text"/>&nbsp;-&nbsp;<input name="taskEndMiunte" type="text"/>
                     </div>
                 </div>
                 <div style="float: left;margin-top: -10px;">
@@ -458,11 +351,11 @@
                     </div>
                 </div>
                 <div style="margin-top: 1em;margin: auto;width: 250px;margin-bottom: 1em;">
-                    <input class="fbrw" type="button" value="发布任务"/>
+                    <input class="fbrw jhsrw_fbrw" type="button" value="发布任务"/>
                 </div>
-                <div style="margin-top: 1em;margin: auto;width: 60%;margin-bottom: 1em;text-align: center;font-size: 0.9em;">
-                    <span>您目前会员等级为：<span style="color:red;">体验会员</span>，享<span style="color:red;">9.8折</span></span><br/>
-                    <span>本次发布任务共<span style="color:red;">888.00</span>&nbsp;TB，折后实际消耗<span style="color:red;">666.00</span>&nbsp;TB</span>
+                <div id="jhsrw_last_tip"style="margin-top: 1em;margin: auto;width: 60%;margin-bottom: 1em;text-align: center;font-size: 0.9em;">
+                    <em>您目前会员等级为：<span style="color:red;">体验会员</span>，享<span style="color:red;">9.8折</span></em><br/>
+                    <em style="display: none">本次发布任务共<span style="color:red;">888.00</span>&nbsp;TB，折后实际消耗<span style="color:red;">666.00</span>&nbsp;TB</em>
                 </div>
             </div>
         </div>
@@ -691,9 +584,9 @@
                 <div style="margin-top: 1em;margin: auto;width: 300px;margin-bottom: 1em;">
                     <input class="fbrw" type="button" value="发布任务"/>
                 </div>
-                <div style="margin-top: 1em;margin: auto;width: 60%;margin-bottom: 1em;text-align: center;font-size: 0.9em;">
-                    <span>您目前会员等级为：<span style="color:red;">体验会员</span>，享<span style="color:red;">9.8折</span></span><br/>
-                    <span>本次发布任务共<span style="color:red;">888.00</span>&nbsp;TB，折后实际消耗<span style="color:red;">666.00</span>&nbsp;TB</span>
+                <div id="" style="margin-top: 1em;margin: auto;width: 60%;margin-bottom: 1em;text-align: center;font-size: 0.9em;">
+                    <em>您目前会员等级为：<span style="color:red;">体验会员</span>，享<span style="color:red;">9.8折</span></em><br/>
+                    <em style="display: none">本次发布任务共<span style="color:red;">888.00</span>&nbsp;TB，折后实际消耗<span style="color:red;">666.00</span>&nbsp;TB</em>
                 </div>
             </div>
         </div>
@@ -1053,390 +946,27 @@
                     <input class="fbrw" type="button" value="发布任务"/>
                 </div>
                 <div style="margin-top: 1em;margin: auto;width: 60%;margin-bottom: 1em;text-align: center;font-size: 0.9em;">
-                    <span>您目前会员等级为：<span style="color:red;">体验会员</span>，享<span style="color:red;">9.8折</span></span><br/>
-                    <span>本次发布任务共<span style="color:red;">888.00</span>&nbsp;TB，折后实际消耗<span style="color:red;">666.00</span>&nbsp;TB</span>
+                    <em >您目前会员等级为：<span style="color:red;">体验会员</span>，享<span style="color:red;">9.8折</span></em><br/>
+                    <em style="display: none">本次发布任务共<span style="color:red;">888.00</span>&nbsp;TB，折后实际消耗<span style="color:red;">666.00</span>&nbsp;TB</em>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
-      var currPageVMoney = 0.00;
-      var currPageNMoney = 0.00;
-      var totalMoney = 0.00;
-
-      /**
-       *  校验是否为正整数
-       **/
-      function checkIsNumber(val){
-          var regex = /^[0-9]+$/;
-          return regex.test(val);
-      }
-
-      // 依据比例rate计算当前的金额
-      function calculateMoney(currentVal,rate,type){
-          var tvMoney = 0;
-          if(currentVal.indexOf(',') != -1){
-              var vList = currentVal.split(',');
-              var currenVal = 0;
-              for (var i = 0; i < vList.length; i++){
-                  currenVal = vList[i];
-                  if(checkIsNumber(currenVal)){
-                      tvMoney += Number(currenVal*rate)
-                  }
-              }
-          }
-          if(currentVal.indexOf('，') != -1){
-              var vList = currentVal.split('，');
-              var currenVal = 0;
-              for (var i = 0; i < vList.length; i++){
-                  currenVal = vList[i];
-                  if(checkIsNumber(currenVal)){
-                      tvMoney += Number(currenVal*rate);
-                  }
-              }
-          }
-          if('vs' === type){
-              // 说明用户输入的数值没有特殊符号
-              if(tvMoney === 0){
-                  currPageVMoney = currentVal;
-              }else{
-                  currPageVMoney = tvMoney.toFixed(2);
-              }
-          }else if('nm' === type){
-              if(tvMoney === 0){
-                  currPageNMoney = currentVal;
-              }else{
-                  currPageNMoney = tvMoney.toFixed(2);
-              }
-          }
-      }
-
-
-      /**
-       * 格式校验
-       * */
-      function checkValFormat($id,val,tips){
-          alert(val)
-          var wordName = $(""+$id+"input[name='wordList']").val();;
-          var prefix = val.substr(0,2);
-          var suffix = val.charAt(val.length - 1);
-          if(prefix == '，' || prefix == ','){
-              alert(tips+'格式有误');
-             return false;
-          }
-          if(suffix == '，' || suffix == ','){
-              alert(tips+'格式有误');
-              return false;
-          }
-          if(val.indexOf(',') != -1 && val.indexOf('，') != -1){
-              alert(tips+'格式有误');
-              return false;
-          }
-          if(val.indexOf(',') != -1){
-              // 此时说明检查 录入的关键词是否符合 存在逗号分隔
-              if(wordName.indexOf(',') != -1 || wordName.indexOf(',') != -1){
-                  var arrayNumber = val.split(',');
-                  for (var i = 0; i < arrayNumber.length; i++) {
-                      console.log("当前数据 ："+arrayNumber[i]);
-                       if(!checkIsNumber(arrayNumber[i])){
-                           alert(tips+'格式有误');
-                           return false;
-                       }
-                  }
-              }else {
-                  return false;
-              }
-          }
-          if(val.indexOf('，') != -1){
-              if(wordName.indexOf(',') != -1 || wordName.indexOf(',') != -1){
-                  var arrayNumber = val.split('，');
-                  for (var i = 0; i < arrayNumber.length; i++) {
-                      if(!checkIsNumber(arrayNumber[i])){
-                          alert(tips+'格式有误');
-                          return false;
-                      }
-                  }
-              }else{
-                  return false;
-              }
-          }
-
-          if(!checkIsNumber(val)){
-              console.log(" 当前参数校验有误");
-              return false;
-          }
-      }
-      // 宝贝链接校验
-      $('#nmrw_good_url').on('blur',function () {
-          var goodLinkUrl = $("#pcll_nmrw input[name='goodLinkUrl']").val();
-          // 数组
-          if('' == goodLinkUrl || goodLinkUrl.length == 0){
-              console.log("请输入关键词");
-              return;
-          }
-          if(!isRightURL(goodLinkUrl)){
-              console.log("宝贝链接格式有误");
-              $("#pcll_nmrw input[name='goodLinkUrl']").val("");
-              return;
-          }
-      });
-
-      // 关键词校验
-      $('#nmrw_word_name').on('blur',function () {
-          var wordList = $("#pcll_nmrw input[name='wordList']").val();
-          // 数组
-          if('' == wordList || wordList.length == 0){
-              console.log("请输入关键词");
-              return;
-          }
-      });
-
-      // 校验访客量是否为空并计算金额
-      $('#nmrw_total_visitor').on('blur',function () {
-          var totalVisitor = $("#pcll_nmrw input[name='totalVisitor']").val();
-          // 数组
-          if('' == totalVisitor && totalVisitor.length == 0){
-              console.log("请输入访客量");
-              return;
-          }
-          if(!checkValFormat("#wordList",totalVisitor.trim(),"访客量")){
-              console.log("访客量格式有误");
-              $("#pcll_nmrw input[name='totalVisitor']").val("");
-              return;
-          };
-          // 计算访客量
-          calculateMoney(totalVisitor.trim(),0.60,"vs");
-      });
-
-      // 校验浏览量是否为空并计算金额
-      $('#nmrw_total_number').on('blur',function () {
-          var totalNumber = $("#pcll_nmrw input[name='totalNumber']").val();
-          // 数组
-          if('' === totalNumber && totalNumber.length == 0){
-              console.log("请输入浏览量");
-              return;
-          }
-          if(!checkValFormat("#wordList",totalNumber.trim(),"浏览量")){
-              console.log("浏览量格式有误");
-              $("#pcll_nmrw input[name='totalNumber']").val("");
-              return;
-          };
-
-          calculateMoney(totalNumber.trim(),0.60,"nm");
-
-          console.log("总的访客量 : "+currPageVMoney+" 浏览量 : "+currPageNMoney);
-          // 总的价格
-          //totalMoney = (currPageVMoney + currPageNMoney);
-          totalMoney = additiveNumber(currPageVMoney,currPageNMoney);
-          console.log("总的价格 : "+totalMoney);
-          // 当前实际折扣价
-          var discount = totalMoney*parseFloat($('#discount').val());
-          console.log("当前折扣价 : "+totalMoney);
-          discount = discount.toFixed(2);
-          console.log("折扣价格 ："+discount +" 总的价格 ： "+totalMoney);
-          showVipRate('nmfw_last_tip',true,totalMoney,discount);
-      });
-
-      // function checkWord(word){
-      //     var re = /[,，]/gi;
-      //     if (re.test(word)) {
-      //         return true;
-      //     }else {
-      //         return false;
-      //     }
-      // }
-
-      $('.nmrw_fbrw').on('click',function () {
-          var goodUrl = $("#pcll_nmrw input[name='goodLinkUrl']").val();
-          var wordList = $("#pcll_nmrw input[name='wordList']").val();
-          var totalVisitor = $("#pcll_nmrw input[name='totalVisitor']").val();
-          var totalNumber = $("#pcll_nmrw input[name='totalNumber']").val();
-          var taskTime = $("#pcll_nmrw input[name='taskTime']").val();
-          var taskBeginHour = $("#pcll_nmrw input[name='taskBeginHour']").val();
-          var taskEndHour = $("#pcll_nmrw input[name='taskEndHour']").val();
-          var taskBeginMiunte = $("#pcll_nmrw input[name='taskBeginMiunte']").val();
-          var taskEndMiunte = $("#pcll_nmrw input[name='taskEndMiunte']").val();
-          var taskSearchScope = '';
-
-          var taskSearchScope = $('#pcll_nmrw input[name="taskSearchScope"]:checked').val();
-
-          console.log("选择的搜索范围 : "+taskSearchScope);
-
-          // var obj = document.getElementsByName("taskSearchScope");
-          // for(var i=0; i<obj.length; i ++){
-          //     if(obj[i].checked){
-          //         console.log(obj[i].value);
-          //         taskSearchScope = obj[i].value;
-          //     }
-          // };
-
-          // 模板ID组合 多选框的值
-          var templateId = '5,';
-          $("#pcll_nmrw input[type='checkbox']").each(function () {
-              if ($(this).is(":checked")) {
-                  if('on' === $(this).val()){
-                      return;
-                  }else{
-                      templateId +=$(this).val()+",";
-                      console.log($(this).val())
-                  }
-              }
-          });
-
-          if(null != templateId && templateId != ''){
-              templateId = templateId.substring(0,templateId.length);
-          }
-
-          // 任务保存
-          saveTask(goodUrl,'1',wordList,totalVisitor,totalNumber,taskTime,taskBeginHour,taskEndHour,taskBeginMiunte,
-              taskEndMiunte,taskSearchScope,templateId);
-      });
-
-      // 设置当前用户的会员等级和折扣 nmfw_last_tip
-      function showVipRate($id,flag,totalMoney,discount){
-          var $firstEle = $("#"+$id+" em:first-child");
-          $firstEle.find('span').eq(0).html($('#levelName').html());
-          $firstEle.find('span').eq(1).html($('#discount').val()+'折');
-          if(flag){
-              $("#"+$id+"").find('em').eq(1).show();
-              var $lastEle = $("#"+$id+" em").last();
-              // 实际价格
-              $lastEle.find('span').eq(0).html(totalMoney);
-              // 折扣价格
-              $lastEle.find('span').eq(1).html(discount);
-          }
-      }
-
-    /*PC端流量的任务栏弹框隐藏显示的js*/
-        $("#pc_btn1").click(function(){
-            showVipRate('nmfw_last_tip',false,0,0);
-            $("#pcll_nmrw").show();
-            $("#pcll_smrw").hide();
-            $("#pcll_ztcrw").hide();
-            $("#pcll_jhsrw").hide();
-        });
-
-        $("#pc_btn2").click(function(){
-            $("#pcll_smrw").show();
-            $("#pcll_nmrw").hide();
-            $("#pcll_ztcrw").hide();
-            $("#pcll_jhsrw").hide();
-        });
-
-        $("#pc_btn3").click(function(){
-            $("#pcll_ztcrw").show();
-            $("#pcll_smrw").hide();
-            $("#pcll_nmrw").hide();
-            $("#pcll_jhsrw").hide();
-        });
-
-        $("#pc_btn4").click(function(){
-            $("#pcll_jhsrw").show();
-            $("#pcll_ztcrw").hide();
-            $("#pcll_smrw").hide();
-            $("#pcll_nmrw").hide();
-        });
-
-
-    /*手机端流量的任务栏弹框隐藏显示的js*/
-    $("#sj_btn1").click(function(){
-        $("#sjll_nmrw").show();
-        $("#sjll_smrw").hide();
-        $("#sjll_ztcrw").hide();
-        $("#sjll_tkl").hide();
-    });
-
-    $("#sj_btn2").click(function(){
-        $("#sjll_smrw").show();
-        $("#sjll_nmrw").hide();
-        $("#sjll_tkl").hide();
-        $("#sjll_tmapp").hide();
-    });
-
-    $("#sj_btn3").click(function(){
-        $("#sjll_tmapp").show();
-        $("#sjll_smrw").hide();
-        $("#sjll_nmrw").hide();
-        $("#sjll_tkl").hide();
-    });
-
-
-    /*其他流量的任务栏弹框隐藏显示的js*/
-    $("#qt_btn2").click(function(){
-        $("#qtll_jdapp").show();
-        $("#qtll_cnxh").hide();
-        $("#qtll_sjztc").hide();
-    });
-
-    $("#qt_btn3").click(function(){
-        $("#qtll_cnxh").show();
-        $("#qtll_sjztc").hide();
-        $("#qtll_jdapp").hide();
-    });
-
-    $("#qt_btn4").click(function(){
-        $("#qtll_sjztc").show();
-        $("#qtll_cnxh").hide();
-        $("#qtll_jdapp").hide();
-    });
-
-    /*收藏的任务栏弹框隐藏显示的js*/
-    $("#scjg_pc_btn1").click(function(){
-        $("#scjg_pc").show();
-        $("#scjg_sj").hide();
-    });
-
-    $("#scjg_sj_btn2").click(function(){
-        $("#scjg_sj").show();
-        $("#scjg_pc").hide();
-    });
-
-    function checkIsEmpty(val) {
-        if('' === val || val.length == 0){
-            console.log("参数为空请校验");
-            return false;
+    // 设置当前用户的会员等级和折扣
+    function showVipRate($id,flag,totalMoney,discount){
+        var $firstEle = $("#"+$id+" em:first-child");
+        $firstEle.find('span').eq(0).html($('#levelName').html());
+        $firstEle.find('span').eq(1).html($('#discount').val()+'折');
+        if(flag){
+            $("#"+$id+"").find('em').eq(1).show();
+            var $lastEle = $("#"+$id+" em").last();
+            // 实际价格
+            $lastEle.find('span').eq(0).html(totalMoney);
+            // 折扣价格
+            $lastEle.find('span').eq(1).html(discount);
         }
-    }
-    // 任务保存
-    function saveTask(goodUrl,taskType,wordList,totalVisitor,totalNumber,taskTime,taskBeginHour,taskEndHour,taskBeginMiunte,
-                      taskEndMiunte,taskSearchScope,templateId) {
-        // if(!checkIsEmpty(taskTime) || !checkIsEmpty(taskBeginHour) || !checkIsEmpty(taskEndHour) || !checkIsEmpty(taskBeginMiunte)
-        //    || !checkIsEmpty(taskEndMiunte) || !checkIsEmpty(taskSearchScope) || !checkIsEmpty(templateId)){
-        //     console.log("参数为空请校验");
-        //     return;
-        // }
-        var taskParams = {"customerId":customerId,"customerStateId":$('#customerStateId').val(),"goodLinkUrl":goodUrl,"taskType":taskType,"wordList":wordList,
-            "totalVisitor":totalVisitor,"totalNumber":totalNumber,"taskTime":taskTime,"totalMoney":totalMoney,"accountMoney":$('#accountMoney').html().split('￥')[1],
-            "taskBeginHour":taskBeginHour,"taskEndHour":taskEndHour,"taskBeginMiunte":taskBeginMiunte,
-            "taskEndMiunte":taskEndMiunte,"taskSearchScope":taskSearchScope,"templateId":templateId};
-        var jsonParams = JSON.stringify(taskParams);
-        console.log("格式化的参数是 ： "+jsonParams);
-
-        console.log("当前用户的ID ： "+customerId+ " 当前用户的token ： "+token);
-
-        $.ajax({
-            url:baseUrl+'task/saveCustomerTask.json',
-            type:'POST',
-            beforeSend: function (XMLHttpRequest) {
-                XMLHttpRequest.setRequestHeader("token", token);
-            },
-            async:"true", //默认是true,异步
-            dataType:"json",
-            data:jsonParams,
-            contentType:"application/json",
-            success:function(result){
-                console.log(result);
-                if(result.code=="200"){
-
-                }else if(result.code=="500"){
-                    alert("系统繁忙稍后再试");
-                }else if(result.code == '401' || result.code == '402'){
-                    // token 失效 直接跳转登录页
-                    window.location.href = baseUrl+"page/login.html";
-                }
-            }
-        });
     }
 </script>
 <div class="md-overlay"></div>
