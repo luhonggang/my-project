@@ -126,7 +126,7 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
             task.setOrderNo((System.currentTimeMillis()+1)+"");
             task.setCreateTime(new Date());
             // 任务默认是 等待中的 状态
-            task.setTaskState(CustomerTask.TaskState.TASK_WAITING.getState());
+            task.setTaskState(CustomerTask.TaskState.TASK_CONTINUE.getState());
             // 新增关键词信息
             String[] wordList = StringHandleUtils.getStrArray(task.getWordList());
             String[] vistorList = StringHandleUtils.getStrArray(task.getTotalVisitor());

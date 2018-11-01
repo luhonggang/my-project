@@ -13,7 +13,13 @@ import java.util.List;
  */
 @Data
 public class CustomerTaskVo {
+    /**
+     * 任务主键
+     */
     private Integer taskId;
+    /**
+     * 定单编号
+     */
     private String orderNo;
     /**
      * 客户主键
@@ -34,7 +40,6 @@ public class CustomerTaskVo {
     /**
      * 宝贝标题
      */
-    //@NotBlank(message = "宝贝标题不能为空")
     private String goodTitle;
 
     /**

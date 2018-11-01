@@ -96,9 +96,53 @@
                 $('#discount').val(result.data.customerState.discount);
                 $('#customerStateId').val(result.data.customerState.customerStateId);
                 //showVipRate('nmfw_last_tip',false,0,0);
-                if(result.data.taskId !='' ){
+                if(result.data.taskList[0].taskId !='' ){
+                    $('.runnable').html("");
                     $('.runnable').show();
+                    var type = "";
+                    switch (result.data.taskList[0].taskType) {
+                        case "1":type="PC端匿名访问";break;
+                        case "2":type="PC端实名访问";break;
+                        case "3":type="PC直通车流量";break;
+                        case "4":type="PC聚划算开团提醒";break;
+                        case "5":type="手机端匿名访问";break;
+                        case "6":type="手机端实名访问";break;
+                        case "7":type="手机端天猫App流量";break;
+                        case "9":type="其他京东App流量";break;
+                        case "10":type="猜你喜欢流量";break;
+                        case "11":type="手机直通车流量";break;
+                        case "12":type="PC端收藏加购";break;
+                        case "13":type="手机端收藏加购";break;
+                    }
+                    var state =  "";
+                    switch (result.data.taskList[0].taskState) {
+                        case 0:state="未执行";break;
+                        case 1:state="进行中";break;
+                        case 2:state="已完成";break;
+                        case 3:state="异常";break;
+                        case 4:state="未知";break;
+                        default: state = "进行中";
+                    }
+                    // 查看全部任务
+                    var taskHtml = "<p style=\"padding-bottom: 1em;padding-top: 1em\">\n" +
+                        "    <span class=\"run_span1\">我的任务</span>\n" +
+                        "    <span class=\"run_span2\"><a href=\"javascript:void(0)\"></a></span>\n" +
+                        "    </p>\n" +
+                        "    <!--任务记录-->\n" +
+                        "    <div class=\"quest_log\">\n" +
+                        "        <p style=\"padding-top: 1.5%\">\n" +
+                        "            <span class=\"quest_log_dd\">订单号：<span>"+result.data.taskList[0].orderNo+"</span></span>\n" +
+                        "            <span class=\"quest_log_zf\">√&nbsp;已支付</span>\n" +
+                        "        </p>\n" +
+                        "        <p class=\"quest_log_xx\">\n" +
+                        "            <span class=\"xx_span1\">任务类型：</span><span id=\"taskType\">"+type+"</span>\n" +
+                        "            <span class=\"xx_span2\">状态：<span id=\"taskState\">"+state+"</span></span>\n" +
+                        "            <span class=\"xx_span3\">已完成任务进度：<span id=\"taskProgess\">0%</span></span>\n" +
+                        "            <hr/>\n" +
+                        "        </p>\n" +
+                        "    </div>";
                     // todo 获取数据
+                    $('.runnable').html(taskHtml);
                 }
             }else if(result.code=="500"){
                 alert("系统繁忙稍后再试");
@@ -199,23 +243,6 @@
 
 <!--我的任务-->
 <div class="runnable" style="display: none">
-    <p style="padding-bottom: 1em;padding-top: 1em">
-    <span class="run_span1">我的任务</span>
-    <span class="run_span2"><a href="javascript:void(0)">查看全部任务</a></span>
-    </p>
-    <!--任务记录-->
-    <div class="quest_log">
-        <p style="padding-top: 1.5%">
-            <span class="quest_log_dd">订单号：<span>888888888888888</span></span>
-            <span class="quest_log_zf">√&nbsp;已支付</span>
-        </p>
-        <p class="quest_log_xx">
-            <span class="xx_span1">任务类型：</span><span id="taskType"></span>
-            <span class="xx_span2">状态：<span id="taskState"></span></span>
-            <span class="xx_span3">已完成任务进度：<span id="taskProgess">0%</span></span>
-            <hr/>
-        </p>
-    </div>
 </div>
 
 <!--尾部-->

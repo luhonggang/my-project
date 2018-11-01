@@ -45,7 +45,7 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    task_id, template_id,task_type, good_id, good_link_url, good_title, store_name, total_visitor,
+    task_id,order_no,template_id,task_type, good_id, good_link_url, good_title, store_name, total_visitor,
     total_number, task_time, task_begin_hour, task_end_hour, task_begin_miunte, task_end_miunte, 
     task_search_scope, create_time, update_time
   </sql>
@@ -54,7 +54,7 @@
     SELECT
     task.*,w.word_name
     FROM customer_task task INNER JOIN customer cu ON task.customer_id = cu.customer_id
-         LEFT JOIN task_word w ON task.task_id = w.task_id
+    LEFT JOIN task_word w ON task.task_id = w.task_id
     <where>
       <if test="customerId != null">
         task.customer_id = #{customerId}

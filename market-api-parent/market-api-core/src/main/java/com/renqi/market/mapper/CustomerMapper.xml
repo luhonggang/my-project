@@ -63,8 +63,8 @@
     </collection>
    <collection property="taskList" ofType="com.renqi.market.entity.CustomerTask">
       <id column="task_id" jdbcType="INTEGER" property="taskId" />
-      <!--<result column="customer_id" jdbcType="INTEGER" property="customerId" />-->
-     <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+      <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+      <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
       <result column="task_state" javaType="INTEGER" property="taskState"/>
       <result column="task_type" jdbcType="VARCHAR" property="taskType" />
       <result column="good_id" jdbcType="INTEGER" property="goodId" />
@@ -90,7 +90,8 @@
         task.task_id,
         task.task_type,
         task.task_state,
-        task.good_id
+        task.good_id,
+        task.order_no
     FROM customer cu
     INNER JOIN customer_state state ON cu.customer_state_id = state.customer_state_id
     INNER JOIN customer_level lev   ON cu.level_id = lev.level_id
