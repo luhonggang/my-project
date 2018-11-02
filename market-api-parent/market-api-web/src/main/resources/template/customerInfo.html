@@ -261,16 +261,16 @@
             <div style="font-size: 0.9em;margin-top: 0px;" class="pcll_zhuti">
                 <p id="task_tips" style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">PC匿名流量创建-基本信息</p>
                 <div>
-                    宝贝链接：<input name="goodLinkUrl" id="nmrw_good_url" class="pcll_input" type="text" placeholder="请输入淘宝或天猫宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫淘宝地址)"/>
+                    宝贝链接：<input name="goodLinkUrl" onblur="changeGoodUrl()" id="nmrw_good_url" class="pcll_input" type="text" placeholder="请输入淘宝或天猫宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫淘宝地址)"/>
                 </div>
                 <div style="margin-top: 1em;">
-                    关键词：<input name="wordList" id="nmrw_word_name" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="请输入一个或者多个关键词&nbsp;&nbsp;(以逗号隔开)"/>
+                    关键词：<input name="wordList" onblur="changeWordName()" id="nmrw_word_name" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="请输入一个或者多个关键词&nbsp;&nbsp;(以逗号隔开)"/>
                 </div>
                 <div style="margin-top: 1em;">
-                    访客量：<input name="totalVisitor" id="nmrw_total_visitor" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="访客量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
+                    访客量：<input name="totalVisitor" onblur="changeVistor()" id="nmrw_total_visitor" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="访客量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
                 </div>
                 <div style="margin-top: 1em;">
-                    浏览量：<input name="totalNumber" id="nmrw_total_number" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="浏览量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
+                    浏览量：<input name="totalNumber" onblur="changeTotalNumber()" id="nmrw_total_number" style="margin-left: 1.28em;" class="pcll_input" type="text" placeholder="浏览量的输入顺序与您输入的关键词顺序必须一致&nbsp;&nbsp;(以逗号隔开)"/>
                 </div>
                 <div class="riqi">
                     <div style="float: left;text-align: center;" class="date_dt">
@@ -322,7 +322,7 @@
                     </div>
                 </div>
                 <div style="margin-top: 1em;margin: auto;width: 300px;margin-bottom: 1em;">
-                    <input id="nmrw_fbrw" class="fbrw" type="button" value="发布任务"/>
+                    <input onclick="savaTask()" id="nmrw_fbrw" class="fbrw" type="button" value="发布任务"/>
                 </div>
                 <div id="nmfw_last_tip" style="margin-top: 1em;margin: auto;width: 60%;margin-bottom: 1em;text-align: center;font-size: 0.9em;">
                     <em>您目前会员等级为：<span id='nmfw_vip_name' style="color:red;">体验会员</span>，享<span id="nmfw_rebate" style="color:red;">9.8折</span></em><br/>
@@ -978,11 +978,13 @@
     </div>
 </div>
 <script type="text/javascript">
+  // $(function () {
     // 计算的总的访客量金额,总的浏览量金额,总的金额,发布任务单价
     var currPageVMoney = 0.00;
     var currPageNMoney = 0.00;
     var totalMoney = 0.00;
     var pcRate = 0.60;
+    var pcType = '1';
 
     // 设置默认的div内容
     var clickDivId = "pcll_nmrw";
@@ -1001,142 +1003,6 @@
             $lastEle.find('span').eq(1).html(discount);
         }
     }
-    /*PC端流量的任务栏弹框隐藏显示的js*/
-    $("#pc_btn1").click(function(){
-        pcRate = 0.60;
-        var  html = $('#pcll_nmrw');
-        console.log("点击的内容 ： "+html.html() +" ------ "+html.length);
-        if(html.html() == "" || html.length == 1){
-            if("pcll_nmrw" != clickDivId){
-                $('#pcll_nmrw').html($('#'+clickDivId+'').html());
-                // 将点击事件前的div内容清除
-                $('#'+clickDivId+'').html("");
-            }
-
-        }
-        // $("#pcll_smrw").html("");
-        // $("#pcll_ztcrw").html("");
-        $('#task_tips').html('PC匿名流量创建-基本信息');
-        $("#pcll_nmrw").show();
-        $("#pcll_smrw").hide();
-        $("#pcll_ztcrw").hide();
-        $("#pcll_jhsrw").hide();
-        showVipRate('nmfw_last_tip',false,0,0);
-        checkClickDivId('pcll_nmrw');
-    });
-
-    $("#pc_btn2").click(function(){
-        pcRate = 0.60;
-        var  html = $('#pcll_smrw');
-        if(html.html() == "" || html.length == 1){
-            console.log("html1 : "+$('#'+clickDivId+'').html());
-            if("pcll_smrw" != clickDivId){
-                $('#pcll_smrw').html($('#'+clickDivId+'').html());
-                // 将点击事件前的div内容清除
-                $('#'+clickDivId+'').html("");
-            }
-        }
-        // $("#pcll_nmrw").html("");
-        // $("#pcll_ztcrw").html("");
-        $('#task_tips').html('PC实名流量创建-基本信息');
-        $("#pcll_smrw").show();
-        $("#pcll_nmrw").hide();
-        $("#pcll_ztcrw").hide();
-        $("#pcll_jhsrw").hide();
-        showVipRate('nmfw_last_tip',false,0,0);
-        // 记录当前点击的div
-        checkClickDivId('pcll_smrw');
-    });
-
-    $("#pc_btn3").click(function(){
-        pcRate = 0.73;
-        var  html = $('#pcll_ztcrw');
-        if(html.html() == "" || html.length == 1){
-            if("pcll_ztcrw" != clickDivId){
-                $('#pcll_ztcrw').html($('#'+clickDivId+'').html());
-                // 将点击事件前的div内容清除
-                $('#'+clickDivId+'').html("");
-            }
-        }
-        // $("#pcll_nmrw").html("");
-        // $("#pcll_smrw").html("");
-        $('#task_tips').html('PC端直通车流量创建-基本信息');
-        $("#pcll_ztcrw").show();
-        $("#pcll_smrw").hide();
-        $("#pcll_nmrw").hide();
-        $("#pcll_jhsrw").hide();
-        showVipRate('nmfw_last_tip',false,0,0);
-        // 记录当前点击的div
-        checkClickDivId('pcll_ztcrw');
-    });
-
-    // 聚划算点击事件
-    $("#pc_btn4").click(function(){
-        showVipRate('jhsrw_last_tip',false,0,0);
-        $("#pcll_jhsrw").show();
-        $("#pcll_ztcrw").hide();
-        $("#pcll_smrw").hide();
-        $("#pcll_nmrw").hide();
-    });
-
-    // 记录当前点击的div
-    function checkClickDivId(val){
-        clickDivId = val;
-    }
-
-    /*手机端流量的任务栏弹框隐藏显示的js*/
-    $("#sj_btn1").click(function(){
-        $("#sjll_nmrw").show();
-        $("#sjll_smrw").hide();
-        $("#sjll_ztcrw").hide();
-        $("#sjll_tkl").hide();
-    });
-
-    $("#sj_btn2").click(function(){
-        $("#sjll_smrw").show();
-        $("#sjll_nmrw").hide();
-        $("#sjll_tkl").hide();
-        $("#sjll_tmapp").hide();
-    });
-
-    $("#sj_btn3").click(function(){
-        $("#sjll_tmapp").show();
-        $("#sjll_smrw").hide();
-        $("#sjll_nmrw").hide();
-        $("#sjll_tkl").hide();
-    });
-
-
-    /*其他流量的任务栏弹框隐藏显示的js*/
-    $("#qt_btn2").click(function(){
-        $("#qtll_jdapp").show();
-        $("#qtll_cnxh").hide();
-        $("#qtll_sjztc").hide();
-    });
-
-    $("#qt_btn3").click(function(){
-        $("#qtll_cnxh").show();
-        $("#qtll_sjztc").hide();
-        $("#qtll_jdapp").hide();
-    });
-
-    $("#qt_btn4").click(function(){
-        $("#qtll_sjztc").show();
-        $("#qtll_cnxh").hide();
-        $("#qtll_jdapp").hide();
-    });
-
-    /*收藏的任务栏弹框隐藏显示的js*/
-    $("#scjg_pc_btn1").click(function(){
-        $("#scjg_pc").show();
-        $("#scjg_sj").hide();
-    });
-
-    $("#scjg_sj_btn2").click(function(){
-        $("#scjg_sj").show();
-        $("#scjg_pc").hide();
-    });
-
 
     /**
      *  校验是否为正整数
@@ -1202,9 +1068,14 @@
             falg == false
             return;
         }
+        // 都不包含
         if(val.indexOf(',') != -1 && val.indexOf('，') != -1){
-            falg == false
-            return;
+            if(!checkIsNumber(val)){
+                console.log("当前参数格式有误");
+                return false;
+            }else {
+                return true;
+            }
         }
         if(val.indexOf(',') != -1){
             // 此时说明检查 录入的关键词是否符合 存在逗号分隔
@@ -1238,78 +1109,79 @@
                 falg == false;
             }
         }
-        if(falg){
-            if(!checkIsNumber(val)){
-                console.log("当前参数格式有误");
-                return false;
-            }else {
-                return true;
-            }
-        }
+        console.log("数据 ： "+falg);
+        return falg;
     }
     // 宝贝链接校验
-    $('#nmrw_good_url').on('blur',function () {
-        var goodLinkUrl = $("#pcll_nmrw input[name='goodLinkUrl']").val();
-        // 数组
-        if('' == goodLinkUrl || goodLinkUrl.length == 0){
-            console.log("请输入关键词");
-            return;
-        }
-        if(!isRightURL(goodLinkUrl)){
-            console.log("宝贝链接格式有误");
-            $("#pcll_nmrw input[name='goodLinkUrl']").val("");
-            return;
-        }
-    });
-
+    function changeGoodUrl(){
+        var $thisGood = $("#"+clickDivId+" input[name='goodLinkUrl']");
+            var goodLinkUrl = $thisGood.val();
+            console.log("div :"+clickDivId+" 数据"+goodLinkUrl);
+            // 数组
+            if('' == goodLinkUrl || goodLinkUrl.length == 0){
+                console.log("请输入关键词");
+                return;
+            }
+            if(!isRightURL(goodLinkUrl)){
+                alert("宝贝链接格式有误");
+                $thisGood.val("");
+                return;
+            }
+    }
     // 关键词校验
-    $('#nmrw_word_name').on('blur',function () {
-        var wordList = $("#pcll_nmrw input[name='wordList']").val();
+    function changeWordName(){
+        console.log("div id ： "+clickDivId)
+        var $thisWord = $("#"+clickDivId+" input[name='wordList']");
+        var wordList = $thisWord.val();
+        console.log("关键词 ： "+wordList);
         // 数组
         if('' == wordList || wordList.length == 0){
             console.log("请输入关键词");
             return;
         }
-    });
-
+    }
     // 校验访客量是否为空并计算金额
-    $('#nmrw_total_visitor').on('blur',function () {
-        var totalVisitor = $("#pcll_nmrw input[name='totalVisitor']").val();
+    function changeVistor(){
+        var $thisVistor = $("#"+clickDivId+" input[name='totalVisitor']");
+        var totalVistor = $thisVistor.val().trim();
         // 数组
-        if('' == totalVisitor && totalVisitor.length == 0){
+        if(totalVistor.length == 0){
             console.log("请输入访客量");
             return;
         }
 
-        if(!checkValFormat("pcll_nmrw",totalVisitor.trim(),"访客量")){
+        if(!checkValFormat(clickDivId,totalVistor,"访客量")){
             console.log("访客量格式有误");
-            $("#pcll_nmrw input[name='totalVisitor']").val("");
+            $thisVistor.val("");
             return;
         };
         // 计算访客量
-        calculateMoney(totalVisitor.trim(),pcRate,"vs");
-    });
+        calculateMoney(totalVistor,pcRate,"vs");
+    }
+    // $('#nmrw_total_visitor').on('blur',function () {
+    // });
 
     function isPositiveInteger(s){//是否为正整数
         var re = /^[0-9]{1,2}$/ ;
-        return re.test(s)
+        return re.test(s);
     }
 
     // 校验浏览量是否为空并计算金额
-    $('#nmrw_total_number').on('blur',function () {
-        var totalNumber = $("#pcll_nmrw input[name='totalNumber']").val();
+    function changeTotalNumber(){
+        var $thisNumber = $("#"+clickDivId+" input[name='totalNumber']");
+        var totalNumber = $thisNumber.val().trim();
         // 数组
-        if('' === totalNumber && totalNumber.length == 0){
+        if(totalNumber.length == 0){
             console.log("请输入浏览量");
             return;
         }
-        if(!checkValFormat("pcll_nmrw",totalNumber.trim(),"浏览量")){
+        if(!checkValFormat("pcll_nmrw",totalNumber,"浏览量")){
             console.log("浏览量格式有误");
-            $("#pcll_nmrw input[name='totalNumber']").val("");
+            $thisNumber.val("");
             return;
         };
 
-        calculateMoney(totalNumber.trim(),pcRate,"nm");
+        calculateMoney(totalNumber,pcRate,"nm");
         console.log("总的访客量 : "+currPageVMoney+" 浏览量 : "+currPageNMoney);
         // 总的价格
         totalMoney = additiveNumber(currPageVMoney,currPageNMoney);
@@ -1320,7 +1192,10 @@
         discount = discount.toFixed(2);
         console.log("折扣价格 ："+discount +" 总的价格 ： "+totalMoney);
         showVipRate('nmfw_last_tip',true,totalMoney,discount);
-    });
+
+    }
+    // $('#nmrw_total_number').on('blur',function () {
+    // });
 
     // function checkWord(word){
     //     var re = /[,，]/gi;
@@ -1331,8 +1206,8 @@
     //     }
     // }
     // 任务发布按钮事件
-    $('#nmrw_fbrw').on('click',function () {
-        alert('点击了');
+    function savaTask(){
+        alert('点击');
         var goodUrl = $("#pcll_nmrw input[name='goodLinkUrl']").val();
         var wordList = $("#pcll_nmrw input[name='wordList']").val();
         var totalVisitor = $("#pcll_nmrw input[name='totalVisitor']").val();
@@ -1364,7 +1239,7 @@
         // 任务保存
         saveTask(goodUrl,'1',wordList,totalVisitor,totalNumber,taskTime,taskBeginHour,taskEndHour,taskBeginMiunte,
             taskEndMiunte,taskSearchScope,templateId);
-    });
+    }
 
     /*******聚划算业务*******/
     // 宝贝链接校验
@@ -1436,7 +1311,12 @@
         saveTask(goodUrl,'4',wordList,totalVisitor,totalNumber,taskTime,taskBeginHour,taskEndHour,taskBeginMiunte,
             taskEndMiunte,taskSearchScope,templateId);
     });
+
     function checkIsEmpty(val) {
+        // if(typeof val=='string' && val.length == 0){
+        //     console.log("参数为空请校验");
+        //     return false;
+        // }
         if('' == val || val.length == 0){
             console.log("参数为空请校验");
             return false;
@@ -1445,33 +1325,30 @@
     // 任务保存
     function saveTask(goodUrl,taskType,wordList,totalVisitor,totalNumber,taskTime,taskBeginHour,taskEndHour,taskBeginMiunte,
                       taskEndMiunte,taskSearchScope,templateId) {
-        // if(!checkIsEmpty(taskTime) || !checkIsEmpty(taskBeginHour) || !checkIsEmpty(taskEndHour) || !checkIsEmpty(taskBeginMiunte)
-        //    || !checkIsEmpty(taskEndMiunte) || !checkIsEmpty(taskSearchScope) || !checkIsEmpty(templateId)){
-        //     console.log("参数为空请校验");
-        //     return;
-        // }
 
-        // 公共参数校验
-        if(!checkIsEmpty(taskBeginHour) || !isPositiveInteger(taskBeginHour)){
+        console.log("taskBeginHour : "+taskBeginHour+" isNaN "+isNaN(taskBeginHour) +" 结果 "+isNaN("2@"));
+        var bh = parseInt(taskBeginHour);
+        var eh = parseInt(taskEndHour);
+        // 公共参数校验 !isPositiveInteger(taskBeginHour)
+        if(isNaN(bh)){
             console.log("开始时段为空或格式有误");
             return;
         }
-        if(!checkIsEmpty(taskEndHour) || !isPositiveInteger(taskEndHour)){
+        if(isNaN(eh)){
             console.log("结束时段为空或格式有误");
             return;
         }
         // todo 开始时段 小于结束时段
-
-        if(!checkIsEmpty(taskBeginMiunte) || !isPositiveInteger(taskBeginMiunte)){
+        var bm = parseInt(taskBeginMiunte);
+        var em = parseInt(taskEndMiunte);
+        if(isNaN(bm)){
             console.log("开始分钟为空或格式有误");
             return;
         }
-        if(!checkIsEmpty(taskEndMiunte) || !isPositiveInteger(taskEndMiunte)){
+        if(isNaN(em)){
             console.log("结束分钟为空或格式有误");
             return;
         }
-        var bm = parseInt(taskBeginMiunte);
-        var em = parseInt(taskEndMiunte);
         if( bm > em|| bm > 60 || em > 60 ){
             console.log("录入的分钟数有误,请检查");
             return;
@@ -1508,6 +1385,140 @@
             }
         });
     }
+
+    /*PC端流量的任务栏弹框隐藏显示的js*/
+    $("#pc_btn1").click(function(){
+        pcRate = 0.60;
+        var  html = $('#pcll_nmrw');
+        if(html.html() == "" || html.length == 1){
+            if("pcll_nmrw" != clickDivId){
+                $('#pcll_nmrw').html($('#'+clickDivId+'').html());
+                // 将点击事件前的div内容清除
+                $('#'+clickDivId+'').html("");
+            }
+
+        }
+        $('#task_tips').html('PC匿名流量创建-基本信息');
+        $("#pcll_nmrw").show();
+        $("#pcll_smrw").hide();
+        $("#pcll_ztcrw").hide();
+        $("#pcll_jhsrw").hide();
+        showVipRate('nmfw_last_tip',false,0,0);
+        checkClickDivId('pcll_nmrw');
+    });
+
+    $("#pc_btn2").click(function(){
+        pcRate = 0.60;
+        var  html = $('#pcll_smrw');
+        if(html.html() == "" || html.length == 1){
+            if("pcll_smrw" != clickDivId){
+                console.log("长度2 ："+html.length);
+                $('#pcll_smrw').html($('#'+clickDivId+'').html());
+                // 将点击事件前的div内容清除
+                $('#'+clickDivId+'').html("");
+                console.log("div点击： "+clickDivId);
+            }
+        }
+        $('#task_tips').html('PC实名流量创建-基本信息');
+        $("#pcll_smrw").show();
+        $("#pcll_nmrw").hide();
+        $("#pcll_ztcrw").hide();
+        $("#pcll_jhsrw").hide();
+        showVipRate('nmfw_last_tip',false,0,0);
+        // 记录当前点击的div
+        checkClickDivId('pcll_smrw');
+    });
+
+    $("#pc_btn3").click(function(){
+        pcRate = 0.73;
+        var  html = $('#pcll_ztcrw');
+        if(html.html() == "" || html.length == 1){
+            if("pcll_ztcrw" != clickDivId){
+                console.log(" 3点击的div : "+clickDivId);
+                $('#pcll_ztcrw').html($('#'+clickDivId+'').html());
+                // 将点击事件前的div内容清除
+                $('#'+clickDivId+'').html("");
+            }
+        }
+        $('#task_tips').html('PC端直通车流量创建-基本信息');
+        $("#pcll_ztcrw").show();
+        $("#pcll_smrw").hide();
+        $("#pcll_nmrw").hide();
+        $("#pcll_jhsrw").hide();
+        showVipRate('nmfw_last_tip',false,0,0);
+        // 记录当前点击的div
+        checkClickDivId('pcll_ztcrw');
+    });
+
+    // 聚划算点击事件
+    $("#pc_btn4").click(function(){
+        showVipRate('jhsrw_last_tip',false,0,0);
+        $("#pcll_jhsrw").show();
+        $("#pcll_ztcrw").hide();
+        $("#pcll_smrw").hide();
+        $("#pcll_nmrw").hide();
+    });
+
+
+    /*手机端流量的任务栏弹框隐藏显示的js*/
+    $("#sj_btn1").click(function(){
+        $("#sjll_nmrw").show();
+        $("#sjll_smrw").hide();
+        $("#sjll_ztcrw").hide();
+        $("#sjll_tkl").hide();
+    });
+
+    $("#sj_btn2").click(function(){
+        $("#sjll_smrw").show();
+        $("#sjll_nmrw").hide();
+        $("#sjll_tkl").hide();
+        $("#sjll_tmapp").hide();
+    });
+
+    $("#sj_btn3").click(function(){
+        $("#sjll_tmapp").show();
+        $("#sjll_smrw").hide();
+        $("#sjll_nmrw").hide();
+        $("#sjll_tkl").hide();
+    });
+
+
+    /*其他流量的任务栏弹框隐藏显示的js*/
+    $("#qt_btn2").click(function(){
+        $("#qtll_jdapp").show();
+        $("#qtll_cnxh").hide();
+        $("#qtll_sjztc").hide();
+    });
+
+    $("#qt_btn3").click(function(){
+        $("#qtll_cnxh").show();
+        $("#qtll_sjztc").hide();
+        $("#qtll_jdapp").hide();
+    });
+
+    $("#qt_btn4").click(function(){
+        $("#qtll_sjztc").show();
+        $("#qtll_cnxh").hide();
+        $("#qtll_jdapp").hide();
+    });
+
+    /*收藏的任务栏弹框隐藏显示的js*/
+    $("#scjg_pc_btn1").click(function(){
+        $("#scjg_pc").show();
+        $("#scjg_sj").hide();
+    });
+
+    $("#scjg_sj_btn2").click(function(){
+        $("#scjg_sj").show();
+        $("#scjg_pc").hide();
+    });
+
+    // 记录当前点击的div
+    function checkClickDivId(val){
+        clickDivId = val;
+    }
+
+  // });
 </script>
 <div class="md-overlay"></div>
 <script src="market/js/classie.js"></script>
