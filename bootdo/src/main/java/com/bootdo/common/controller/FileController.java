@@ -4,21 +4,13 @@ import com.bootdo.common.config.BootdoConfig;
 import com.bootdo.common.config.Constant;
 import com.bootdo.common.dao.CustomerMapper;
 import com.bootdo.common.domain.CustomerInfoDto;
-import com.bootdo.common.domain.CustomerTask;
-import com.bootdo.common.domain.CustomerTaskDto;
-import com.bootdo.common.domain.FileDO;
 import com.bootdo.common.service.FileService;
 import com.bootdo.common.utils.*;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,12 +20,6 @@ import java.util.Map;
 @Controller
 @RequestMapping("/common/userlist")
 public class FileController extends BaseController {
-
-	@Autowired
-	private FileService sysFileService;
-
-	@Autowired
-	private BootdoConfig bootdoConfig;
 
 	@Autowired
 	private CustomerMapper customerMapper;

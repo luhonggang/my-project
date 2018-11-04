@@ -1,14 +1,17 @@
 package com.renqi.market.common;
 
+/**
+ * @author luhonggang
+ * @date 2018/11/4
+ * @since 1.0
+ */
+
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 用户发布任务实体参数类
@@ -137,13 +140,12 @@ public class CustomerTaskDto implements Serializable {
      * task_begin_browse  浏览时长开始秒
      * task_end_browse    浏览时长结束秒
      */
-    @NotNull( message = "浏览控制 参数不能为空 (参数格式 5,6,7)")
+    @NotNull(message = "浏览控制 参数不能为空 (参数格式 5,6,7)")
     private String templateId;
 //    private List<String> templateList;
 
     private Date createTime;
 
     private Date updateTime;
-
 
 }
