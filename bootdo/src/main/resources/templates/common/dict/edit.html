@@ -7,33 +7,40 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="ibox float-e-margins">
-                <div class="ibox-content">
+                <div class="ibox-content" style="height:400px">
                     <form class="form-horizontalm-t" id="signupForm">
-                        <input id="id" name="id" th:value="${dict.taskId}"
+                        <input id="id" name="taskId" th:value="${dict.taskId}"
                                class="form-control" type="hidden">
                         <div class="form-group">
                             <label class="col-sm-3 control-label">任务编号：</label>
-                            <div class="col-sm-8">
+                            <div class="col-sm-8" style="margin-bottom:20px">
                                 <input id="name" name="name" readonly="readonly" th:value="${dict.taskId}"
                                        class="form-control" type="text">
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" onchange="selectTaskState()">
                             <label class="col-sm-3 control-label">任务状态：</label>
-                            <div class="col-sm-8">
-                                <input id="value" name="value" th:value="${dict.taskState}"
-                                       class="form-control" type="text">
+                            <div class="col-sm-8" style="margin-bottom:20px">
+                                <select id="selectTaskState" data-placeholder="任务状态" class="form-control chosen-select"
+                                        tabindex="2" style="width: 100%">
+                                    <option value="0">未执行</option>
+                                    <option value="1">进行中</option>
+                                    <option value="2">已完成</option>
+                                    <option value="3">异常</option>
+                                </select>
+                                <input id="task_is_select" style="display: none" name="taskState"  class="form-control" >
+                                <input id="task_state"  th:value="${dict.taskState}" class="form-control" type="hidden">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">执行时间：</label>
-                            <div class="col-sm-8">
-                                <input id="type" name="type" th:value="${dict.taskTime}"
+                            <div class="col-sm-8" style="margin-bottom:20px">
+                                <input id="type" name="taskTime" th:value="${dict.taskTime}"
                                        class="form-control" type="text">
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-8 col-sm-offset-3">
+                            <div class="col-sm-8 col-sm-offset-3" style="margin-top:14px">
                                 <button type="submit" class="btn btn-primary">提交</button>
                             </div>
                         </div>
@@ -45,6 +52,15 @@
 </div>
 <div th:include="include::footer"></div>
 <script type="text/javascript" src="/js/appjs/common/dict/edit.js">
+</script>
+<script type="text/javascript">
+    // 设置下拉框的值
+    $('#selectTaskState').val($('#task_state').val());
+    function selectTaskState() {
+        var currentSelect = $("#selectTaskState").find("option:selected").val();
+        console.log('xuanzhong '+currentSelect);
+        $('#task_is_select').val(currentSelect);
+    }
 </script>
 </body>
 </html>

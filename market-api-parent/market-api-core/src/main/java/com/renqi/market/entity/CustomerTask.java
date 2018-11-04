@@ -31,6 +31,10 @@ public class CustomerTask {
 
     private String orderNo;
 
+    private Double useMoney;
+
+    private Double useDiscount;
+
     private Integer customerId;
 
     private String templateId;

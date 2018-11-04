@@ -46,7 +46,9 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
     private StringRedisTemplate redisTemplate;
 
     /**
-     * 统计用户的任务发布的详情及个人信息 @param customerId  客户主键ID @return            BaseResultMsg
+     * 统计用户的任务发布的详情及个人信息
+     * @param customerId  客户主键ID
+     * @return            BaseResultMsg
      */
     @Override
     public BaseResultMsg countCustomerTask(String customerId) {
@@ -75,13 +77,12 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
                         }
                      }
                 }
+                customer.setTaskIsComplete(taskCom);
+                customer.setTaskIsDoing(taskContinue);
+                customer.setTaskIsException(taskException);
             }
-            customer.setTaskIsComplete(taskCom);
-            customer.setTaskIsDoing(taskContinue);
-            customer.setTaskIsException(taskException);
             msg.setData(customer);
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage(), "++++++++++++ /task/queryCustomerMsg +++++++++++");
             msg.setCode(SystemCode.SYSTEM_ERROR.getCode());
             msg.setMsg(SystemCode.SYSTEM_ERROR.getMsg());
@@ -126,9 +127,12 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
         String[] vistorList = null;
         String[] numberList = null;
         // 依据关键词来新增 任务
-        if (TaskType.PC_JUHUASUAN_OPENS.getValue().equals(task.getWordList())) {
+        if ("no".equals(task.getWordList())) {
             // PC端 聚划算开团提醒
             task.setWordList(null);
+            if("0".equals(task.getTemplateId())){
+                task.setTemplateId(null);
+            }
         } else {
             wordList = StringHandleUtils.getStrArray(task.getWordList());
             vistorList = StringHandleUtils.getStrArray(task.getTotalVisitor());
@@ -141,8 +145,43 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
             task.setTotalVisitor(StringHandleUtils.calculateTotalVal(task.getTotalVisitor()));
             task.setTotalNumber(StringHandleUtils.calculateTotalVal(task.getTotalNumber()));
             // 设置模板组合ID
-            task.setTemplateId(task.getTemplateId().substring(0, task.getTemplateId().length() - 1));
+            if("0".equals(task.getTemplateId())){
+                task.setTemplateId(null);
+            }else {
+                task.setTemplateId(task.getTemplateId().substring(0, task.getTemplateId().length() - 1));
+            }
         }
+
+        //
+        task.setUseDiscount(task.getUseDiscount());
+        task.setUseMoney(task.getTotalMoney());
+
+        String cacheTotalTask = (String) redisTemplate.opsForValue().get("TOTAL_TASK" + task.getTaskId());
+        if (StringUtils.isNotEmpty(cacheTotalTask)) {
+            totalTask += Integer.parseInt(cacheTotalTask);
+        }
+        totalTask += 1;
+
+        Double totalMoney = 0.0d;
+        // accountMoney 当前账户余额
+        // 查询出 当前用户账户总的金额
+        Optional<CustomerState> stateVo = Optional.ofNullable(customerStateMapper.queryTotalMoneyByCustomerId(task.getCustomerStateId()));
+        if (stateVo.isPresent()) {
+            totalMoney = stateVo.get().getTotalMoney();
+        } else {
+            throw new CheckBaseException(msg, SystemCode.SYSTEM_ERROR.getCode(), SystemCode.SYSTEM_ERROR.getMsg());
+        //  return ResultMsgUtil.setCodeMsg(msg,SystemCode.SYSTEM_ERROR.getCode(),SystemCode.SYSTEM_ERROR.getMsg());
+        }
+
+        // 当前用户发布所用的金额
+        Double currentMoney = task.getTotalMoney();
+        if(currentMoney > totalMoney){
+            throw new CheckBaseException(msg,SystemCode.MONEY_NOT_ENOUGH.getCode(),SystemCode.MONEY_NOT_ENOUGH.getMsg());
+            //return ResultMsgUtil.setCodeMsg(msg,SystemCode.MONEY_NOT_ENOUGH.getCode(),SystemCode.MONEY_NOT_ENOUGH.getMsg());
+        }
+        logger.info("当前用户发布任务扣除的金额 ; "+ BigDecMathUtil.subtract(totalMoney,currentMoney));
+        // 发布任务后扣除用户充值的总金额
+        customerStateMapper.updateByCustomerStateId(totalTask+"",task.getCustomerStateId()+"",(BigDecMathUtil.subtract(totalMoney,currentMoney))+"");
 
         // 新增任务记录
         customerTaskMapper.insertCustomerTask(task);
@@ -166,33 +205,6 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
                 taskWordMapper.insertTaskWord(dto);
             }
         }
-
-        String cacheTotalTask = (String) redisTemplate.opsForValue().get("TOTAL_TASK" + task.getTaskId());
-        if (StringUtils.isNotEmpty(cacheTotalTask)) {
-            totalTask += Integer.parseInt(cacheTotalTask);
-        }
-        totalTask += 1;
-
-        Double totalMoney = 0.0d;
-        // 查询出 当前用户账户总的金额
-        Optional<CustomerState> stateVo = Optional.ofNullable(customerStateMapper.queryTotalMoneyByCustomerId(task.getCustomerStateId()));
-        if (stateVo.isPresent()) {
-            totalMoney = stateVo.get().getTotalMoney();
-        } else {
-            throw new CheckBaseException(msg, SystemCode.SYSTEM_ERROR.getCode(), SystemCode.SYSTEM_ERROR.getMsg());
-//                return ResultMsgUtil.setCodeMsg(msg,SystemCode.SYSTEM_ERROR.getCode(),SystemCode.SYSTEM_ERROR.getMsg());
-        }
-
-            // 当前用户发布所用的金额
-            Double currentMoney = task.getTotalMoney();
-            if(currentMoney > totalMoney){
-                throw new CheckBaseException(msg,SystemCode.MONEY_NOT_ENOUGH.getCode(),SystemCode.MONEY_NOT_ENOUGH.getMsg());
-                //return ResultMsgUtil.setCodeMsg(msg,SystemCode.MONEY_NOT_ENOUGH.getCode(),SystemCode.MONEY_NOT_ENOUGH.getMsg());
-            }
-            logger.info("当前用户发布任务扣除的金额 ; "+ BigDecMathUtil.subtract(totalMoney,currentMoney));
-            // 发布任务后扣除用户充值的总金额
-            customerStateMapper.updateByCustomerStateId(totalTask+"",task.getCustomerStateId()+"",(BigDecMathUtil.subtract(totalMoney,currentMoney))+"");
-
             /**
              * TODO 此时用户发布任务成功 后需要 发送验证码通知管理人员
              */

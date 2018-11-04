@@ -65,6 +65,8 @@
       <id column="task_id" jdbcType="INTEGER" property="taskId" />
       <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
       <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+      <result column="use_discount" jdbcType="DOUBLE" property="userDiscount" />
+      <result column="use_money" jdbcType="DOUBLE" property="useMoney" />
       <result column="task_state" javaType="INTEGER" property="taskState"/>
       <result column="task_type" jdbcType="VARCHAR" property="taskType" />
       <result column="good_id" jdbcType="BIGINT" property="goodId" />
@@ -97,7 +99,7 @@
     INNER JOIN customer_level lev   ON cu.level_id = lev.level_id
     LEFT  JOIN customer_shop shop   ON cu.customer_id = shop.customer_id
     LEFT  JOIN customer_task task   ON cu.customer_id = task.customer_id
-    WHERE cu.customer_id = #{customerId}
+    WHERE cu.customer_id = #{customerId} ORDER BY task.create_time DESC
   </select>
 
 
@@ -144,11 +146,11 @@
     </selectKey>
     insert into customer (customer_id, customer_state_id, phone,
       pass_word, token, expire_time,
-      level_id, shop_id, login_time,
+      level_id, login_time,
       create_time, update_time)
     values (#{customerId,jdbcType=INTEGER}, #{customerStateId,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR},
       #{passWord,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR}, #{expireTime,jdbcType=VARCHAR},
-      #{levelId,jdbcType=INTEGER}, #{shopId,jdbcType=BIGINT}, #{loginTime,jdbcType=TIMESTAMP},
+      #{levelId,jdbcType=INTEGER},  #{loginTime,jdbcType=TIMESTAMP},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.renqi.market.entity.Customer">

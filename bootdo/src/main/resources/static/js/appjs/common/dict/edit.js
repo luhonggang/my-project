@@ -7,7 +7,9 @@ $.validator.setDefaults({
 		update();
 	}
 });
+
 function update() {
+	console.log('数据 ：'+$('#signupForm').serialize());
 	$.ajax({
 		cache : true,
 		type : "POST",

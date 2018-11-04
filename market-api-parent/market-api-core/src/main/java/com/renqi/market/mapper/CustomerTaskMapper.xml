@@ -110,6 +110,12 @@
       <if test="orderNo != null and orderNo != ''">
         order_no,
       </if>
+      <if test="useDiscount != null">
+        use_discount,
+      </if>
+      <if test="useMoney != null">
+        use_money,
+      </if>
       <if test="customerId != null and customerId != 0">
         customer_id,
       </if>
@@ -172,6 +178,13 @@
       <if test="orderNo != null and orderNo != ''">
         #{orderNo},
       </if>
+      <if test="useDiscount != null">
+        #{useDiscount},
+      </if>
+      <if test="useMoney != null">
+        #{useMoney},
+      </if>
+
       <if test="customerId != null and customerId != 0">
         #{customerId,jdbcType=INTEGER},
       </if>

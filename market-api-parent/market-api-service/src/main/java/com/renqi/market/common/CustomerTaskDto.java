@@ -29,6 +29,10 @@ public class CustomerTaskDto implements Serializable {
     private Integer taskId;
 
     private String orderNo;
+
+    private Double useMoney;
+
+    private Double useDiscount;
     /**
      * 客户主键
      */

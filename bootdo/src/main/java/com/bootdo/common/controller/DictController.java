@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bootdo.common.config.Constant;
 import com.bootdo.common.domain.CustomerTask;
+import com.bootdo.common.domain.CustomerTaskDto;
 import com.bootdo.common.domain.DictDO;
 import com.bootdo.common.service.DictService;
 import com.bootdo.common.utils.PageUtils;
@@ -23,12 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 字典表
- * @author chglee
- * @email 1992lcg@163.com
- * @date 2017-09-29 18:28:07
+ * 查询出所有 的任务
  */
-
 @Controller
 @RequestMapping("/common/dict")
 public class DictController extends BaseController {
@@ -89,11 +86,12 @@ public class DictController extends BaseController {
 	@ResponseBody
 	@RequestMapping("/update")
 	@RequiresPermissions("common:dict:edit")
-	public R update(DictDO dict) {
+	public R update(CustomerTaskDto taskDto) {
+		// 测试账户不允许修改
 		if (Constant.DEMO_ACCOUNT.equals(getUsername())) {
 			return R.error(1, "演示系统不允许修改,完整体验请部署程序");
 		}
-		dictService.update(dict);
+		dictService.update(taskDto);
 		return R.ok();
 	}
 

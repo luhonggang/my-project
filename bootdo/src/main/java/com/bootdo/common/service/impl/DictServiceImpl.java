@@ -1,6 +1,7 @@
 package com.bootdo.common.service.impl;
 
 import com.bootdo.common.domain.CustomerTask;
+import com.bootdo.common.domain.CustomerTaskDto;
 import com.bootdo.common.utils.StringUtils;
 import com.bootdo.system.domain.UserDO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
-    public int update(DictDO dict) {
+    public int update(CustomerTaskDto dict) {
         return dictDao.update(dict);
     }
 

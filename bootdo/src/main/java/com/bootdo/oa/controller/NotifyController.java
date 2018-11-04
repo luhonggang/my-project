@@ -25,12 +25,10 @@ import java.util.Map;
 
 /**
  * 通知通告
- *
  * @author chglee
  * @email 1992lcg@163.com
  * @date 2017-10-05 17:11:16
  */
-
 @Controller
 @RequestMapping("/oa/notify")
 public class NotifyController extends BaseController {

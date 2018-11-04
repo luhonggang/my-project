@@ -1,6 +1,7 @@
 package com.bootdo.common.service;
 
 import com.bootdo.common.domain.CustomerTask;
+import com.bootdo.common.domain.CustomerTaskDto;
 import com.bootdo.common.domain.DictDO;
 import com.bootdo.system.domain.UserDO;
 
@@ -24,7 +25,7 @@ public interface DictService {
 	
 	int save(DictDO dict);
 	
-	int update(DictDO dict);
+	int update(CustomerTaskDto dict);
 	
 	int remove(Long id);
 	

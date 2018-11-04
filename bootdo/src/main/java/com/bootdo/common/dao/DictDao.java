@@ -1,6 +1,7 @@
 package com.bootdo.common.dao;
 
 import com.bootdo.common.domain.CustomerTask;
+import com.bootdo.common.domain.CustomerTaskDto;
 import com.bootdo.common.domain.DictDO;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public interface DictDao {
 
 	int save(DictDO dict);
 
-	int update(DictDO dict);
+	int update(CustomerTaskDto dict);
 
 	int remove(Long id);
 
