@@ -91,7 +91,7 @@ function load() {
 				// 返回false将会终止请求
 				columns : [
 					{
-						checkbox : true
+						checkbox : false
 					},
 					{
 						field : 'taskId',
@@ -104,7 +104,7 @@ function load() {
 					{
 						field : 'goodId',
 						title : '宝贝ID',
-						width : '100px'
+						// width : '100px'
 					},
 					{
 						field : 'taskTime',
