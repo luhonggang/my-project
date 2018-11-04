@@ -5,12 +5,11 @@ import com.renqi.market.exception.HandleTokenException;
 import com.renqi.market.exception.NotExistTokenException;
 import com.renqi.market.util.JsonUtil;
 import com.renqi.market.util.JwtTokenUtil;
-import com.renqi.market.util.MatchTokenUtils;
 import com.renqi.market.util.SystemCode;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -19,6 +18,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * token 验签 例:获取用户信息 依据token查询用户信息是否存在于当前库
@@ -32,8 +35,49 @@ import java.io.PrintWriter;
 @SuppressWarnings("all")
 public class TokenHandleFilter implements Filter {
     private final static Logger logger = LoggerFactory.getLogger(TokenHandleFilter.class);
-    @Autowired
-    private MatchTokenUtils matchTokenUtils;
+
+    @Value("${springBoot.token.checkUrl}")
+    private String checkLoginUrl;
+    private Pattern pattern = null;
+    private Matcher match = null;
+    private boolean flag = false;
+
+    /**
+     * 判断是否匹配到URL
+     * @param url
+     * @return
+     */
+    public boolean isMactchUrl(String url){
+        // 判断含有 url
+        flag = false;
+        if (null == checkLoginUrl) {
+            return flag;
+        }
+        List<String> urlsList = Arrays.asList(checkLoginUrl.split(","));
+        urlsList.forEach(params -> {
+            // 匹配成功，跳出循环
+            if (url.contentEquals(params)) {
+                flag = true;
+                return;
+            }
+        });
+        if (flag) {
+            return flag;
+        } else {
+            // 正则匹配
+            urlsList.forEach(param -> {
+                pattern = Pattern.compile(param);
+                match = pattern.matcher(url);
+                // 匹配成功，跳出循环
+                if (match.matches()) {
+                    flag = true;
+                    return;
+                }
+
+            });
+        }
+        return flag;
+    }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -50,15 +94,19 @@ public class TokenHandleFilter implements Filter {
         String url = httpServletRequest.getServletPath();
         logger.info("+++++++++++ current url +++++++++++ " + url);
         try {
-            if (matchTokenUtils.isMactchUrl(url)) {
-                logger.info("+++++++++++ current url is need token +++++++++++ 需要token ");
+            logger.info("+++++++++ matchTokenUtils +++++++++ : "+checkLoginUrl);
+            logger.info("+++++++++ matchTokenUtils +++++++++ : {}",checkLoginUrl);
+            if (isMactchUrl(url)) {
+                logger.info("+++++++++++ current url is need token +++++++++++ token ");
                 // 说明是需要校验token的
                 String token = ((HttpServletRequest) request).getHeader("token");
                 if (StringUtils.isEmpty(token) || "null".equals(token)) {
                     throw new NotExistTokenException();
                 }
+                logger.info("++++++++++ token ++++++++++: "+token);
                 JwtTokenUtil.checkTokenIsExpiredTime(token);
             }
+            logger.info("++++++++++ not token ++++++++++: ");
         } catch (NotExistTokenException e1) {
             logger.error(this + "+++++++++++:token不存在:+++++++++++", e1);
             BaseResultException<?> baseResponse = BaseResultException.fail(SystemCode.TOKEN_IS_EMPTY.getCode(),

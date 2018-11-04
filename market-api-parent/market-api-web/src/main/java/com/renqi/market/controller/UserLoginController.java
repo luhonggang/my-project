@@ -62,6 +62,7 @@ public class UserLoginController extends GlobalExceptionHandler {
                 // 重新生成token
                 String token = JwtTokenUtil.createJWT(lognCustomer.getCustomerId()+"","renqi",
                         lognCustomer.getShopId()+"",expiredTime,null);
+                logger.info("lognCustomer,token,{},{}",token,lognCustomer);
                 //redisService.set("user_token:"+customerPhone,token);
                 lognCustomer.setToken(token);
                 // 过期时间
