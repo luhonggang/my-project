@@ -28,9 +28,17 @@
     customer_id, customer_state_id, phone, pass_word, token, expire_time, level_id,
     login_time, create_time, update_time
   </sql>
+
   <select id="selectCustomerByPhonePwd" parameterType="java.lang.String" resultMap="BaseCustomerMap">
     SELECT customer_id,phone, pass_word, token, expire_time, level_id, login_time FROM customer
-    WHERE phone = #{phone} AND pass_word = #{passWord}
+    <where>
+      <if test="phone != null and phone !=''">
+        phone = #{phone}
+      </if>
+      <if test="passWord !=null and passWord !=''">
+        AND pass_word = #{passWord}
+      </if>
+    </where>
   </select>
 
   <!-- 多个对象关联查询的结果集-->

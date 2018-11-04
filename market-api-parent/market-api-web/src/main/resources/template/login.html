@@ -153,7 +153,8 @@
                     }else if(result.code == '400'){
                         // 手机号格式异常
                         alert(result.msg);
-
+                    }else if(result.code == '416'){
+                        alert('输入的密码不正确');
                     }
                 }
             });

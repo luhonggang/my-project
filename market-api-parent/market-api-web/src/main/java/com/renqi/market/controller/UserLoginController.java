@@ -52,24 +52,29 @@ public class UserLoginController extends GlobalExceptionHandler {
         BaseResultMsg baseResultMsg = new BaseResultMsg();
          // 校验手机号是否正确
          if(StringHandleUtils.checkCellphone(phone)){
-                // 输入的手机号码和密码都符合查库查询用户信息
-                BaseCustomer lognCustomer = customerService.selectCustomerByPhonePwd(phone,passWord);
-                if(null != lognCustomer){
-                    // 重新生成token
-                    String token = JwtTokenUtil.createJWT(lognCustomer.getCustomerId()+"","renqi",
-                            lognCustomer.getShopId()+"",expiredTime,null);
-                    //redisService.set("user_token:"+customerPhone,token);
-                    lognCustomer.setToken(token);
-                    // 过期时间
-                    lognCustomer.setExpireTime((System.currentTimeMillis()+expiredTime)+"");
-                    // 此时要将token更新入库
-                    lognCustomer.setLoginTime(new Date());
-                    lognCustomer.setUpdateTime(new Date());
-                    customerService.updateCustomerToken(lognCustomer);
-                    return ResultMsgUtil.setResponse(baseResultMsg,SystemCode.SYSTEM_SUCCESS_LOGIN.getCode(), SystemCode.SYSTEM_SUCCESS_LOGIN.getMsg(),lognCustomer);
+            // 输入的手机号码和密码都符合查库查询用户信息
+            BaseCustomer lognCustomer = customerService.selectCustomerByPhonePwd(phone,null);
+            if(null != lognCustomer){
+                // 比较密码是否正确
+                if(!passWord.equalsIgnoreCase(lognCustomer.getPassWord())){
+                    return ResultMsgUtil.setResponse(baseResultMsg,SystemCode.PASS_WORD_INCORRECT.getCode(), SystemCode.PASS_WORD_INCORRECT.getMsg(),lognCustomer);
                 }
-                // 说明用户没有注册 先注册
-                return ResultMsgUtil.setResponse(baseResultMsg,SystemCode.SYSTEM_LOGIN_ERROR.getCode(), SystemCode.SYSTEM_LOGIN_ERROR.getMsg(),lognCustomer);
+                // 重新生成token
+                String token = JwtTokenUtil.createJWT(lognCustomer.getCustomerId()+"","renqi",
+                        lognCustomer.getShopId()+"",expiredTime,null);
+                //redisService.set("user_token:"+customerPhone,token);
+                lognCustomer.setToken(token);
+                // 过期时间
+                lognCustomer.setExpireTime((System.currentTimeMillis()+expiredTime)+"");
+                // 此时要将token更新入库
+                lognCustomer.setLoginTime(new Date());
+                lognCustomer.setUpdateTime(new Date());
+                customerService.updateCustomerToken(lognCustomer);
+                return ResultMsgUtil.setResponse(baseResultMsg,SystemCode.SYSTEM_SUCCESS_LOGIN.getCode(), SystemCode.SYSTEM_SUCCESS_LOGIN.getMsg(),lognCustomer);
+            }else{
+             // 说明用户没有注册 先注册
+             return ResultMsgUtil.setResponse(baseResultMsg,SystemCode.SYSTEM_LOGIN_ERROR.getCode(), SystemCode.SYSTEM_LOGIN_ERROR.getMsg(),lognCustomer);
+            }
            }else{
                 return  ResultMsgUtil.setResponse(baseResultMsg,SystemCode.PHONE_NUMBER_ERROR.getCode(), SystemCode.PHONE_NUMBER_ERROR.getMsg(),null);
           }
