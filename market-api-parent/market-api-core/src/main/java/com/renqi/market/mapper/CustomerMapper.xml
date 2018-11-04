@@ -67,7 +67,7 @@
       <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
       <result column="task_state" javaType="INTEGER" property="taskState"/>
       <result column="task_type" jdbcType="VARCHAR" property="taskType" />
-      <result column="good_id" jdbcType="INTEGER" property="goodId" />
+      <result column="good_id" jdbcType="BIGINT" property="goodId" />
     </collection>
   </resultMap>
   <!--查询出个人信息，商铺信息，任务充值信息-->
@@ -78,7 +78,7 @@
         cu.customer_state_id,
         state.total_task AS total_task,
         state.total_money AS total_money,
-        state.discount AS discount,
+        state.discount,
         state.is_recharge AS is_recharge,
         state.expired_time AS expired_time,
         cu.level_id,

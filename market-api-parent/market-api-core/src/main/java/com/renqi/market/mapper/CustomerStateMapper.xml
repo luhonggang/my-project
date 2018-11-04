@@ -89,9 +89,13 @@
 
   <update id="updateByCustomerStateId" parameterType="String">
     update customer_state
-    set
-      total_money = #{money}
+    set total_money = #{money},
+        total_task = #{totalTask}
     where customer_state_id = #{customerStateId}
   </update>
+
+  <select id="queryTotalMoneyByCustomerId" parameterType="int" resultMap="BaseResultMap">
+   SELECT <include refid="Base_Column_List"/> FROM  customer_state WHERE customer_state_id = #{customerStateId}
+  </select>
 
 </mapper>

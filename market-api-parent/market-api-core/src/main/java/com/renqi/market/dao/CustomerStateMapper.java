@@ -16,5 +16,9 @@ public interface CustomerStateMapper {
 
     int updateByPrimaryKeySelective(CustomerState record);
 
-    void updateByCustomerStateId(@Param("customerStateId") String customerStateId, @Param("money") String money);
+    void updateByCustomerStateId(@Param("totalTask") String totalTask,
+                                 @Param("customerStateId") String customerStateId,
+                                 @Param("money") String money);
+
+    CustomerState queryTotalMoneyByCustomerId(@Param("customerStateId") Integer customerStateId);
 }

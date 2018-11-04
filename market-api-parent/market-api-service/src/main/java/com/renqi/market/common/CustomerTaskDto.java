@@ -22,6 +22,8 @@ public class CustomerTaskDto implements Serializable {
     public CustomerTaskDto() {
     }
 
+    private Integer totalTask;
+
     private Double totalMoney;
 
     private Integer taskId;
@@ -53,11 +55,11 @@ public class CustomerTaskDto implements Serializable {
     /**
      * 宝贝ID
      */
-    private Integer goodId;
+    private Long goodId;
     /**
      * 关键词集合
      */
-    @NotNull(message = "关键词集合")
+    //@NotNull(message = "关键词集合")
     private String wordList;
     /**
      * 宝贝标题

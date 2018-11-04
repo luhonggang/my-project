@@ -39,7 +39,7 @@ public class CustomerTask {
 
     private String taskType;
 
-    private Integer goodId;
+    private Long goodId;
 
     private String goodLinkUrl;
 
