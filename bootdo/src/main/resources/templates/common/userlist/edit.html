@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content ">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content" style="height:400px">
+                    <form class="form-horizontalm-t" id="signupForm">
+                        <input id="id" name="customerId" th:value="${dict.customerId}" class="form-control" type="hidden">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">用户手机号码：</label>
+                            <div class="col-sm-8" style="margin-bottom:20px">
+                                <input id="name" name="phone" readonly="readonly" th:value="${dict.phone}" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group" onchange="selectTaskState()">
+                            <label class="col-sm-3 control-label">会员等级：</label>
+                            <div class="col-sm-8" style="margin-bottom:20px">
+                                <select id="selectTaskState" data-placeholder="任务状态" class="form-control chosen-select"
+                                        tabindex="2" style="width: 100%">
+                                    <option value="1">普通会员</option>
+                                    <option value="2">白银会员</option>
+                                    <option value="3">黄金会员</option>
+                                    <option value="4">白金会员</option>
+                                </select>
+                                <input id="task_is_select" style="display: none" name="levelId"  class="form-control" >
+                                <input id="task_state"  th:value="${dict.levelId}" class="form-control" type="hidden">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">账户余额：</label>
+                            <div class="col-sm-8" style="margin-bottom:20px">
+                                <input id="type" name="totalMoney" th:value="${dict.totalMoney}"
+                                       class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">当前折扣：</label>
+                            <div class="col-sm-8" style="margin-bottom:20px">
+                                <input id="check_discount" name="taskTime" th:value="${dict.discount}" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">是否充值：</label>
+                            <div class="col-sm-8" style="margin-bottom:20px">
+                                <select id="checkIsRecharge" onchange="checkIsRecharge()" data-placeholder="是否充值" class="form-control chosen-select"
+                                        tabindex="2" style="width: 100%">
+                                    <option value="0">未充值</option>
+                                    <option value="1">已充值</option>
+                                </select>
+                                <input id="save_isRecharge" style="display: none" name="isRecharge"  class="form-control" >
+                                <input id="hidden_isRecharge"  th:value="${dict.isRecharge}" class="form-control" type="hidden">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-3" style="margin-top:14px">
+                                <button type="submit" class="btn btn-primary">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript" src="/js/appjs/common/userlist/edit.js">
+</script>
+<script type="text/javascript">
+    // 设置下拉框的值
+    $('#selectTaskState').val($('#task_state').val());
+    function selectTaskState() {
+        var currentSelect = $("#selectTaskState").find("option:selected").val();
+        console.log('xuanzhong '+currentSelect);
+        $('#task_is_select').val(currentSelect);
+    }
+
+    // 是否充值
+    $('#checkIsRecharge').val($('#hidden_isRecharge').val());
+    function checkIsRecharge() {
+        var currentSelect = $("#selectTaskState").find("option:selected").val();
+        console.log('xuanzhong '+currentSelect);
+        $('#save_isRecharge').val(currentSelect);
+    }
+
+    // 检查折扣
+    $('#check_discount').on('blur',function () {
+       var dis = $('#check_discount').val();
+       if(!checkIsNumber(dis)){
+           layer.tips('输入的折扣有误', '#check_discount');
+           return;
+       }
+    });
+    // 折扣校验
+    function checkIsNumber(val){
+        return (/^((0\.[1-9]{1})|(([1-9]{1})(\.\d{1})?))$/.test(val));
+    }
+</script>
+
+</body>
+</html>
+

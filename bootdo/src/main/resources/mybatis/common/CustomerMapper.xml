@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bootdo.common.dao.CustomerMapper">
+    <sql id="Base_Column_List">
+      customer_id, customer_state_id, phone, pass_word, token, expire_time, level_id,
+      login_time, create_time, update_time
+   </sql>
+    <!--查询出个人信息，商铺信息，任务充值信息-->
+    <select id="queryListCustomerMsg" resultType="com.bootdo.common.domain.CustomerInfoDto">
+        SELECT
+            cu.customer_id AS customerId ,
+            cu.phone,
+            cu.customer_state_id AS stateId,
+            state.total_money AS totalMoney,
+            state.discount,
+            state.is_recharge AS isRecharge,
+            state.expired_time AS expiredTime,
+            cu.level_id AS levelId,
+            lev.level_name AS levelName,
+            lev.level_desc AS levelDesc
+        FROM customer cu
+        INNER JOIN customer_state state ON cu.customer_state_id = state.customer_state_id
+        INNER JOIN customer_level lev   ON cu.level_id = lev.level_id
+         <where>
+              <if test="phone != null and phone != ''"> and phone LIKE CONCAT('',#{phone},'%') </if>
+         </where>
+          <if test="offset != null and limit != null">
+              limit #{offset}, #{limit}
+          </if>
+    </select>
+
+    <select id="queryCustomerById" parameterType="long" resultType="com.bootdo.common.domain.CustomerInfoDto">
+        SELECT
+        cu.customer_id AS customerId ,
+        cu.phone,
+        cu.customer_state_id AS stateId,
+        state.total_money AS totalMoney,
+        state.discount,
+        state.is_recharge AS isRecharge,
+        state.expired_time AS expiredTime,
+        cu.level_id AS levelId,
+        lev.level_name AS levelName,
+        lev.level_desc AS levelDesc
+    FROM customer cu
+    INNER JOIN customer_state state ON cu.customer_state_id = state.customer_state_id
+    INNER JOIN customer_level lev   ON cu.level_id = lev.level_id
+    WHERE customer_id = #{customerId} LIMIT 1
+    </select>
+
+    <select id="count" resultType="int">
+        SELECT
+        COUNT(*)
+        FROM customer cu
+        INNER JOIN customer_state state ON cu.customer_state_id = state.customer_state_id
+        INNER JOIN customer_level lev   ON cu.level_id = lev.level_id
+    </select>
+
+    <update id="updateLevelById" parameterType="com.bootdo.common.domain.CustomerInfoDto">
+        UPDATE customer
+        <set>
+            update_time = NOW(),
+          <if test="levelId != null and levelId !=''">
+                level_id = #{levelId}
+          </if>
+        </set>
+    WHERE customer_id = #{customerId}
+    </update>
+
+    <select id="selectStateId" parameterType="int" resultType="com.bootdo.common.domain.CustomerInfoDto">
+     SELECT  customer_state_id AS  stateId FROM  customer  WHERE customer_id = #{customerId}
+    </select>
+
+    <select id="queryListPhone" resultType="com.bootdo.common.domain.CustomerInfoDto">
+        SELECT
+        cu.customer_id AS customerId ,
+        cu.phone,
+        cu.customer_state_id AS stateId,
+        state.total_money AS totalMoney,
+        state.discount,
+        state.is_recharge AS isRecharge,
+        state.expired_time AS expiredTime,
+        cu.level_id AS levelId,
+        lev.level_name AS levelName,
+        lev.level_desc AS levelDesc
+        FROM customer cu
+        INNER JOIN customer_state state ON cu.customer_state_id = state.customer_state_id
+        INNER JOIN customer_level lev   ON cu.level_id = lev.level_id
+    </select>
+
+    <update id="updateTotalMoney" parameterType="com.bootdo.common.domain.CustomerInfoDto">
+        UPDATE customer_state
+        <set>
+            update_time = NOW(),
+            <if test="isRecharge != null and isRecharge =''">
+                is_recharge = #{isRecharge},
+            </if>
+            <if test="totalMoney != null ">
+                total_money = #{totalMoney},
+            </if>
+            <if test="discount != null ">
+                discount = #{discount},
+            </if>
+            <if test="expiredTime != null and expiredTime !=''">
+                expired_time = #{expiredTime}
+            </if>
+
+        </set>
+        WHERE customer_state_id = #{stateId}
+    </update>
+</mapper>
