@@ -3,7 +3,7 @@ var baseUrl = '/market/';
 var token = localStorage.getItem("TOKEN");
 // 当前用户的客户ID
 var customerId = localStorage.getItem("customerId");
-// // 加载用户的数据
+// 加载用户的数据
 // var token = localStorage.getItem("TOKEN");
 // var customerId = localStorage.getItem("customerId");
 

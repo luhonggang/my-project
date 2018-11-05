@@ -18,14 +18,6 @@
     <link rel="stylesheet" type="text/css" href="layui/css/layui.css" />-->
 </head>
 <script type="text/javascript">
-    //加载层
-    // var index = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
-    // //loading层
-    //
-    // var index = layer.load(1, {
-    //     shade: [0.1,'#fff'] //0.1透明度的白色背景
-    // });
-
     /* 窗口尺寸改变的事件 */
     onload = function(){
         changeBgSize();
@@ -91,8 +83,11 @@
                 $("#completeTask").html(result.data.taskIsComplete);
                 $("#taskIsDoing").html(result.data.taskIsDoing);
                 // 当前用户的折扣率
-                $('#discount').val(result.data.customerState.discount);
+                var discount = result.data.customerState.discount;
+                $('#discount').val(discount);
                 $('#customerStateId').val(result.data.customerState.customerStateId);
+                // 折扣
+                window.localStorage.setItem('discount',discount);
                 if(result.data.taskList[0].taskId !='' ){
                     $('.runnable').html("");
                     $('.runnable').show();
@@ -834,8 +829,11 @@
     </div>
 </div>
 <script type="text/javascript">
-    // 折扣
-    var useDis = $('#discount').val()/10;
+//  折扣
+    console.log(parseFloat(localStorage.getItem("discount")));
+    var useDis = Number(parseFloat(localStorage.getItem("discount"))/10).toFixed(2);
+    alert(useDis);
+//    console.log('折扣价 ： '+useDis)
     // 宝贝标题
     var goodTitle = '';
     // 计算总的金额
@@ -871,7 +869,6 @@
         }else{
             $("#"+$id+"").find('em').eq(1).hide();
         }
-        console.log("html : "+$('#'+clickDivId+'').html() +' 当前div ：'+clickDivId+' type '+type);
         // 只要点击PC端 就展示匿名流量
         if('pcll_nmrw' == type){
             currentClickType = 'pc';
@@ -976,7 +973,6 @@
             arrayNumber = val.split($cc);
             if(wordName.indexOf($ec) != -1 || wordName.indexOf($cc) != -1){
                 for (i = 0; i < arrayNumber.length; i++) {
-                    console.log("当前数据c ："+arrayNumber[i]);
                     if(!checkIsNumber(arrayNumber[i])){
                         return false;
                     }
@@ -1047,7 +1043,6 @@
     function  checkvsAndBvNum(ct,val,falg,type) {
         var arrayNumber = val.split(ct);
         for (i = 0; i < arrayNumber.length; i++) {
-            console.log("当前数据获取数据 ："+arrayNumber[i]);
             if(checkIsNumber(arrayNumber[i])){
                 totalMoney = additiveNumber(totalMoney,Number(arrayNumber[i]));
             }else{
@@ -1060,7 +1055,6 @@
       function  checkFirstIsNum(ct,val,falg) {
           var arrayNumber = val.split(ct);
           if(checkIsNumber(arrayNumber[0])){
-              console.log("totalMoney "+Number(arrayNumber[i])+" 计算 ： "+additiveNumber(totalMoney,Number(arrayNumber[i])));
               totalMoney = additiveNumber(totalMoney,Number(arrayNumber[i]));
           }else{
               falg = false;
@@ -1072,7 +1066,6 @@
     function changeGoodUrl(){
         var $thisGood = $("#"+clickDivId+" input[name='goodLinkUrl']");
             var goodLinkUrl = $thisGood.val();
-            console.log("div :"+clickDivId+" 数据"+goodLinkUrl);
             // 数组
             if('' == goodLinkUrl || goodLinkUrl.length == 0){
                 console.log("请输入关键词");
@@ -1086,10 +1079,8 @@
     }
     // 关键词校验
     function changeWordName(){
-        console.log("div id ： "+clickDivId)
         var $thisWord = $("#"+clickDivId+" input[name='wordList']");
         var wordList = $thisWord.val();
-        console.log("关键词 ： "+wordList);
         // 数组
         if('' == wordList || wordList.length == 0){
             console.log("请输入关键词");
@@ -1377,11 +1368,9 @@
         var  html = $('#pcll_smrw');
         if(html.html() == "" || html.length == 1){
             if("pcll_smrw" != clickDivId){
-                console.log("长度2 ："+html.length);
                 $('#pcll_smrw').html($('#'+clickDivId+'').html());
                 // 将点击事件前的div内容清除
                 $('#'+clickDivId+'').html("");
-                console.log("div点击： "+clickDivId);
             }
         }
         $('#task_tips').html('PC实名流量创建-基本信息');
@@ -1436,16 +1425,13 @@
         pcRate = 0.60;
         pcType = '5';
         var  html = $('#sjll_nmrw');
-        console.log("当前div ： "+clickDivId);
         if(html.html() == "" || html.length == 1){
             if("sjll_nmrw" != clickDivId){
-                console.log("当前div2 ： "+clickDivId);
                 $('#sjll_nmrw').html($('#'+clickDivId+'').html());
                 // 将点击事件前的div内容清除
                 $('#'+clickDivId+'').html("");
             }
         }
-        console.log("当前div展示 手机端匿名 ： "+clickDivId);
         $('#task_tips').html('手机匿名流量创建-基本信息');
         $("#sjll_nmrw").show();
         $("#sjll_smrw").hide();
@@ -1461,7 +1447,6 @@
         pcType = '6';
         clickDiv = '实名';
         var  html = $('#sjll_smrw');
-        console.log("当前div sm： "+clickDivId+" html : "+html.html());
         if(html.html() == "" || html.length == 1){
             if("sjll_smrw" != clickDivId){
                 console.log("当前div sm1 ： "+clickDivId);
@@ -1469,7 +1454,6 @@
                 $('#'+clickDivId+'').html("");
             }
         }
-        console.log("当前div sm2 ： "+clickDivId);
         $('#task_tips').html('手机实名流量创建-基本信息');
         $("#sjll_smrw").show();
         $("#sjll_nmrw").hide();
@@ -1600,7 +1584,6 @@
   $('#other_word').on('blur',function () {
       var $thisWord = $("#qtll_jdapp input[name='wordList']");
       var wordList = $thisWord.val();
-      console.log("关键词 ： "+wordList);
       // 数组
       if('' == wordList || wordList.length == 0){
           console.log("请输入关键词");
