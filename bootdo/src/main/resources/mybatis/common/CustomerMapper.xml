@@ -5,6 +5,23 @@
       customer_id, customer_state_id, phone, pass_word, token, expire_time, level_id,
       login_time, create_time, update_time
    </sql>
+
+    <select id="selectCurrentMoney" parameterType="com.bootdo.common.domain.CustomerInfoDto" resultType="com.bootdo.common.domain.CustomerInfoDto">
+        SELECT
+            cu.customer_id AS customerId ,
+            cu.phone,
+            cu.customer_state_id AS stateId,
+            state.total_money AS totalMoney,
+            state.discount,
+            state.is_recharge AS isRecharge,
+            state.expired_time AS expiredTime,
+            SUM(task.use_money) AS useMoney
+        FROM customer cu
+        INNER JOIN customer_state state ON cu.customer_state_id = state.customer_state_id
+        INNER JOIN customer_task task   ON cu.customer_id = task.customer_id
+        WHERE cu.customer_id = #{customerId} LIMIT 1
+    </select>
+
     <!--查询出个人信息，商铺信息，任务充值信息-->
     <select id="queryListCustomerMsg" resultType="com.bootdo.common.domain.CustomerInfoDto">
         SELECT

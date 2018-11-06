@@ -80,7 +80,15 @@ public class CustomerController extends BaseController {
 		// 查询出当前用户 绑定的 状态id
 		CustomerInfoDto infoDto = customerMapper.selectStateId(customerInfoDto.getCustomerId());
 		// 修改用户的折扣 总的账户余额 是否充值
-		customerMapper.updateTotalMoney(customerInfoDto);
+		CustomerInfoDto taskVo = customerMapper.selectCurrentMoney(customerInfoDto);
+		Double totalMoney = customerInfoDto.getTotalMoney();
+		Double cuTotalMoney = taskVo.getTotalMoney() == null ? 0.0D : taskVo.getTotalMoney();
+		if(taskVo != null){
+			if(totalMoney < cuTotalMoney){
+				return R.error();
+			}
+			customerMapper.updateTotalMoney(customerInfoDto);
+		}
 		return R.ok();
 	}
 

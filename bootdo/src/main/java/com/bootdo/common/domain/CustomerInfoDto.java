@@ -21,5 +21,6 @@ public class CustomerInfoDto {
     private String levelName;
     private String levelDesc;
     private Double totalMoney;
+    private Double useMoney;
     private Date updateTime;
 }
