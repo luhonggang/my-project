@@ -88,7 +88,7 @@
                 $('#customerStateId').val(result.data.customerState.customerStateId);
                 // 折扣
                 window.localStorage.setItem('discount',discount);
-                if(result.data.taskList[0].taskId !='' ){
+                if(null != result.data.taskList[0] && result.data.taskList[0].taskId !='' ){
                     $('.runnable').html("");
                     $('.runnable').show();
                     var type = "";
@@ -832,8 +832,6 @@
 //  折扣
     console.log(parseFloat(localStorage.getItem("discount")));
     var useDis = Number(parseFloat(localStorage.getItem("discount"))/10).toFixed(2);
-    alert(useDis);
-//    console.log('折扣价 ： '+useDis)
     // 宝贝标题
     var goodTitle = '';
     // 计算总的金额
@@ -1093,15 +1091,25 @@
         var totalVistor = $thisVistor.val().trim();
         // 数组
         if(totalVistor.length == 0){
-            console.log("请输入访客量");
+            alert("请输入访客量");
             return;
         }
 
         if(!checkValFormat(clickDivId,totalVistor,"访客量")){
-            console.log("访客量格式有误");
+            alert("访客量格式有误");
             $thisVistor.val("");
             return;
         };
+        var $thisNumber = $("#"+clickDivId+" input[name='totalNumber']");
+        var totalNumber = $thisNumber.val().trim();
+        if(totalNumber !='' && totalNumber.length != 0){
+            if(!calculateMoney(clickDivId,totalNumber,"浏览量",'bs')){
+                alert("浏览量格式有误");
+                $thisNumber.val("");
+                return;
+            };
+
+        }
         // 计算访客量
         //calculateMoney(currentId,totalVistor,pcRate,"vs");
     }
@@ -1119,19 +1127,19 @@
         var totalVistor = $thisVistor.val().trim();
         // 数组
         if(totalNumber.length == 0 || totalVistor.length == 0){
-            console.log("请输入浏览量或访客量");
+            alert("请输入浏览量或访客量");
             return;
         }
 
         totalMoney = 0;
         // 计算访客量总量
         if(!calculateMoney(clickDivId,totalVistor,"访客量",'vs')){
-            console.log("访客量格式有误");
+            alert("访客量格式有误");
             $thisVistor.val("");
             return;
         }
         if(!calculateMoney(clickDivId,totalNumber,"浏览量",'bs')){
-            console.log("浏览量格式有误");
+            alert("浏览量格式有误");
             $thisNumber.val("");
             return;
         };
@@ -1144,7 +1152,6 @@
 
     // 任务发布按钮事件
     function savaTask(){
-        alert('点击');
         var goodUrl = $("#"+clickDivId+" input[name='goodLinkUrl']").val();
         var wordList = $("#"+clickDivId+" input[name='wordList']").val();
         var totalVisitor = $("#"+clickDivId+" input[name='totalVisitor']").val();
@@ -1184,12 +1191,12 @@
         var goodLinkUrl = $("#pcll_jhsrw input[name='goodLinkUrl']").val();
         // 数组
         if('' == goodLinkUrl || goodLinkUrl.length == 0){
-            console.log("请输入关键词");
+            alert("请输入关键词");
             return;
         }
         // 淘宝天猫链接 校验
         if(!isRightURL(goodLinkUrl)){
-            console.log("宝贝链接格式有误");
+            alert("宝贝链接格式有误");
             $("#pcll_jhsrw input[name='goodLinkUrl']").val("");
             return;
         }
@@ -1200,11 +1207,11 @@
         var taskNumber = $("#pcll_jhsrw input[name='taskTotalNumber']").val();
         // 数组
         if('' == taskNumber || taskNumber.length == 0){
-            console.log("请输入关键词");
+            alert("请输入关键词");
             return;
         }
         if(!checkIsNumber(taskNumber)){
-            console.log("请输入任务量");
+            alert("请输入任务量");
             return;
         }
         totalMoney = taskNumber * 2.00;
@@ -1267,26 +1274,26 @@
         var eh = parseInt(taskEndHour);
         // 公共参数校验 !isPositiveInteger(taskBeginHour)
         if(isNaN(bh)){
-            console.log("开始时段为空或格式有误");
+            alert("开始时段为空或格式有误");
             return;
         }
         if(isNaN(eh)){
-            console.log("结束时段为空或格式有误");
+            alert("结束时段为空或格式有误");
             return;
         }
         // todo 开始时段 小于结束时段
         var bm = parseInt(taskBeginMiunte);
         var em = parseInt(taskEndMiunte);
         if(isNaN(bm)){
-            console.log("开始分钟为空或格式有误");
+            alert("开始分钟为空或格式有误");
             return;
         }
         if(isNaN(em)){
-            console.log("结束分钟为空或格式有误");
+            alert("结束分钟为空或格式有误");
             return;
         }
         if( bm > em|| bm > 60 || em > 60 ){
-            console.log("录入的分钟数有误,请检查");
+            alert("录入的分钟数有误,请检查");
             return;
         }
         var useDiscount = $('#discount').val();
@@ -1315,7 +1322,7 @@
                 if(result.code == "200"){
                     totalMoney = 0.0;
                     pcRate = 0.0;
-                    alert('任务发布成功'+currentClickType);
+                    alert('任务发布成功');
                     switch (currentClickType){
                         case 'pc': $('#modal-1').removeClass('md-show');break;
                         case 'mobile': $('#modal-2').removeClass('md-show');break;
@@ -1328,7 +1335,7 @@
                 }else if(result.code == '415'){
                     alert("您好，您的账户余额不足，请先去充值");
                 }else if(result.code=="500"){
-                    alert("系统繁忙稍后再试");
+                    alert(result.msg);
                 }else if(result.code == '401' || result.code == '402'){
                     // token 失效 直接跳转登录页
                     window.location.href = baseUrl+"page/login.html";
@@ -1390,7 +1397,6 @@
         var  html = $('#pcll_ztcrw');
         if(html.html() == "" || html.length == 1){
             if("pcll_ztcrw" != clickDivId){
-                console.log(" 3点击的div : "+clickDivId);
                 $('#pcll_ztcrw').html($('#'+clickDivId+'').html());
                 // 将点击事件前的div内容清除
                 $('#'+clickDivId+'').html("");
@@ -1449,7 +1455,6 @@
         var  html = $('#sjll_smrw');
         if(html.html() == "" || html.length == 1){
             if("sjll_smrw" != clickDivId){
-                console.log("当前div sm1 ： "+clickDivId);
                 $('#sjll_smrw').html($('#'+clickDivId+'').html());
                 $('#'+clickDivId+'').html("");
             }
@@ -1480,12 +1485,12 @@
       var goodLinkUrl = $thisGood.val();
       // 数组
       if('' == goodLinkUrl || goodLinkUrl.length == 0){
-          console.log("请输入关键词");
+          alert("请输入关键词");
           return;
       }
       // 淘宝天猫链接 校验
       if(!isRightURL(goodLinkUrl)){
-          console.log("宝贝链接格式有误");
+          alert("宝贝链接格式有误");
           $thisGood.val("");
           return;
       }
@@ -1494,10 +1499,9 @@
   $('#tmapp_word').on('blur',function () {
       var $thisWord = $("#sjll_tmapp input[name='wordList']");
       var wordList = $thisWord.val();
-      console.log("关键词 ： "+wordList);
       // 数组
       if('' == wordList || wordList.length == 0){
-          console.log("请输入关键词");
+          alert("请输入关键词");
           return;
       }
   });
@@ -1507,12 +1511,12 @@
       var taskNumber = $task.val();
       // 数组
       if('' == taskNumber || taskNumber.length == 0){
-          console.log("请输入关键词");
+          alert("请输入关键词");
           return;
       }
       if(!checkIsNumber(taskNumber)){
           $task.val('');
-          console.log("请输入任务量");
+          alert("请输入任务量");
           return;
       }
       totalMoney = taskNumber * 0.8;
@@ -1574,7 +1578,7 @@
       }
       // 淘宝天猫链接 校验
       if(!isRightURL(goodLinkUrl)){
-          console.log("宝贝链接格式有误");
+          alert("宝贝链接格式有误");
           $thisGood.val("");
           return;
       }
@@ -1586,7 +1590,7 @@
       var wordList = $thisWord.val();
       // 数组
       if('' == wordList || wordList.length == 0){
-          console.log("请输入关键词");
+          alert("请输入关键词");
           return;
       }
   });
@@ -1597,12 +1601,12 @@
       var taskNumber = $task.val();
       // 数组
       if('' == taskNumber || taskNumber.length == 0){
-          console.log("请输入关键词");
+          alert("请输入关键词");
           return;
       }
       if(!checkIsNumber(taskNumber)){
           $task.val('');
-          console.log("请输入任务量");
+          alert("请输入任务量");
           return;
       }
       totalMoney = taskNumber * 0.8;
@@ -1661,7 +1665,7 @@
       }
       // 淘宝天猫链接 校验
       if(!isRightURL(goodLinkUrl)){
-          console.log("宝贝链接格式有误");
+          alert("宝贝链接格式有误");
           $thisGood.val("");
           return;
       }
@@ -1673,12 +1677,12 @@
       var taskNumber = $task.val();
       // 数组
       if('' == taskNumber || taskNumber.length == 0){
-          console.log("请输入关键词");
+          alert("请输入关键词");
           return;
       }
       if(!checkIsNumber(taskNumber)){
           $task.val('');
-          console.log("请输入任务量");
+          alert("请输入任务量");
           return;
       }
       totalMoney = taskNumber * 2.0;
@@ -1738,7 +1742,7 @@
       }
       // 淘宝天猫链接 校验
       if(!isRightURL(goodLinkUrl)){
-          console.log("宝贝链接格式有误");
+          alert("宝贝链接格式有误");
           $thisGood.val("");
           return;
       }
@@ -1750,7 +1754,7 @@
       console.log("短标题 ： "+title);
       // 数组
       if('' == title || title.length == 0){
-          console.log("请输入端标题");
+          alert("请输入端标题");
           return;
       }
         goodTitle = title;
@@ -1759,10 +1763,9 @@
     $('#mbztc_word').on('blur',function () {
       var $thisWord = $("#qtll_sjztc input[name='wordList']");
       var wordList = $thisWord.val();
-      console.log("关键词 ： "+wordList);
       // 数组
       if('' == wordList || wordList.length == 0){
-          console.log("请输入关键词");
+          alert("请输入关键词");
           return;
       }
     });
@@ -1772,12 +1775,12 @@
       var taskNumber = $task.val();
       // 数组
       if('' == taskNumber || taskNumber.length == 0){
-          console.log("请输入关键词");
+          alert("请输入关键词");
           return;
       }
       if(!checkIsNumber(taskNumber)){
           $task.val('');
-          console.log("请输入任务量");
+          alert("请输入任务量");
           return;
       }
     });
@@ -1789,7 +1792,7 @@
         var totalVistor = $thisVistor.val().trim();
         // 数组
         if(totalNumber.length == 0 || totalVistor.length == 0){
-            console.log("请输入浏览量或访客量");
+            alert("请输入浏览量或访客量");
             return;
         }
 
@@ -1798,12 +1801,12 @@
         pcRate = 0.88;
         // 计算访客量总量
         if(!calculateMoney('qtll_sjztc',totalVistor,"访客量",'vs')){
-            console.log("访客量格式有误");
+            alert("访客量格式有误");
             $thisVistor.val("");
             return;
         }
         if(!calculateMoney('qtll_sjztc',totalNumber,"浏览量",'bs')){
-            console.log("浏览量格式有误");
+            alert("浏览量格式有误");
             $thisNumber.val("");
             return;
         };
@@ -1861,7 +1864,7 @@
         }
         // 淘宝天猫链接 校验
         if(!isRightURL(goodLinkUrl)){
-            console.log("宝贝链接格式有误");
+            alert("宝贝链接格式有误");
             $thisGood.val("");
             return;
         }
@@ -1873,7 +1876,7 @@
         console.log("关键词 ： "+wordList);
         // 数组
         if('' == wordList || wordList.length == 0){
-            console.log("请输入关键词");
+            alert("请输入关键词");
             return;
         }
     });
@@ -1900,12 +1903,12 @@
         var taskNumber = $task.val();
         // 数组
         if('' == taskNumber || taskNumber.length == 0){
-            console.log("请输入关键词");
+            alert("请输入关键词");
             return;
         }
         if(!checkIsNumber(taskNumber)){
             $task.val('');
-            console.log("请输入任务量");
+            alert("请输入任务量");
             return;
         }
     });
@@ -1942,7 +1945,7 @@
         }
         // 淘宝天猫链接 校验
         if(!isRightURL(goodLinkUrl)){
-            console.log("宝贝链接格式有误");
+            alert("宝贝链接格式有误");
             $thisGood.val("");
             return;
         }
@@ -1954,7 +1957,7 @@
         console.log("关键词 ： "+wordList);
         // 数组
         if('' == wordList || wordList.length == 0){
-            console.log("请输入关键词");
+            alert("请输入关键词");
             return;
         }
     });
@@ -1979,12 +1982,12 @@
         var taskNumber = $task.val();
         // 数组
         if('' == taskNumber || taskNumber.length == 0){
-            console.log("请输入关键词");
+            alert("请输入关键词");
             return;
         }
         if(!checkIsNumber(taskNumber)){
             $task.val('');
-            console.log("请输入任务量");
+            alert("请输入任务量");
             return;
         }
     });

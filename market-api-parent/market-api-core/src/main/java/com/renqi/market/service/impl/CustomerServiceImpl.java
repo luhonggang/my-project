@@ -189,7 +189,13 @@ public class CustomerServiceImpl implements CustomerService {
 		return ResultMsgUtil.setCodeMsg(new BaseResultMsg(),SystemCode.SYSTEM_SUCCESS.getCode(),SystemCode.SYSTEM_SUCCESS.getMsg());
     }
 
-    /**
+	@Override
+	public boolean updateCustomerByPhone(CustomerRegister user) {
+    	int count = customerMapper.updateCustomerByPhone(user);
+		return count > 0;
+	}
+
+	/**
 	 * 依据手机号码和 以及指定key的业务类型,模板 来生成验证码 并存在Redis中
 	 * @param mobile
 	 * @param typeAndTemplate

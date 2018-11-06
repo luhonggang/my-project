@@ -17,7 +17,11 @@ public class CustomerRegister implements Serializable {
     private String phone;
     @NotNull(message="passWord不可为空")
     private String passWord;
+    /**
+     * 确认密码
+     */
     private String confirmPwd;
+
 //    @NotNull(message="mobileCode不可为空")
     private String mobileCode;
     public CustomerRegister() {

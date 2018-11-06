@@ -1,6 +1,8 @@
 package com.renqi.market.controller;
 
+import com.renqi.market.common.BaseResult;
 import com.renqi.market.common.BaseResultMsg;
+import com.renqi.market.exception.CheckBaseException;
 import com.renqi.market.exception.GlobalException;
 import com.renqi.market.util.SystemCode;
 import org.slf4j.Logger;
@@ -24,6 +26,7 @@ import java.util.Set;
 public class ExceptionHandlerController {
     private final static Logger logger = LoggerFactory.getLogger(ExceptionHandlerController.class);
 
+    private BaseResult baseResult;
     /**
      * 处理Controller类异常
      * @param e
@@ -38,6 +41,10 @@ public class ExceptionHandlerController {
         logger.error("File="+stackTraceElement.getFileName());
         logger.error("Line="+stackTraceElement.getLineNumber());
         logger.error("Method="+stackTraceElement.getMethodName());
+        if(e instanceof CheckBaseException){
+            CheckBaseException error = (CheckBaseException) e;
+            return new BaseResultMsg<>(error.getcode(),error.getmessage());
+        }
         if(e instanceof GlobalException){
             GlobalException error = (GlobalException) e;
             return new BaseResultMsg<>(error.getCode(),error.getErrorMessage());

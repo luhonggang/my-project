@@ -1,5 +1,6 @@
 package com.renqi.market.service.impl;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.renqi.market.common.*;
 import com.renqi.market.dao.*;
 import com.renqi.market.entity.CustomerState;
@@ -8,10 +9,7 @@ import com.renqi.market.entity.CustomerTaskInfo;
 import com.renqi.market.exception.BaseResultException;
 import com.renqi.market.exception.CheckBaseException;
 import com.renqi.market.service.CustomerTaskService;
-import com.renqi.market.util.BigDecMathUtil;
-import com.renqi.market.util.ResultMsgUtil;
-import com.renqi.market.util.StringHandleUtils;
-import com.renqi.market.util.SystemCode;
+import com.renqi.market.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +18,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -176,6 +172,8 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
         // 当前用户发布所用的金额
         Double currentMoney = task.getTotalMoney();
         if(currentMoney > totalMoney){
+            msg.setCode(SystemCode.MONEY_NOT_ENOUGH.getCode());
+            msg.setMsg(SystemCode.MONEY_NOT_ENOUGH.getMsg());
             throw new CheckBaseException(msg,SystemCode.MONEY_NOT_ENOUGH.getCode(),SystemCode.MONEY_NOT_ENOUGH.getMsg());
             //return ResultMsgUtil.setCodeMsg(msg,SystemCode.MONEY_NOT_ENOUGH.getCode(),SystemCode.MONEY_NOT_ENOUGH.getMsg());
         }
@@ -208,6 +206,34 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
             /**
              * TODO 此时用户发布任务成功 后需要 发送验证码通知管理人员
              */
+//            Map<String,String> mapPram = new HashMap<>();
+//            mapPram.put("phone","15812346666");
+//            String typeName = "";
+//            switch (taskType){
+//                case "1":typeName = "PC端匿名访问";break;
+//                case "2":typeName = "PC端实名访问";break;
+//                case "3":typeName = "PC直通车流量";break;
+//                case "4":typeName = "PC聚划算开团提醒";break;
+//                case "5":typeName = "手机端匿名访问";break;
+//                case "6":typeName = "手机端实名访问";break;
+//                case "7":typeName = "手机端天猫App流量";break;
+//                case "9":typeName = "其他京东App流量";break;
+//                case "10":typeName = "猜你喜欢流量";break;
+//                case "11":typeName = "手机直通车流量";break;
+//                case "12":typeName = "PC端收藏加购";break;
+//                case "13":typeName = "手机端收藏加购";break;
+//                default:typeName = "PC端匿名访问";break;
+//
+//
+//            }
+//            mapPram.put("remark","用户发布"+typeName+"任务");
+//        try {
+//            MobileCodeUtil.sendSmsTask(mapPram);
+//        } catch (ClientException e) {
+//            logger.info("++++++++++ 发送通知短信失败 +++++++++ customerId : {}",task.getCustomerId());
+//            e.printStackTrace();
+//            throw new CheckBaseException(msg, SystemCode.SYSTEM_ERROR.getCode(), SystemCode.TASK_SEND_CODE_ERROR.getMsg());
+//        }
         return msg;
     }
 

@@ -142,14 +142,36 @@ public class UserLoginController extends GlobalExceptionHandler {
                 if(stringRedisTemplate.hasKey(type+"_"+phone)){
                     return ResultMsgUtil.setCodeMsg(base,SystemCode.MOBILE_IS_EXIST.getCode(),SystemCode.MOBILE_IS_EXIST.getMsg());
                 }
+                // SMS_77560073
                 Map<String,String> map = new HashMap<>();
                 map.put("type",type);
-                map.put("template","SMS_77560073");
+                map.put("template","SMS_150570582");
                 return  customerService.getIdentiFyingCode(phone,map);
             }else{
                 return ResultMsgUtil.setCodeMsg(base,SystemCode.MOBILE_IS_REGISTER.getCode(),SystemCode.MOBILE_IS_REGISTER.getMsg());
             }
         }
+    }
+
+    /**
+     * 注册用户
+     * @param user 手机号码 密码 确认密码
+     * @return     BaseResultMsg
+     */
+    @RequestMapping(value = "/updatePwd", method = RequestMethod.POST)
+    public BaseResultMsg updatePwd(@RequestBody CustomerRegister user) {
+        BaseResultMsg base = new BaseResultMsg(SystemCode.SYSTEM_SUCCESS.getCode(),"修改密码成功");
+        try{
+            BaseCustomer cvo = customerService.selectCustomerByPhonePwd(user.getPhone(),null);
+            if(null == cvo){
+                return ResultMsgUtil.setCodeMsg(base,SystemCode.USER_NOT_EXIST.getCode(),SystemCode.USER_NOT_EXIST.getMsg());
+            }
+            customerService.updateCustomerByPhone(user);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResultMsgUtil.setCodeMsg(base,SystemCode.SYSTEM_ERROR.getCode(),SystemCode.SYSTEM_ERROR.getMsg());
+        }
+        return base;
     }
 
     /**

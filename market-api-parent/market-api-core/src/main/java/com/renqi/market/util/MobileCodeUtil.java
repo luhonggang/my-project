@@ -30,6 +30,8 @@ import java.util.regex.Pattern;
  * @since 1.0
  */
 public class MobileCodeUtil {
+    private static final String SUCCESS_CODE  = "OK";
+    private static final String SUCCESS_STATE = "200";
     /**
      * 判斷是否包含字母
      * @param strContent
@@ -66,7 +68,7 @@ public class MobileCodeUtil {
         //必填:待发送手机号
         request.setPhoneNumbers(mobile);
         //必填:短信签名-可在短信控制台中找到
-        request.setSignName("海盈");
+        request.setSignName("人气通");
         //必填:短信模板-可在短信控制台中找到
         request.setTemplateCode(templateId);
 //        switch (templateId){
@@ -126,7 +128,63 @@ public class MobileCodeUtil {
         return querySendDetailsResponse;
     }
 
-    
+
+    /**
+     * 用户发布任务的时候发送短信通知
+     * @param map  手机号码 短信模板 短信参数
+     * @return     Map<String,String>
+     * @throws ClientException
+     */
+    public static Map<String,String> sendSmsTask(Map<String,String> map) throws ClientException {
+
+        int mobile_code = (int)((Math.random()*9+1)*100000);
+        //可自助调整超时时间
+        System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
+        System.setProperty("sun.net.client.defaultReadTimeout", "10000");
+        //初始化acsClient,暂不支持region化
+        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
+        DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
+        IAcsClient acsClient = new DefaultAcsClient(profile);
+
+        //组装请求对象-具体描述见控制台-文档部分内容
+        SendSmsRequest request = new SendSmsRequest();
+        //必填:待发送手机号
+        request.setPhoneNumbers(map.get("phone"));
+        //必填:短信签名-可在短信控制台中找到
+        request.setSignName("人气通");
+        //必填:短信模板-可在短信控制台中找到
+        String templateId = map.get("templateId");
+        switch (templateId){
+            case "SMS_77560073":
+                request.setTemplateCode(templateId);
+                request.setTemplateParam("{\"phone\":\""+map.get("phone")+"\",\"remark\":\""+map.get("remark")+"\"}");
+                break;
+            case "":
+                request.setTemplateCode(templateId);
+                request.setTemplateParam("{\"code\":\""+mobile_code+"\"}");
+                break;
+            default:
+                request.setTemplateCode(templateId);
+                request.setTemplateParam("{\"code\":\""+mobile_code+"\"}");
+                break;
+        }
+
+        //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
+        request.setOutId("yourOutId");
+
+        //hint 此处可能会抛出异常，注意catch
+        SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
+        if(sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals(SUCCESS_CODE)) {
+            mobileCode.clear();
+            mobileCode.put("code",SUCCESS_STATE);
+            mobileCode.put("msg","短信发送成功");
+        }else{
+            mobileCode.put("code",null);
+            mobileCode.put("msg","短信发送失败");
+        }
+        return mobileCode;
+    }
+
     public static void main(String[] args) throws ClientException, InterruptedException {
         //发短信
 //        SendSmsResponse response = sendSms("","");

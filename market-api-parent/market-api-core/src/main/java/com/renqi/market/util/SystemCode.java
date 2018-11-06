@@ -27,6 +27,8 @@ public enum SystemCode {
     TASK_TYPE_EXCEPTION("414","任务类型异常"),
     MONEY_NOT_ENOUGH("415","余额不足,请去充值"),
     PASS_WORD_INCORRECT("416","输入的密码不对"),
+    TASK_SEND_CODE_ERROR("417","验证码发送失败,系统繁忙"),
+    USER_NOT_EXIST("418","用户不存在,请检查您的手机号码"),
     SYSTEM_ERROR("500","系统异常"),
     UNKNOW_EXCEPTION("500","未知异常"),
     GOOD_LINKURL_ERROR("501", "宝贝链接有误");

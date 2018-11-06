@@ -1,6 +1,7 @@
 package com.renqi.market.dao;
 
 import com.renqi.market.common.BaseCustomer;
+import com.renqi.market.common.CustomerRegister;
 import com.renqi.market.entity.Customer;
 import com.renqi.market.entity.CustomerTaskInfo;
 import org.apache.ibatis.annotations.Mapper;
@@ -41,4 +42,6 @@ public interface CustomerMapper {
      * @return
      */
     CustomerTaskInfo queryCustomerMsg(@Param("customerId") String customerId);
+
+    int updateCustomerByPhone(CustomerRegister user);
 }

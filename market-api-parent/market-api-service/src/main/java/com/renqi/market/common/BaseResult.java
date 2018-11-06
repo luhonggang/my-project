@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @date 2018/8/13 10:16
  */
 @Data
-public class BaseResult <T> implements Serializable {
+public class BaseResult implements Serializable {
     /**
      * 错误码
      */
@@ -20,6 +20,7 @@ public class BaseResult <T> implements Serializable {
      */
     private String msg;
 
+    public BaseResult(){}
     public BaseResult(String code, String msg) {
         this.code = code;
         this.msg = msg;

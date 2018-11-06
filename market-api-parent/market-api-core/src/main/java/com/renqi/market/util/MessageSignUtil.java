@@ -92,44 +92,44 @@ public class MessageSignUtil {
     }
 
 
-    public static void main(String[] args) {
-        /**
-         * 签名测试
-         */
-        String secretKey = "5C0706A63D4B4C6E";
-        String mobile = "13717566001";
-        String mobileNo = "13388534226";
-        System.out.println("mobile-md5:" + signToHexStr(ALGORITHMS_MD5,mobileNo));
-        System.out.println("sign:" + signParams(secretKey, signToHexStr(ALGORITHMS_MD5,mobileNo)));
-        // b2e8e55399f80dce916d0b215855f037
-        String guDingStr = "b2e8e55399f80dce916d0b215855f037";
-        System.out.println("字符长度 ： "+guDingStr.length());
-
-        /**
-         *  参数加密测试
-         */
-        String key = "5C0706A63D4B4C6E";
-        Map<String, Object> userAttr = new HashMap<>();
-        userAttr.put("mobile", "13800138004");
-        userAttr.put("username", "custName");
-        userAttr.put("channelId", "chaoshi216");
-
-        String userAttrStr = JSONObject.toJSONString(userAttr);
-
-        String enUserAttr =  strEncodBase64(key, userAttrStr);
-        System.out.println("encodedStr = " + enUserAttr);
-        //System.out.println("md5加密多个参数 ： "+MD5Utils.encode2hex(enUserAttr));
-        String jsonStr = new String(base64StrDecode(key,enUserAttr));
-        // .trim().replace("\\u0000","")
-        System.out.println("decodedStr = " + jsonStr.trim());
-        JSONObject paramsObj = JSONObject.parseObject(jsonStr);
-        System.out.println("获取的参数是 ："+paramsObj.getString("mobile"));
-
-        //MessageSignUtil.signParams(secretKey,encryptData)
-        System.out.println("+++++++++++++sign : "+signParams(key,enUserAttr));
-
-        //MessageSignUtil.signParams(secretKey,encryptData)
-    }
+//    public static void main(String[] args) {
+//        /**
+//         * 签名测试
+//         */
+//        String secretKey = "5C0706A63D4B4C6E";
+//        String mobile = "13717566001";
+//        String mobileNo = "13388534226";
+//        System.out.println("mobile-md5:" + signToHexStr(ALGORITHMS_MD5,mobileNo));
+//        System.out.println("sign:" + signParams(secretKey, signToHexStr(ALGORITHMS_MD5,mobileNo)));
+//        // b2e8e55399f80dce916d0b215855f037
+//        String guDingStr = "b2e8e55399f80dce916d0b215855f037";
+//        System.out.println("字符长度 ： "+guDingStr.length());
+//
+//        /**
+//         *  参数加密测试
+//         */
+//        String key = "5C0706A63D4B4C6E";
+//        Map<String, Object> userAttr = new HashMap<>();
+//        userAttr.put("mobile", "13800138004");
+//        userAttr.put("username", "custName");
+//        userAttr.put("channelId", "chaoshi216");
+//
+//        String userAttrStr = JSONObject.toJSONString(userAttr);
+//
+//        String enUserAttr =  strEncodBase64(key, userAttrStr);
+//        System.out.println("encodedStr = " + enUserAttr);
+//        //System.out.println("md5加密多个参数 ： "+MD5Utils.encode2hex(enUserAttr));
+//        String jsonStr = new String(base64StrDecode(key,enUserAttr));
+//        // .trim().replace("\\u0000","")
+//        System.out.println("decodedStr = " + jsonStr.trim());
+//        JSONObject paramsObj = JSONObject.parseObject(jsonStr);
+//        System.out.println("获取的参数是 ："+paramsObj.getString("mobile"));
+//
+//        //MessageSignUtil.signParams(secretKey,encryptData)
+//        System.out.println("+++++++++++++sign : "+signParams(key,enUserAttr));
+//
+//        //MessageSignUtil.signParams(secretKey,encryptData)
+//    }
 
     /**
      * AES/CBC/NoPadding encrypt

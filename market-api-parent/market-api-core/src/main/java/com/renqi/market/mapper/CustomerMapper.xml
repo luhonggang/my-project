@@ -39,6 +39,7 @@
         AND pass_word = #{passWord}
       </if>
     </where>
+    LIMIT 1
   </select>
 
   <!-- 多个对象关联查询的结果集-->
@@ -270,18 +271,12 @@
     </set>
     where customer_id = #{customerId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.renqi.market.entity.Customer">
-    update customer
-    set customer_state_id = #{customerStateId,jdbcType=INTEGER},
-      phone = #{phone,jdbcType=VARCHAR},
-      pass_word = #{passWord,jdbcType=VARCHAR},
-      token = #{token,jdbcType=VARCHAR},
-      expire_time = #{expireTime,jdbcType=VARCHAR},
-      level_id = #{levelId,jdbcType=INTEGER},
-      shop_id = #{shopId,jdbcType=BIGINT},
-      login_time = #{loginTime,jdbcType=TIMESTAMP},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where customer_id = #{customerId,jdbcType=INTEGER}
+  <!-- 修改用户的密码-->
+  <update id="updateCustomerByPhone" parameterType="com.renqi.market.common.CustomerRegister">
+    UPDATE customer
+    SET
+      pass_word = #{confirmPwd},
+      update_time = NOW()
+    WHERE phone = #{phone}
   </update>
 </mapper>
