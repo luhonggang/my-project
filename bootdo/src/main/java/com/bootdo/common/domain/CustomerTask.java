@@ -27,6 +27,11 @@ public class CustomerTask {
         }
     }
 
+    /**
+     * 用户的手机号码
+     */
+    private String phone;
+
     private Integer taskId;
 
     private String orderNo;

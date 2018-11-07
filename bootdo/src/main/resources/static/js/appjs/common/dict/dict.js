@@ -97,6 +97,15 @@ function load() {
 						field : 'taskId',
 						title : '任务编号'
 					},
+                    {
+                        field : 'phone',
+                        title : '手机号码'
+                    },
+                    {
+                        field : 'orderNo',
+                        title : '订单编号'
+                    },
+
 					{
 						field : 'taskType',
 						title : '任务类型'
@@ -114,46 +123,6 @@ function load() {
 						field : 'goodLinkUrl',
 						title : '宝贝链接'
 					},
-					// {
-					// 	visible : false,
-					// 	field : 'sort',
-					// 	title : '排序（升序）'
-					// },
-					// {
-					// 	visible : false,
-					// 	field : 'parentId',
-					// 	title : '父级编号'
-					// },
-					// {
-					// 	visible : false,
-					// 	field : 'createBy',
-					// 	title : '创建者'
-					// },
-					// {
-					// 	visible : false,
-					// 	field : 'createDate',
-					// 	title : '创建时间'
-					// },
-					// {
-					// 	visible : false,
-					// 	field : 'updateBy',
-					// 	title : '更新者'
-					// },
-					// {
-					// 	visible : false,
-					// 	field : 'updateDate',
-					// 	title : '更新时间'
-					// },
-					// {
-					// 	visible : false,
-					// 	field : 'remarks',
-					// 	title : '备注信息'
-					// },
-					// {
-					// 	visible : false,
-					// 	field : 'delFlag',
-					// 	title : '删除标记'
-					// },
 					{
 						title : '操作',
 						field : 'taskId',
