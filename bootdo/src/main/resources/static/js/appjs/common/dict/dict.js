@@ -90,9 +90,9 @@ function load() {
 				// sortOrder.
 				// 返回false将会终止请求
 				columns : [
-					{
-						checkbox : false
-					},
+					// {
+					// 	checkbox : true
+					// },
 					{
 						field : 'taskId',
 						title : '任务编号'

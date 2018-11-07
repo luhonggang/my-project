@@ -71,9 +71,9 @@ function load() {
                 // sortOrder.
                 // 返回false将会终止请求
                 columns : [
-                    {
-                        checkbox : false
-                    },
+                    // {
+                    //     checkbox : false
+                    // },
                     {
                         field : 'customerId',
                         title : '客户ID'

@@ -4,6 +4,7 @@ import com.bootdo.common.config.Constant;
 import com.bootdo.common.dao.CustomerMapper;
 import com.bootdo.common.domain.CustomerInfoDto;
 import com.bootdo.common.utils.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/common/userlist")
+@Slf4j
 public class CustomerController extends BaseController {
 
 	@Autowired
@@ -77,16 +79,23 @@ public class CustomerController extends BaseController {
 		// 修改用户的会员等级
 		customerMapper.updateLevelById(customerInfoDto);
 
+		// 当前要修改的金额
+		Double totalMoney = customerInfoDto.getTotalMoney();
+
 		// 查询出当前用户 绑定的 状态id
 		CustomerInfoDto infoDto = customerMapper.selectStateId(customerInfoDto.getCustomerId());
-		// 修改用户的折扣 总的账户余额 是否充值
+        log.info("+++++++++ infoDto +++++++++ infoDto: {}",infoDto);
+		// 查询当前用户下 发布的所有任务使用的总金额
 		CustomerInfoDto taskVo = customerMapper.selectCurrentMoney(customerInfoDto);
-		Double totalMoney = customerInfoDto.getTotalMoney();
+		// 用户在数据库中的总的金额
 		Double cuTotalMoney = taskVo.getTotalMoney() == null ? 0.0D : taskVo.getTotalMoney();
+		// 修改用户的折扣 总的账户余额 是否充值
 		if(taskVo != null){
 			if(totalMoney < cuTotalMoney){
-				return R.error();
+				return R.error("金额不能小于用户发布任务已用过的总金额");
 			}
+			// 将当前用户的状态ID 赋值给当前修改参数
+			customerInfoDto.setStateId(infoDto.getStateId());
 			customerMapper.updateTotalMoney(customerInfoDto);
 		}
 		return R.ok();

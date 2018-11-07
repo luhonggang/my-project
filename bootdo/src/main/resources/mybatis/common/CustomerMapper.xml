@@ -104,11 +104,12 @@
         INNER JOIN customer_level lev   ON cu.level_id = lev.level_id
     </select>
 
+    <!-- 修改用户的账户余额，折扣，过期时间，是否充值-->
     <update id="updateTotalMoney" parameterType="com.bootdo.common.domain.CustomerInfoDto">
         UPDATE customer_state
         <set>
             update_time = NOW(),
-            <if test="isRecharge != null and isRecharge =''">
+            <if test="isRecharge != null">
                 is_recharge = #{isRecharge},
             </if>
             <if test="totalMoney != null ">
