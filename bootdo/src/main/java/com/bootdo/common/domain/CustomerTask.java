@@ -32,6 +32,16 @@ public class CustomerTask {
      */
     private String phone;
 
+    private String timeScope;
+
+    private String miunteScope;
+
+    private String wordList;
+
+    private String taskTypeName;
+
+    private String bowerTime;
+
     private Integer taskId;
 
     private String orderNo;

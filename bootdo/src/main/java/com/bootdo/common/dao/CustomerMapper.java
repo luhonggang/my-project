@@ -2,6 +2,7 @@ package com.bootdo.common.dao;
 
 import com.bootdo.common.domain.CustomerInfoDto;
 import com.bootdo.common.domain.FileDO;
+import com.bootdo.common.domain.TaskWord;
 import com.bootdo.common.utils.Query;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -29,4 +30,6 @@ public interface CustomerMapper {
     List<CustomerInfoDto> queryListPhone();
 
     CustomerInfoDto selectCurrentMoney(CustomerInfoDto customerInfoDto);
+
+    String selectListWord(Integer taskId);
 }

@@ -105,24 +105,48 @@ function load() {
                         field : 'orderNo',
                         title : '订单编号'
                     },
-
+                    {
+                        field : 'wordList',
+                        title : '关键词'
+                    },
+                    {
+                        field : 'totalVisitor',
+                        title : '浏览量'
+                    },
+                    {
+                        field : 'totalNumber',
+                        title : '访客量'
+                    },
+					// {
+					// 	field : 'taskType',
+					// 	title : '任务类型',
+					// 	hidden : true,
+					// },
+                    {
+                        field : 'taskTypeName',
+                        title : '任务类型'
+                    },
+					// {
 					{
-						field : 'taskType',
-						title : '任务类型'
-					},
-					{
-						field : 'goodId',
-						title : '宝贝ID',
-						// width : '100px'
+						field : 'goodLinkUrl',
+						title : '宝贝链接'
 					},
 					{
 						field : 'taskTime',
 						title : '执行时间'
 					},
 					{
-						field : 'goodLinkUrl',
-						title : '宝贝链接'
+					  field : 'timeScope',
+		              title : '间隔时段(时)'
 					},
+                    {
+                        field : 'miunteScope',
+                        title : '间隔时间(分)'
+                    },
+                    {
+                        field : 'taskSearchScope',
+                        title : '搜索范围'
+                    },
 					{
 						title : '操作',
 						field : 'taskId',

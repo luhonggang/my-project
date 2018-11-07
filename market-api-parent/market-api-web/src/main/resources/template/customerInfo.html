@@ -137,7 +137,7 @@
                     $('.runnable').html(taskHtml);
                 }
             }else if(result.code=="500"){
-                alert("系统繁忙稍后再试");
+                conson.log("系统繁忙稍后再试");
             }else if(result.code == '401' || result.code == '402'){
                 // token 失效 直接跳转登录页
                 window.location.href = baseUrl+"page/login.html";
@@ -297,8 +297,8 @@
                         <label><i class="mdi mdi-check"></i> 前30页</label>
                     </div>
                 </div>
-                <div style="float: left;margin-top: -10px;">
-                    <p style="font-size: 0.9em;">浏览控制：浏览时长&nbsp;&nbsp;<span class="llsc">50</span>&nbsp;秒&nbsp;-&nbsp;<span class="llsc">80</span>&nbsp;秒&nbsp;&nbsp;<span style="font-size: 0.9em;">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span></p>
+                <div onchange="selectTemplate(this)" style="float: left;margin-top: -10px;">
+                    <p style="font-size: 0.9em;">浏览控制：浏览时长&nbsp;&nbsp;<span id="beginCT" class="llsc">50</span>&nbsp;秒&nbsp;-&nbsp;<span id="endCT" class="llsc">80</span>&nbsp;秒&nbsp;&nbsp;<span style="font-size: 0.9em;">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span></p>
                     <div style="padding-top: -15px;" class="pretty success">
                         <input type="checkbox" name="nmxqy" checked="checked" disabled="">
                         <label><i class="mdi mdi-check" value="5"></i> 浏览商品详情页</label>
@@ -1070,7 +1070,7 @@
                 return;
             }
             if(!isRightURL(goodLinkUrl)){
-                alert("宝贝链接格式有误");
+                conson.log("宝贝链接格式有误");
                 $thisGood.val("");
                 return;
             }
@@ -1091,12 +1091,12 @@
         var totalVistor = $thisVistor.val().trim();
         // 数组
         if(totalVistor.length == 0){
-            alert("请输入访客量");
+            conson.log("请输入访客量");
             return;
         }
 
         if(!checkValFormat(clickDivId,totalVistor,"访客量")){
-            alert("访客量格式有误");
+            conson.log("访客量格式有误");
             $thisVistor.val("");
             return;
         };
@@ -1104,7 +1104,7 @@
         var totalNumber = $thisNumber.val().trim();
         if(totalNumber !='' && totalNumber.length != 0){
             if(!calculateMoney(clickDivId,totalNumber,"浏览量",'bs')){
-                alert("浏览量格式有误");
+                conson.log("浏览量格式有误");
                 $thisNumber.val("");
                 return;
             };
@@ -1127,19 +1127,19 @@
         var totalVistor = $thisVistor.val().trim();
         // 数组
         if(totalNumber.length == 0 || totalVistor.length == 0){
-            alert("请输入浏览量或访客量");
+            conson.log("请输入浏览量或访客量");
             return;
         }
 
         totalMoney = 0;
         // 计算访客量总量
         if(!calculateMoney(clickDivId,totalVistor,"访客量",'vs')){
-            alert("访客量格式有误");
+            conson.log("访客量格式有误");
             $thisVistor.val("");
             return;
         }
         if(!calculateMoney(clickDivId,totalNumber,"浏览量",'bs')){
-            alert("浏览量格式有误");
+            conson.log("浏览量格式有误");
             $thisNumber.val("");
             return;
         };
@@ -1150,6 +1150,31 @@
         showVipRate('nmfw_last_tip',true,totalMoney,discount,currentClickType);
     }
 
+    // 模板配置 click_score
+     function selectTemplate($this) {
+        alert($($this).html());
+         var templateId = '5,';
+         // var beginCT = $();
+         $("#"+clickDivId+" input[type='checkbox']").each(function () {
+             if ($(this).is(":checked")) {
+                 var currentVal =$(this).val();
+                 if('on' === currentVal){
+                     return;
+                 }else{
+                     if(currentVal == '6'){
+
+                     }else if(currentVal == '7'){
+
+                     }else if(currentVal == '8'){
+
+                     }
+                     templateId +=$(this).val()+",";
+                     console.log($(this).val())
+                 }
+             }
+         });
+         
+     }
     // 任务发布按钮事件
     function savaTask(){
         var goodUrl = $("#"+clickDivId+" input[name='goodLinkUrl']").val();
@@ -1191,12 +1216,12 @@
         var goodLinkUrl = $("#pcll_jhsrw input[name='goodLinkUrl']").val();
         // 数组
         if('' == goodLinkUrl || goodLinkUrl.length == 0){
-            alert("请输入关键词");
+            conson.log("请输入关键词");
             return;
         }
         // 淘宝天猫链接 校验
         if(!isRightURL(goodLinkUrl)){
-            alert("宝贝链接格式有误");
+            conson.log("宝贝链接格式有误");
             $("#pcll_jhsrw input[name='goodLinkUrl']").val("");
             return;
         }
@@ -1207,11 +1232,11 @@
         var taskNumber = $("#pcll_jhsrw input[name='taskTotalNumber']").val();
         // 数组
         if('' == taskNumber || taskNumber.length == 0){
-            alert("请输入关键词");
+            conson.log("请输入关键词");
             return;
         }
         if(!checkIsNumber(taskNumber)){
-            alert("请输入任务量");
+            conson.log("请输入任务量");
             return;
         }
         totalMoney = taskNumber * 2.00;
@@ -1274,26 +1299,26 @@
         var eh = parseInt(taskEndHour);
         // 公共参数校验 !isPositiveInteger(taskBeginHour)
         if(isNaN(bh)){
-            alert("开始时段为空或格式有误");
+            conson.log("开始时段为空或格式有误");
             return;
         }
         if(isNaN(eh)){
-            alert("结束时段为空或格式有误");
+            conson.log("结束时段为空或格式有误");
             return;
         }
         // todo 开始时段 小于结束时段
         var bm = parseInt(taskBeginMiunte);
         var em = parseInt(taskEndMiunte);
         if(isNaN(bm)){
-            alert("开始分钟为空或格式有误");
+            conson.log("开始分钟为空或格式有误");
             return;
         }
         if(isNaN(em)){
-            alert("结束分钟为空或格式有误");
+            conson.log("结束分钟为空或格式有误");
             return;
         }
         if( bm > em|| bm > 60 || em > 60 ){
-            alert("录入的分钟数有误,请检查");
+            conson.log("录入的分钟数有误,请检查");
             return;
         }
         var useDiscount = $('#discount').val();
@@ -1301,7 +1326,7 @@
             {"customerId":customerId,"customerStateId":$('#customerStateId').val(),"goodLinkUrl":goodUrl,
             "taskType":taskType,"wordList":wordList, "totalVisitor":totalVisitor,"totalNumber":totalNumber,
             "taskTime":taskTime,"totalMoney":totalMoney,"accountMoney":$('#accountMoney').html().split('￥')[1],
-            "taskBeginHour":taskBeginHour,"taskEndHour":taskEndHour,"taskBeginMiunte":taskBeginMiunte,
+            "taskBeginHour":taskBeginHour,"taskEndHour":taskEndHour,"taskBeginMiunte":taskBeginMiunte,"phone":phone,
             "taskEndMiunte":taskEndMiunte,"taskSearchScope":taskSearchScope,"templateId":templateId,"goodTitle":goodTitle,
             "useDiscount":useDiscount
             };
@@ -1485,12 +1510,12 @@
       var goodLinkUrl = $thisGood.val();
       // 数组
       if('' == goodLinkUrl || goodLinkUrl.length == 0){
-          alert("请输入关键词");
+          conson.log("请输入关键词");
           return;
       }
       // 淘宝天猫链接 校验
       if(!isRightURL(goodLinkUrl)){
-          alert("宝贝链接格式有误");
+          conson.log("宝贝链接格式有误");
           $thisGood.val("");
           return;
       }
@@ -1501,7 +1526,7 @@
       var wordList = $thisWord.val();
       // 数组
       if('' == wordList || wordList.length == 0){
-          alert("请输入关键词");
+          conson.log("请输入关键词");
           return;
       }
   });
@@ -1511,12 +1536,12 @@
       var taskNumber = $task.val();
       // 数组
       if('' == taskNumber || taskNumber.length == 0){
-          alert("请输入关键词");
+          conson.log("请输入关键词");
           return;
       }
       if(!checkIsNumber(taskNumber)){
           $task.val('');
-          alert("请输入任务量");
+          conson.log("请输入任务量");
           return;
       }
       totalMoney = taskNumber * 0.8;
@@ -1573,12 +1598,12 @@
       var goodLinkUrl = $thisGood.val();
       // 数组
       if('' == goodLinkUrl || goodLinkUrl.length == 0){
-          alert("请输入宝贝链接");
+          conson.log("请输入宝贝链接");
           return;
       }
       // 淘宝天猫链接 校验
       if(!isRightURL(goodLinkUrl)){
-          alert("宝贝链接格式有误");
+          conson.log("宝贝链接格式有误");
           $thisGood.val("");
           return;
       }
@@ -1590,7 +1615,7 @@
       var wordList = $thisWord.val();
       // 数组
       if('' == wordList || wordList.length == 0){
-          alert("请输入关键词");
+          conson.log("请输入关键词");
           return;
       }
   });
@@ -1601,12 +1626,12 @@
       var taskNumber = $task.val();
       // 数组
       if('' == taskNumber || taskNumber.length == 0){
-          alert("请输入关键词");
+          conson.log("请输入关键词");
           return;
       }
       if(!checkIsNumber(taskNumber)){
           $task.val('');
-          alert("请输入任务量");
+          conson.log("请输入任务量");
           return;
       }
       totalMoney = taskNumber * 0.8;
@@ -1660,12 +1685,12 @@
       var goodLinkUrl = $thisGood.val();
       // 数组
       if('' == goodLinkUrl || goodLinkUrl.length == 0){
-          alert("请输入宝贝链接");
+          conson.log("请输入宝贝链接");
           return;
       }
       // 淘宝天猫链接 校验
       if(!isRightURL(goodLinkUrl)){
-          alert("宝贝链接格式有误");
+          conson.log("宝贝链接格式有误");
           $thisGood.val("");
           return;
       }
@@ -1677,12 +1702,12 @@
       var taskNumber = $task.val();
       // 数组
       if('' == taskNumber || taskNumber.length == 0){
-          alert("请输入关键词");
+          conson.log("请输入关键词");
           return;
       }
       if(!checkIsNumber(taskNumber)){
           $task.val('');
-          alert("请输入任务量");
+          conson.log("请输入任务量");
           return;
       }
       totalMoney = taskNumber * 2.0;
@@ -1737,12 +1762,12 @@
       var goodLinkUrl = $thisGood.val();
       // 数组
       if('' == goodLinkUrl || goodLinkUrl.length == 0){
-          alert("请输入宝贝链接");
+          conson.log("请输入宝贝链接");
           return;
       }
       // 淘宝天猫链接 校验
       if(!isRightURL(goodLinkUrl)){
-          alert("宝贝链接格式有误");
+          conson.log("宝贝链接格式有误");
           $thisGood.val("");
           return;
       }
@@ -1754,7 +1779,7 @@
       console.log("短标题 ： "+title);
       // 数组
       if('' == title || title.length == 0){
-          alert("请输入端标题");
+          conson.log("请输入端标题");
           return;
       }
         goodTitle = title;
@@ -1765,7 +1790,7 @@
       var wordList = $thisWord.val();
       // 数组
       if('' == wordList || wordList.length == 0){
-          alert("请输入关键词");
+          conson.log("请输入关键词");
           return;
       }
     });
@@ -1775,12 +1800,12 @@
       var taskNumber = $task.val();
       // 数组
       if('' == taskNumber || taskNumber.length == 0){
-          alert("请输入关键词");
+          conson.log("请输入关键词");
           return;
       }
       if(!checkIsNumber(taskNumber)){
           $task.val('');
-          alert("请输入任务量");
+          conson.log("请输入任务量");
           return;
       }
     });
@@ -1792,7 +1817,7 @@
         var totalVistor = $thisVistor.val().trim();
         // 数组
         if(totalNumber.length == 0 || totalVistor.length == 0){
-            alert("请输入浏览量或访客量");
+            conson.log("请输入浏览量或访客量");
             return;
         }
 
@@ -1801,12 +1826,12 @@
         pcRate = 0.88;
         // 计算访客量总量
         if(!calculateMoney('qtll_sjztc',totalVistor,"访客量",'vs')){
-            alert("访客量格式有误");
+            conson.log("访客量格式有误");
             $thisVistor.val("");
             return;
         }
         if(!calculateMoney('qtll_sjztc',totalNumber,"浏览量",'bs')){
-            alert("浏览量格式有误");
+            conson.log("浏览量格式有误");
             $thisNumber.val("");
             return;
         };
@@ -1859,12 +1884,12 @@
         var goodLinkUrl = $thisGood.val();
         // 数组
         if('' == goodLinkUrl || goodLinkUrl.length == 0){
-            alert("请输入宝贝链接");
+            conson.log("请输入宝贝链接");
             return;
         }
         // 淘宝天猫链接 校验
         if(!isRightURL(goodLinkUrl)){
-            alert("宝贝链接格式有误");
+            conson.log("宝贝链接格式有误");
             $thisGood.val("");
             return;
         }
@@ -1876,7 +1901,7 @@
         console.log("关键词 ： "+wordList);
         // 数组
         if('' == wordList || wordList.length == 0){
-            alert("请输入关键词");
+            conson.log("请输入关键词");
             return;
         }
     });
@@ -1903,12 +1928,12 @@
         var taskNumber = $task.val();
         // 数组
         if('' == taskNumber || taskNumber.length == 0){
-            alert("请输入关键词");
+            conson.log("请输入关键词");
             return;
         }
         if(!checkIsNumber(taskNumber)){
             $task.val('');
-            alert("请输入任务量");
+            conson.log("请输入任务量");
             return;
         }
     });
@@ -1940,12 +1965,12 @@
         var goodLinkUrl = $thisGood.val();
         // 数组
         if('' == goodLinkUrl || goodLinkUrl.length == 0){
-            alert("请输入宝贝链接");
+            conson.log("请输入宝贝链接");
             return;
         }
         // 淘宝天猫链接 校验
         if(!isRightURL(goodLinkUrl)){
-            alert("宝贝链接格式有误");
+            conson.log("宝贝链接格式有误");
             $thisGood.val("");
             return;
         }
@@ -1957,7 +1982,7 @@
         console.log("关键词 ： "+wordList);
         // 数组
         if('' == wordList || wordList.length == 0){
-            alert("请输入关键词");
+            conson.log("请输入关键词");
             return;
         }
     });
@@ -1982,12 +2007,12 @@
         var taskNumber = $task.val();
         // 数组
         if('' == taskNumber || taskNumber.length == 0){
-            alert("请输入关键词");
+            conson.log("请输入关键词");
             return;
         }
         if(!checkIsNumber(taskNumber)){
             $task.val('');
-            alert("请输入任务量");
+            conson.log("请输入任务量");
             return;
         }
     });

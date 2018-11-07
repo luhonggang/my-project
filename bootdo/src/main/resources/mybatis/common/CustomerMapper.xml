@@ -125,4 +125,8 @@
         </set>
         WHERE customer_state_id = #{stateId}
     </update>
+
+    <select id="selectListWord" parameterType="int" resultType="String">
+       SELECT GROUP_CONCAT(word_name)  wordName FROM `task_word` WHERE task_id  = '2' GROUP BY task_id
+    </select>
 </mapper>

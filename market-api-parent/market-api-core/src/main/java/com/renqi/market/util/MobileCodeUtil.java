@@ -149,15 +149,15 @@ public class MobileCodeUtil {
         //组装请求对象-具体描述见控制台-文档部分内容
         SendSmsRequest request = new SendSmsRequest();
         //必填:待发送手机号
-        request.setPhoneNumbers(map.get("phone"));
+        request.setPhoneNumbers(map.get("ownPhone"));
         //必填:短信签名-可在短信控制台中找到
         request.setSignName("人气通");
         //必填:短信模板-可在短信控制台中找到
         String templateId = map.get("templateId");
         switch (templateId){
-            case "SMS_77560073":
+            case "SMS_150575604":
                 request.setTemplateCode(templateId);
-                request.setTemplateParam("{\"phone\":\""+map.get("phone")+"\",\"remark\":\""+map.get("remark")+"\"}");
+                request.setTemplateParam("{\"phone\":\""+map.get("phone")+"\"}");
                 break;
             case "":
                 request.setTemplateCode(templateId);

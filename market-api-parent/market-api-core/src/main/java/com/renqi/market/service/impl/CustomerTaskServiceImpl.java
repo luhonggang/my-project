@@ -206,34 +206,34 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
             /**
              * TODO 此时用户发布任务成功 后需要 发送验证码通知管理人员
              */
-//            Map<String,String> mapPram = new HashMap<>();
+            String typeName = "";
+            switch (taskType){
+                case "1":typeName = "PC端匿名访问";break;
+                case "2":typeName = "PC端实名访问";break;
+                case "3":typeName = "PC直通车流量";break;
+                case "4":typeName = "PC聚划算开团提醒";break;
+                case "5":typeName = "手机端匿名访问";break;
+                case "6":typeName = "手机端实名访问";break;
+                case "7":typeName = "手机端天猫App流量";break;
+                case "9":typeName = "其他京东App流量";break;
+                case "10":typeName = "猜你喜欢流量";break;
+                case "11":typeName = "手机直通车流量";break;
+                case "12":typeName = "PC端收藏加购";break;
+                case "13":typeName = "手机端收藏加购";break;
+                default:typeName = "PC端匿名访问";break;
+            }
+            logger.info("++++++++++ phone ++++++++++ : {}",task.getPhone());
+            Map<String,String> mapPram = new HashMap<>();
 //            mapPram.put("phone","15812346666");
-//            String typeName = "";
-//            switch (taskType){
-//                case "1":typeName = "PC端匿名访问";break;
-//                case "2":typeName = "PC端实名访问";break;
-//                case "3":typeName = "PC直通车流量";break;
-//                case "4":typeName = "PC聚划算开团提醒";break;
-//                case "5":typeName = "手机端匿名访问";break;
-//                case "6":typeName = "手机端实名访问";break;
-//                case "7":typeName = "手机端天猫App流量";break;
-//                case "9":typeName = "其他京东App流量";break;
-//                case "10":typeName = "猜你喜欢流量";break;
-//                case "11":typeName = "手机直通车流量";break;
-//                case "12":typeName = "PC端收藏加购";break;
-//                case "13":typeName = "手机端收藏加购";break;
-//                default:typeName = "PC端匿名访问";break;
-//
-//
-//            }
-//            mapPram.put("remark","用户发布"+typeName+"任务");
-//        try {
-//            MobileCodeUtil.sendSmsTask(mapPram);
-//        } catch (ClientException e) {
-//            logger.info("++++++++++ 发送通知短信失败 +++++++++ customerId : {}",task.getCustomerId());
-//            e.printStackTrace();
-//            throw new CheckBaseException(msg, SystemCode.SYSTEM_ERROR.getCode(), SystemCode.TASK_SEND_CODE_ERROR.getMsg());
-//        }
+            mapPram.put("ownPhone","17717926547");
+            mapPram.put("phone",task.getPhone());
+        try {
+            MobileCodeUtil.sendSmsTask(mapPram);
+        } catch (ClientException e) {
+            logger.info("++++++++++ 发送通知短信失败 +++++++++ customerId : {}",task.getCustomerId());
+            e.printStackTrace();
+            throw new CheckBaseException(msg, SystemCode.SYSTEM_ERROR.getCode(), SystemCode.TASK_SEND_CODE_ERROR.getMsg());
+        }
         return msg;
     }
 

@@ -3,15 +3,19 @@ package com.bootdo.common.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bootdo.common.config.Constant;
+import com.bootdo.common.dao.CustomerMapper;
 import com.bootdo.common.domain.CustomerTask;
 import com.bootdo.common.domain.CustomerTaskDto;
 import com.bootdo.common.domain.DictDO;
+import com.bootdo.common.domain.TaskWord;
 import com.bootdo.common.service.DictService;
 import com.bootdo.common.utils.PageUtils;
 import com.bootdo.common.utils.Query;
 import com.bootdo.common.utils.R;
+import com.bootdo.common.utils.StringUtils;
 import com.bootdo.system.common.TaskState;
 import com.bootdo.system.common.TaskType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,9 +32,15 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/common/dict")
+@Slf4j
 public class DictController extends BaseController {
 	@Autowired
 	private DictService dictService;
+
+	@Autowired
+	private CustomerMapper customerMapper;
+	private static final 	String HOUR = "点";
+	private static final	String MIN = "分钟";
 
 	@GetMapping()
 	@RequiresPermissions("common:dict:dict")
@@ -44,12 +54,34 @@ public class DictController extends BaseController {
 	public PageUtils list(@RequestParam Map<String, Object> params) {
 		// 查询列表数据
 		Query query = new Query(params);
-		List<CustomerTask> dictList = dictService.list(query);
+		List<CustomerTask> taskList = dictService.list(query);
 		int total = dictService.count(query);
-		PageUtils pageUtils = new PageUtils(dictList, total);
+		PageUtils pageUtils = new PageUtils(collectCount(taskList), total);
 		return pageUtils;
 	}
 
+	/**
+	 * 组装需要的数据展现
+	 * @param taskList List 集合
+	 * @return  List<CustomerTask>
+	 */
+	private List<CustomerTask> collectCount(List<CustomerTask> taskList){
+		for (CustomerTask task:taskList) {
+			task.setTimeScope(task.getTaskBeginHour()+HOUR+"到"+task.getTaskEndHour()+HOUR);
+			task.setMiunteScope(task.getTaskBeginMiunte()+MIN+"到"+task.getTaskEndMiunte()+MIN);
+			// 关键词
+			String wordList = customerMapper.selectListWord(task.getTaskId());
+			task.setWordList(wordList);
+			// 浏览时长 todo
+			String tId = task.getTemplateId();
+			String lastElement = tId.substring(tId.lastIndexOf(",")+1);
+			task.setBowerTime(StringUtils.getBowerTime(lastElement));
+			// 获取的是 任务类型名称
+			log.info("+++++++++++++ taskType ++++++++++++++ ",task.getTaskType() +" task.getTotalNumber "+task.getTotalNumber());
+			task.setTaskTypeName(StringUtils.getTaskType(task.getTaskType()));
+		}
+		return taskList;
+	}
 	@GetMapping("/add")
 	@RequiresPermissions("common:dict:add")
 	String add() {
@@ -172,6 +204,6 @@ public class DictController extends BaseController {
 		Map<String, Object> map = new HashMap<>(16);
 		map.put("taskType", type);
 		List<CustomerTask> dictList = dictService.list(map);
-		return dictList;
+		return collectCount(dictList);
 	}
 }
