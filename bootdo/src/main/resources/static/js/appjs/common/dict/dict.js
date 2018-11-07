@@ -102,6 +102,10 @@ function load() {
                         title : '手机号码'
                     },
                     {
+                        field : 'createTime',
+                        title : '创建时间'
+                    },
+                    {
                         field : 'orderNo',
                         title : '订单编号'
                     },

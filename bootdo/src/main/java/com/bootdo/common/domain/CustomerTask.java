@@ -82,7 +82,9 @@ public class CustomerTask {
 
     private String taskSearchScope;
 
-    private Date createTime;
+    private String createTime;
+
+//    private String createStrTime;
 
     private Date updateTime;
 }
