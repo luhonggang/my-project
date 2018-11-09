@@ -23,6 +23,7 @@ public class CustomerTaskInfo implements Serializable {
     private Integer taskIsDoing;
     private Integer taskIsComplete;
     private Integer taskIsException;
+    private String taskRate;
 
     public CustomerTaskInfo() {
 

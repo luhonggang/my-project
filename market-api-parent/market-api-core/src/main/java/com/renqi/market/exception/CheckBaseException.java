@@ -31,12 +31,6 @@ public class CheckBaseException extends RuntimeException {
     public void setmessage(String message) {
         this.message = message;
     }
-//    public CheckBaseException(String code, String subcode, String message) {
-//        super(message);
-//        this.code = code;
-//        this.subcode = subcode;
-//        this.message = message;
-//    }
     public CheckBaseException(BaseResult msg,String code, String message) {
         super(message);
         this.msg = msg;

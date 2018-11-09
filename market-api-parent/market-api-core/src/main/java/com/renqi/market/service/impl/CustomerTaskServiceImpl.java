@@ -55,12 +55,14 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
             int taskCom = 0;
             int taskContinue = 0;
             int taskException = 0;
+            int totalTask = 1;
             if (null != customer) {
                 customer.setTotalTask(customer.getCustomerState().getTotalTask()); /* 缓存总的任务数*/
                 redisTemplate.opsForValue().set("TOTAL_TASK" + customerId, customer.getCustomerState().getTotalTask() + "", 1 * 60 * 60, TimeUnit.SECONDS);
                 List<CustomerTask> taskList = customer.getTaskList();
                 if (null != taskList && taskList.size() > 0) {
-                    customer.setTotalTask(taskList.size());
+                    totalTask = taskList.size();
+                    customer.setTotalTask(totalTask);
                     for (CustomerTask task : taskList) {
                         if (CustomerTask.TaskState.TASK_INCOMPLETED.getState().equals(task.getTaskState())){
                             taskInCom++;
@@ -76,13 +78,15 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
                 customer.setTaskIsComplete(taskCom);
                 customer.setTaskIsDoing(taskContinue);
                 customer.setTaskIsException(taskException);
+                // 设置完成率的百分比
+                int isRate = taskCom + taskContinue;
+                int rate = isRate/totalTask;
+                customer.setTaskRate(rate+"%");
             }
             msg.setData(customer);
         } catch (Exception e) {
             logger.error(e.getMessage(), "++++++++++++ /task/queryCustomerMsg +++++++++++");
-            msg.setCode(SystemCode.SYSTEM_ERROR.getCode());
-            msg.setMsg(SystemCode.SYSTEM_ERROR.getMsg());
-            msg.setData(null);
+            return ResultMsgUtil.setCodeMsg(msg,SystemCode.SYSTEM_ERROR.getCode(),SystemCode.SYSTEM_ERROR.getMsg());
         }
         return msg;
     }

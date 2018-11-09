@@ -1,12 +1,10 @@
 package com.renqi.market.controller;
 
-import com.renqi.market.common.BaseResult;
 import com.renqi.market.common.BaseResultMsg;
 import com.renqi.market.exception.CheckBaseException;
 import com.renqi.market.exception.GlobalException;
 import com.renqi.market.util.SystemCode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,10 +21,8 @@ import java.util.Set;
  * @since 1.0
  */
 @ControllerAdvice
+@Slf4j
 public class ExceptionHandlerController {
-    private final static Logger logger = LoggerFactory.getLogger(ExceptionHandlerController.class);
-
-    private BaseResult baseResult;
     /**
      * 处理Controller类异常
      * @param e
@@ -36,11 +32,11 @@ public class ExceptionHandlerController {
     @ExceptionHandler({RuntimeException.class})
     public BaseResultMsg<Object> exceptionHandler(RuntimeException e) {
 
-        logger.error("全局捕获异常###exceptionHandler()### ERROR:", e.getMessage(),e);
+        log.error("全局捕获异常###exceptionHandler()### ERROR:", e.getMessage(),e);
         StackTraceElement stackTraceElement= e.getStackTrace()[0];
-        logger.error("File="+stackTraceElement.getFileName());
-        logger.error("Line="+stackTraceElement.getLineNumber());
-        logger.error("Method="+stackTraceElement.getMethodName());
+        log.error("File="+stackTraceElement.getFileName());
+        log.error("Line="+stackTraceElement.getLineNumber());
+        log.error("Method="+stackTraceElement.getMethodName());
         if(e instanceof CheckBaseException){
             CheckBaseException error = (CheckBaseException) e;
             return new BaseResultMsg<>(error.getcode(),error.getmessage());
@@ -49,7 +45,7 @@ public class ExceptionHandlerController {
             GlobalException error = (GlobalException) e;
             return new BaseResultMsg<>(error.getCode(),error.getErrorMessage());
         }else {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return new BaseResultMsg<>(SystemCode.SYSTEM_ERROR.getCode(),SystemCode.SYSTEM_ERROR.getMsg());
         }
     }
