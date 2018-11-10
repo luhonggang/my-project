@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.springframework.org/schema/jdbc">
 <head>
     <meta charset="UTF-8">
     <title>活动</title>
-    <link rel="stylesheet" href="CSS/activity.css">
-    <script type="text/javascript" src="JQuery/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="market/css/activity.css">
+    <script src="market/js/jquery-3.3.1.min.js" type="text/javascript" ></script>
 </head>
 <style type="text/css">
     body{
@@ -15,35 +15,40 @@
     }
 
 </style>
+<script th:src="@{market/js/base.js}" type="text/javascript"></script>
 <script type="text/javascript">
     onload = function(){
         var twoimg_height = $("body").height();
         $("#twoimg").height(twoimg_height*0.35);
         $("#threeimg").height(twoimg_height*0.5);
+        $('#phone').html(phone);
+        if(phone == null || phone === ''){
+            window.location.href = baseUrl+"page/login.html";
+        }
     }
+
 </script>
 <body>
 <div class="header">
     <!--导航条-->
     <span class="head_a1">
         <span>欢迎使用人气通&nbsp;</span>|
-        <span><a href="#">返回首页</a></span>&nbsp;|
         <span><a href="#">个人中心</a></span>
     </span>
     <span  class="head_a2">
         <span>您好，</span>
-        <span>15827703606&nbsp;</span>|
-        <span><a href="#">切换用户&nbsp;</a>|</span>
-        <span><a href="#">帮助中心&nbsp;</a>|</span>
+        <span id="phone">&nbsp;</span>|
+        <span><a href="login.html">切换用户&nbsp;</a>|</span>
+        <span><a href="help.html">帮助中心&nbsp;</a>|</span>
         <span>
-            <a target="_blank" href="http://wpa.qq.com/msgrd?v=1&uin=1248326918&site=qq&menu=yes"><img style="height:1.2em;width: 1.2em; vertical-align: middle;margin-top: -3px;" border="0" src="user.imgs/qqq.png" alt="联系客服" title="联系客服"/>联系客服</a>
+            <a target="_blank" href="http://wpa.qq.com/msgrd?v=1&uin=1248326918&site=qq&menu=yes"><img style="height:1.2em;width: 1.2em; vertical-align: middle;margin-top: -3px;" border="0" src="market/images/register/qqq.png" alt="联系客服" title="联系客服"/>联系客服</a>
         </span>
     </span>
 </div>
 
-<img style="width:100%;display: block;" id="twoimg" src="activity_imgs/2_02.jpg">
+<img style="width:100%;display: block;" id="twoimg" src="market/images/activity/2_02.jpg">
 <div style="position: relative;">
-    <img style="width:100%;display: block;" id="threeimg" src="activity_imgs/2_03.jpg">
+    <img style="width:100%;display: block;" id="threeimg" src="market/images/activity/2_03.jpg">
    <!--充送活动-->
     <div style=" position: absolute;top:65%;left:50%;margin-left: -400px;">
     <div class="realize">
@@ -83,23 +88,23 @@
                     <span class="realize_d1_span1" style="font-size: 1.5em;">充值任意金额，送10T币和运营资料再送体验会员一个月(享9.8折)</span>
                 </div>
                 <div class="newimg_div">
-                    <img class="new_user_img" src="activity_imgs/BISING1.png">
+                    <img class="new_user_img" src="market/images/activity/BISING1.png">
                     <br/>
                     <span style="font-size: 1.5em;">10T币</span>
                 </div>
                 <div class="newimg_div">
-                    <img style="width:60px;height:60px;margin-bottom: 60px;" src="activity_imgs/+.png">
+                    <img style="width:60px;height:60px;margin-bottom: 60px;" src="market/images/activity/+.png">
                 </div>
                 <div class="newimg_div">
-                    <img class="new_user_img" src="activity_imgs/BISING2.png">
+                    <img class="new_user_img" src="market/images/activity/BISING2.png">
                     <br/>
                     <span style="font-size: 1.5em;">运营资料</span>
                 </div>
                 <div class="newimg_div">
-                    <img style="width:60px;height:60px;margin-bottom: 60px;" src="activity_imgs/+.png">
+                    <img style="width:60px;height:60px;margin-bottom: 60px;" src="market/images/activity/+.png">
                 </div>
                 <div class="newimg_div">
-                    <img class="new_user_img" src="activity_imgs/BISING3.png">
+                    <img class="new_user_img" src="market/images/activity/BISING3.png">
                     <br/>
                     <span style="font-size: 1.5em;">VIP会员</span>
                 </div>
