@@ -145,7 +145,7 @@ public class UserLoginController extends GlobalExceptionHandler {
                 // SMS_77560073
                 Map<String,String> map = new HashMap<>();
                 map.put("type",type);
-                map.put("template","SMS_150570582");
+                map.put("template","SMS_77560073");
                 return  customerService.getIdentiFyingCode(phone,map);
             }else{
                 return ResultMsgUtil.setCodeMsg(base,SystemCode.MOBILE_IS_REGISTER.getCode(),SystemCode.MOBILE_IS_REGISTER.getMsg());

@@ -906,17 +906,17 @@
             $("#"+$id+"").find('em').eq(1).hide();
         }
         // 只要点击PC端 就展示匿名流量
-        if('pcll_nmrw' == type){
+        if('pcll_nmrw' === type && 'pcll_nmrw' != clickDivId ){
             currentClickType = 'pc';
             pcRate = 0.68;
             pcType = "1";
             $('#pcll_nmrw').html($('#'+clickDivId+'').html());
             $('#pcll_nmrw').show();
-            $("#pcll_smrw").hide();
-            $("#pcll_ztcrw").hide();
-            $("#pcll_jhsrw").hide();
+            $('#pcll_smrw').hide();
+            $('#pcll_ztcrw').hide();
+            $('#pcll_jhsrw').hide();
             // 将点击事件前的div内容清除
-            //$('#'+clickDivId+'').html("");
+            $('#'+clickDivId+'').html("");
             checkClickDivId('pcll_nmrw');
         }
     }
@@ -938,7 +938,7 @@
           $("#"+$id+"").find('em').eq(1).hide();
       }
       // 初始化手机端 页面展现
-      if('sjll_nmrw' == type){
+      if('sjll_nmrw' === type && 'sjll_nmrw' != clickDivId){
           currentClickType = 'mobile';
           pcRate = 0.68;
           pcType = '5';

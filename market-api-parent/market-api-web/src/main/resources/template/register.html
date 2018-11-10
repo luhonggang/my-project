@@ -115,7 +115,7 @@
                     if(result.code == '200' ){
                         console.log(result.msg);
                         // 发送成功后自动录入验证码
-                        $('#mobileCode').val(result.data);
+                        //$('#mobileCode').val(result.data);
                     }else if(result.code == '408'){
                         // 手机号码已经注册过,请更换手机号
                         layer.msg(result.msg);
@@ -190,15 +190,14 @@
                 success:function(result){
                     console.log(result);
                     if(result.code == '200' || result.code == '408'){
-                        $("#mobileCode").val(result.data);
+                        //$("#mobileCode").val(result.data);
                         layer.msg(result.msg);
                         // 说明注册成功 跳转到登录页面
                         window.location.href = "login.html";
                     }else if(result.code == '411'){
                         // 输入的验证码有误
                         layer.msg(result.msg);
-                    }
-                    else if(result.code == '412'){
+                    } else if(result.code == '412'){
                         // 验证码失效,请重新发送验证码
                         layer.msg(result.msg);
                     }else{
