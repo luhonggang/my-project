@@ -4,7 +4,6 @@ import com.renqi.market.common.BaseResult;
 import com.renqi.market.common.BaseResultMsg;
 import com.renqi.market.common.CustomerParamDto;
 import com.renqi.market.common.CustomerTaskDto;
-import com.renqi.market.entity.CustomerTask;
 import com.renqi.market.service.CustomerTaskService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

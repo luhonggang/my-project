@@ -35,10 +35,10 @@
 <div class="header">
     <!--导航条-->
     <span style="padding-left: 15%">欢迎登陆人气通&nbsp;|</span>
-    <span><a href="#">返回首页</a></span>
+   <!-- <span><a href="#">返回首页</a></span>-->
     <span style="padding-left: 40%;"><a href="#">用户注册&nbsp;|</a></span>
-    <span><a href="#">帮助中心&nbsp;|</a></span>
-    <span><a href="#">联系客服</a></span>
+    <span><a href="help.html">帮助中心&nbsp;|</a></span>
+    <span><a target="_blank" href="http://wpa.qq.com/msgrd?v=1&uin=1248326918&site=qq&menu=yes"><img style="height:1.2em;width: 1.2em; vertical-align: middle;margin-top: -3px;" border="0" src="market/images/register/qqq.png" alt="联系客服" title="联系客服"/>联系客服</a></span>
 </div>
     <!--注册-->
 <form action="" method="">
@@ -55,7 +55,7 @@
             <div><input id="mobileCode" style="width:199px;" type="text" placeholder="请输入您的短信验证码"/>
                 <input  id="send_Code" style="height: 32px"  type="button" value="获取短信验证码"/></div>
             <div><input id ="register_submit" type="submit" value="立即注册"/></div>
-            <div style="margin-top: 25px;"><a href="login.html">我已经有账号，现在登录</a></div>
+            <div style="margin-top: 25px;"><a  style="font-size: 24px;" href="login.html">我已经有账号，现在登录</a></div>
         </div>
     </div>
 </form>
@@ -66,6 +66,7 @@
 </body>
 <script th:src="@{market/js/base.js}" type="text/javascript"></script>
 <script th:src="@{market/js/jquery-3.1.1.js}" type="text/javascript"></script>
+<script th:src="@{market/js/layer/layer.js}" type="text/javascript"></script>
 <script th:inline="javascript">
     $(function(){
          // 校验手机号是否正确
@@ -73,7 +74,7 @@
              var myPhone = $('#phone').val();
              console.log(myPhone);
             if(myPhone.length < 11){
-                alert("手机号有误");
+                layer.msg('手机号码格式有误');
                 $('#mobileCode').attr('disabled',true);
                 $('#register_submit').attr('disabled',true);
                 $('#send_Code').attr('disabled',true);
@@ -83,10 +84,11 @@
              $('#send_Code').attr('disabled',false);
              $('#register_submit').removeAttr('disabled',false);
          });
-        // 校验手机号是否正确
+        // 校验密码是否正确
         $('#confirmPwd').on('blur',function(){
             if($('#confirmPwd').val() != $("#passWord").val()){
-               alert("请重新确认密码");
+               layer.msg("请重新确认密码");
+               return false;
             }
         });
 
@@ -95,7 +97,7 @@
             var myPhone = $('#phone').val();
             console.log(myPhone);
             if(myPhone==''){
-               alert("请您输入手机号码");
+               layer.msg("请您输入手机号码");
                 return false;
             }
             var jsonCode = '{"phone":"'+myPhone+'","mobileCode":""}';
@@ -116,16 +118,16 @@
                         $('#mobileCode').val(result.data);
                     }else if(result.code == '408'){
                         // 手机号码已经注册过,请更换手机号
-                        alert(result.msg);
+                        layer.msg(result.msg);
                     }else if(result.code == '409'){
                         //验证码已经发送过,2分钟内不可重复发送
-                        alert(result.msg);
+                        layer.msg(result.msg);
                     }else if(result.code == '500'){
                         // 系统异常
-                        alert(result.msg);
+                        layer.msg(result.msg);
                     }else if(result.code == '410'){
                         // 验证码发送失败,请稍后再试
-                        alert(result.msg);
+                        layer.msg(result.msg);
                     }
                 }
             });
@@ -151,7 +153,7 @@
                     console.log(result);
                     if(result.code == '411'){
                         // 验证码输入有误
-                        alert(result.msg);
+                        layer.msg(result.msg);
                     }
                 }
             });
@@ -163,16 +165,16 @@
             var confirmPwd = $("#confirmPwd").val();
             var mobileCode = $("#mobileCode").val();
             if(customerPhone == '' || customerPwd == '' || confirmPwd == ''|| mobileCode== '' ){
-                alert("请完善信息");
+                layer.msg("请完善信息");
                 return;
             }
             if(customerPwd != customerPwd || customerPwd == '' || confirmPwd == ''){
                // 密码有误
-                alert("重新输入密码");
+                layer.msg("重新输入密码");
                 return;
             }
             if(customerPhone == '' || mobileCode == '' ){
-                alert("手机号码或验证码为空");
+                layer.msg("手机号码或验证码为空");
                 return;
             }
             var jsonRegister = '{"phone":"'+customerPhone+'","passWord":"'+customerPwd+'",' +
@@ -190,19 +192,19 @@
                     if(result.code == '200' || result.code == '408'){
                         $("#mobileCode").val(result.data);
                         console.log(result.data);
-                        alert(result.msg);
+                        layer.msg(result.msg);
                         // 说明注册成功 跳转到登录页面
                         window.location.href = baseUrl+"page/login.html";
                     }else if(result.code == '411'){
                         // 输入的验证码有误
-                        alert(result.msg);
+                        layer.msg(result.msg);
                     }
                     else if(result.code == '412'){
                         // 验证码失效,请重新发送验证码
-                        alert(result.msg);
+                        layer.msg(result.msg);
                     }else{
                         // 系统异常
-                        alert(result.msg);
+                        layer.msg(result.msg);
                     }
                 }
             });

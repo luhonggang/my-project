@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="no-js">
+<html lang="en" class="no-js" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>个人信息</title>
@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="market/css/pretty.min.css">
     <link rel="stylesheet" type="text/css" href="market/css/demo.css">
     <link async rel="stylesheet" href="https://cdn.materialdesignicons.com/1.8.36/css/materialdesignicons.min.css"/>
+    <script th:src="@{market/js/layer/layer.js}" type="text/javascript"></script>
 </head>
 <script type="text/javascript">
     /* 窗口尺寸改变的事件 */
@@ -73,6 +74,45 @@
                 $("#customerPhone").html(result.data.phone+"，欢迎您");
                 $("#accountMoney").html("￥"+result.data.customerState.totalMoney);
                 $("#levelName").html(result.data.customerLevel.levelName);
+                var spanContext = "";
+                var vipPng= "";
+                var levelName = result.data.customerLevel.levelName;
+                var levelId = result.data.customerLevel.levelId;
+                console.log(levelId);
+                if(null != levelId && levelId != ''){
+                    switch (levelId) {
+                        case 1:
+                            spanContext +=""+levelName+"<img class=\"viplogo\" src=\"market/images/customer/UN-VIP.png\"/>\n" +
+                                          "<span id=\"expiredTime\" style=\"display: none\">到期时间：</span>";
+                            vipPng += "<img src=\"market/images/customer/UN-VIP.png\" style=\"width: 4em\">";
+                            break;
+                        case 2:
+                            spanContext +=""+levelName+"<img class=\"viplogo\" src=\"market/images/customer/VIP1.png\"/>\n" +
+                                          "<span id=\"expiredTime\" style=\"display: none\">到期时间：</span>";
+                            vipPng += "<img src=\"market/images/customer/VIP1.png\" style=\"width: 4em\">";
+                            break;
+                        case 3:
+                            spanContext +=""+levelName+"<img class=\"viplogo\" src=\"market/images/customer/VIP2.png\"/>\n" +
+                                          "<span id=\"expiredTime\" style=\"display: none\">到期时间：</span>";
+                            vipPng += "<img src=\"market/images/customer/VIP2.png\" style=\"width: 4em\">";
+                            break;
+                        case 4:
+                            spanContext +=""+levelName+"<img class=\"viplogo\" src=\"market/images/customer/VIP3.png\"/>\n" +
+                                          "<span id=\"expiredTime\" style=\"display: none\">到期时间：</span>";
+                            vipPng += "<img src=\"market/images/customer/VIP3.png\" style=\"width: 4em\">";
+                            break;
+                        default:
+                            spanContext +="体验会员<img class=\"viplogo\" src=\"market/images/customer/UN-VIP.png\"/>\n" +
+                                            "<span id=\"expiredTime\" style=\"display: none\">到期时间：</span>";
+                            vipPng += "<img src=\"market/images/customer/UN-VIP.png\" style=\"width: 4em\">";
+                            break;
+
+                    }
+                    // 初始化头像等级图片
+                    $('.zhuti_viplogo').html(vipPng);
+                    // 初始化会员信息
+                    $('#span_content').html(spanContext);
+                }
                 var expiredTime = result.data.customerState.expiredTime;
                 if(expiredTime != null && expiredTime !== ''){
                     $("#expiredTime").html("到期时间："+result.data.customerState.expiredTime);
@@ -93,6 +133,7 @@
                     // 设置完成率
                     console.log(" rate : "+result.data.taskRate);
                     var taskState = result.data.taskRate;
+                    // 标识任务类型名称
                     var type = "";
                     switch (result.data.taskList[0].taskType) {
                         case "1":type="PC端匿名访问";break;
@@ -108,6 +149,7 @@
                         case "12":type="PC端收藏加购";break;
                         case "13":type="手机端收藏加购";break;
                     }
+                    // 标识任务状态
                     var state =  "";
                     switch (result.data.taskList[0].taskState) {
                         case 0:state="未执行";break;
@@ -161,14 +203,13 @@
     <!--导航条-->
     <span class="head_a1">
         <span>欢迎使用人气通&nbsp;|</span>
-        <span><a href="#">返回首页</a></span>
     </span>
     <span  class="head_a2">
         <span>您好，</span>
         <span id="topCustomerPhone">&nbsp;|</span>
         <span><a href="login.html">切换用户&nbsp;|</a></span>
-        <span><a href="#">帮助中心&nbsp;|</a></span>
-        <span><a href="#">联系客服</a></span>
+        <span><a href="help.html">帮助中心&nbsp;|</a></span>
+        <span><a target="_blank" href="http://wpa.qq.com/msgrd?v=1&uin=1248326918&site=qq&menu=yes"><img style="height:1.2em;width: 1.2em; vertical-align: middle;margin-top: -3px;" border="0" src="market/images/register/qqq.png" alt="联系客服" title="联系客服"/>联系客服</a></span>
     </span>
 </div>
 
@@ -193,34 +234,31 @@
     <div class="zhuti_touxiang">
         <img style="width:13%;" src="market/images/customer/touxiang-man.png"/>
         <div class="zhuti_viplogo">
-            <img src="market/images/customer/VIP3.png" style="width: 4em">
         </div>
     </div>
     <p style="margin-top: -5px;"><span style="color:black;font-size: 1.8em;" id="customerPhone"></span></p>
     <p class="zhuti_p">
-        <span style="color:#FE5453;">账户余额：<span id="accountMoney"></span>
-        <button style="padding: 1px 4px;background-color:#FE5453;font-size: 15px;" class="md-trigger" data-modal="modal-9">账户充值</button>
+        <span style="color:black;">账户余额：<span id="accountMoney" style="color:#FE5453;"></span><em style="color:#FE5453;">&nbsp;TB</em>
+        <a target="_blank" href="http://wpa.qq.com/msgrd?v=1&uin=1248326918&site=qq&menu=yes" class="cz_kf">联系客服充值</a>
         </span>
-        <span style="color: black;font-size: 17px;">
-            <span id="levelName"></span><img class="viplogo" src="market/images/customer/VIP3.png"/>
-            <span id="expiredTime" style="display: none"></span>
+        <br/>
+        <span style="color: black;" id="span_content">
         </span>
         <input id="discount" type="hidden"/>
         <input id="customerStateId" type="hidden"/>
     </p>
     <!--活动表-->
-
     <div id="three" class="three">
         <div class="three_div1">
             <p>任务总览</p>
-            <p>已完成任务：<a href="javascript:void(0)"><span id="completeTask">0</span></a>个</p>
-            <p>进行中任务：<a href="javascript:void(0)"><span id="taskIsDoing">0</span></a>个</p>
+            <p>已完成任务：<a style="cursor: pointer"><span id="completeTask">0</span></a>个</p>
+            <p>进行中任务：<a style="cursor: pointer"><span id="taskIsDoing">0</span></a>个</p>
             <hr/>
         </div>
         <div class="three_div2">
             <p>活动专栏</p>
-            <p><a href="javascript:void(0)">新人福利</a></p>
-            <p><a href="javascript:void(0)">VIP特权</a></p>
+            <p><a href="activity.html">新人福利</a></p>
+            <p><a href="activity.html">VIP特权</a></p>
             <hr/>
         </div>
         <div class="three_div3">
@@ -243,17 +281,17 @@
 <!--PC流量任务栏弹框-->
 <div class="md-modal md-effect-9" id="modal-1" style="width:60%;height:94%;padding-left: 3px;overflow: auto">
     <div class="md-content" style="margin-top: 0.6em;">
-        <button class="pcll_btn" id="pc_btn1">PC流量(匿名访问)<br/>(0.60TB/条)</button>
-        <button class="pcll_btn" id="pc_btn2">PC流量(实名访问)<br/>(0.60TB/条)</button>
-        <button class="pcll_btn" id="pc_btn3">PC直通车流量<br/>(0.73TB/条)</button>
-        <button class="pcll_btn" id="pc_btn4">聚划算开团提醒<br/>(2.00TB/条)</button>
+        <button class="pcll_btn" id="pc_btn1">PC流量(匿名访问)</button>
+        <button class="pcll_btn" id="pc_btn2">PC流量(实名访问)</button>
+        <button class="pcll_btn" id="pc_btn3">PC直通车流量</button>
+        <button class="pcll_btn" id="pc_btn4">聚划算开团提醒</button>
         <button style="margin: 0;float: right;margin-right: 0.5em;" class="md-close">X</button>
         <div id="pc_rwfb_div" style="display: none">
         </div>
         <!--PC流量匿名访问任务栏-->
         <div id="pcll_nmrw" style="margin: auto;width: 90%;">
             <div style="font-size: 0.9em;margin-top: 0px;" class="pcll_zhuti">
-                <p id="task_tips" style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">PC匿名流量创建-基本信息</p>
+                <p id="task_tips" style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">PC匿名流量创建-基本信息<span style="font-size: 0.8em;">(访客量和浏览量<span style="color: #FF5656">0.68TB</span>/条)</span></p>
                 <div>
                     宝贝链接：<input name="goodLinkUrl" onblur="changeGoodUrl()" id="nmrw_good_url" class="pcll_input" type="text" placeholder="请输入淘宝或天猫宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫淘宝地址)"/>
                 </div>
@@ -296,7 +334,8 @@
                         <label><i class="mdi mdi-check"></i> 前30页</label>
                     </div>
                 </div>
-                <div onchange="selectTemplate(this)" style="float: left;margin-top: -10px;">
+                <!--onchange="selectTemplate(this)"-->
+                <div  style="float: left;margin-top: -10px;">
                     <p style="font-size: 0.9em;">浏览控制：浏览时长&nbsp;&nbsp;<span id="beginCT" class="llsc">50</span>&nbsp;秒&nbsp;-&nbsp;<span id="endCT" class="llsc">80</span>&nbsp;秒&nbsp;&nbsp;<span style="font-size: 0.9em;">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span></p>
                     <div style="padding-top: -15px;" class="pretty success">
                         <input type="checkbox" name="nmxqy" checked="checked" disabled="">
@@ -331,7 +370,7 @@
         <!--PC流量聚划算开通提醒任务栏-->
         <div id="pcll_jhsrw" style="margin: auto;width: 90%">
             <div style="font-size: 0.9em;margin-top: 0px;" class="pcll_zhuti">
-                <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">聚划算明日开团提醒任务创建-基本信息</p>
+                <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">聚划算明日开团提醒任务创建-基本信息<span style="font-size: 0.8em;">(任务数量<span style="color: #FF5656">1.98TB</span>/个)</span></p>
                 <div>
                     宝贝链接：<input name="goodLinkUrl" id="jhsrw_good_url" style="width: 60%;" class="pcll_input" type="text" placeholder="请输入淘宝或天猫宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫淘宝地址)"/>
                 </div>
@@ -383,9 +422,9 @@
 <!--手机流量任务栏弹框-->
 <div class="md-modal md-effect-9" id="modal-2" style="width:60%;height:94%;padding-left: 3px;overflow: auto">
     <div class="md-content" style="margin-top: 0.6em;">
-        <button class="pcll_btn" id="sj_btn1">手机流量(匿名访问)<br/>(0.60TB/条)</button>
-        <button class="pcll_btn" id="sj_btn2">手机流量(实名访问)<br/>(0.60TB/条)</button>
-        <button class="pcll_btn" id="sj_btn3">天猫APP流量<br/>(0.80TB/条)</button>
+        <button class="pcll_btn" id="sj_btn1">手机流量(匿名访问)</button>
+        <button class="pcll_btn" id="sj_btn2">手机流量(实名访问)</button>
+        <button class="pcll_btn" id="sj_btn3">天猫APP流量</button>
         <button style="margin: 0;float: right;margin-right: 0.5em;" class="md-close">X</button>
         <!--手机流量匿名访问任务栏-->
         <div id="sjll_nmrw" style="margin: auto;width: 90%;"></div>
@@ -394,7 +433,7 @@
         <!--天猫APP流量任务栏-->
         <div id="sjll_tmapp" style="margin: auto;width: 90%;display: none">
             <div style="font-size: 0.9em;margin-top: 0px;" class="pcll_zhuti">
-                <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">天猫APP流量创建-基本信息</p>
+                <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">天猫APP流量创建-基本信息<span style="font-size: 0.8em;">(访客量<span style="color: #FF5656">0.78TB</span>/条)</span></p>
                 <div>
                     宝贝链接：<input id="tmapp_good_url" name="goodLinkUrl"  class="pcll_input" type="text" placeholder="请输入天猫宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫宝贝地址)"/>
                 </div>
@@ -468,14 +507,14 @@
 <!--其他流量任务栏弹框-->
 <div class="md-modal md-effect-9" id="modal-3" style="width:60%;height:94%;padding-left: 3px;overflow: auto">
     <div class="md-content" style="margin-top: 0.6em;">
-        <button class="pcll_btn" id="qt_btn2">京东APP流量<br/>(0.80TB/条)</button>
-        <button class="pcll_btn" id="qt_btn3">猜你喜欢流量<br/>(2.00TB/条)</button>
-        <button class="pcll_btn" id="qt_btn4">手机直通车流量<br/>(0.88TB/条)</button>
+        <button class="pcll_btn" id="qt_btn2">京东APP流量</button>
+        <button class="pcll_btn" id="qt_btn3">猜你喜欢流量</button>
+        <button class="pcll_btn" id="qt_btn4">手机直通车流量</button>
         <button style="margin: 0;float: right;margin-right: 0.5em;" class="md-close">X</button>
         <!--其他流量京东APP任务栏-->
         <div id="qtll_jdapp" style="margin: auto;width: 90%;">
             <div style="font-size: 0.9em;margin-top: 0px;" class="pcll_zhuti">
-                <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">京东APP流量创建-基本信息</p>
+                <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">京东APP流量创建-基本信息<span style="font-size: 0.8em;">(访客量<span style="color: #FF5656">0.98TB</span>/条)</span></p>
                 <div>
                     宝贝链接：<input id="other_good_url" name="goodLinkUrl" class="pcll_input" type="text" placeholder="请输入京东宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫淘宝地址)"/>
                 </div>
@@ -548,7 +587,7 @@
         <!--猜你喜欢流量任务栏-->
         <div id="qtll_cnxh" style="margin: auto;width: 90%;display: none">
             <div style="font-size: 0.9em;margin-top: 0px;" class="pcll_zhuti">
-                <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">猜你喜欢流量创建-基本信息</p>
+                <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">猜你喜欢流量创建-基本信息<span style="font-size: 0.8em;">(任务数量<span style="color: #FF5656">1.98TB</span>/个)</span></p>
                 <div>
                     宝贝链接：<input id="like_good_url" name="goodLinkUrl" class="pcll_input" type="text" placeholder="请输入京东宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫淘宝地址)"/>
                 </div>
@@ -603,7 +642,7 @@
         <!--手机直通车流量任务栏-->
         <div id="qtll_sjztc" style="margin: auto;width: 90%;display: none">
             <div style="font-size: 0.9em;margin-top: 0px;" class="pcll_zhuti">
-                <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">手机直通车流量创建-基本信息</p>
+                <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">手机直通车流量创建-基本信息<span style="font-size: 0.8em;">(访客量和浏览量<span style="color: #FF5656">0.98TB</span>/条)</span></p>
                 <div>
                     宝贝链接：<input id="mbztc_good_url" name="goodLinkUrl"  class="pcll_input" type="text" placeholder="请输入淘宝或天猫宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫淘宝地址)"/>
                 </div>
@@ -685,13 +724,13 @@
 <!--收藏加购-->
 <div class="md-modal md-effect-9" id="modal-4" style="width:60%;height:94%;padding-left: 3px;overflow: auto">
     <div class="md-content" style="margin-top: 0.6em;">
-        <button class="pcll_btn" id="scjg_pc_btn1">PC收藏加购<br/>(0.88TB/条)</button>
-        <button class="pcll_btn" id="scjg_sj_btn2">手机收藏加购<br/>(0.88TB/条)</button>
+        <button class="pcll_btn" id="scjg_pc_btn1">PC收藏加购</button>
+        <button class="pcll_btn" id="scjg_sj_btn2">手机收藏加购</button>
         <button style="margin: 0;float: right;margin-right: 0.5em;" class="md-close">X</button>
         <!--PC收藏加购任务栏-->
         <div id="scjg_pc" style="margin: auto;width: 90%;">
             <div style="font-size: 0.9em;margin-top: 0px;" class="pcll_zhuti">
-                <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">PC收藏加购-基本信息<br/><span style="font-size: 0.8em;color: red;">PC收藏加购任务执行较慢,请前往手机收藏加购发布任务，手机端效果更好哦！</span></p>
+                <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">PC收藏加购-基本信息<span style="font-size: 0.8em;">(任务总数<span style="color: #FF5656">0.88TB</span>/个)</span><br/><span style="font-size: 0.8em;color: red;">PC收藏加购任务执行较慢,请前往手机收藏加购发布任务，手机端效果更好哦！</span></p>
                 <div>
                     宝贝链接：<input id="collect_good_url" name="goodLinkUrl" class="pcll_input" type="text" placeholder="请输入淘宝或天猫宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫淘宝地址)"/>
                 </div>
@@ -758,7 +797,7 @@
         <!--手机收藏加购任务栏-->
         <div id="scjg_sj" style="margin: auto;width: 90%;display: none">
             <div style="font-size: 0.9em;margin-top: 0px;" class="pcll_zhuti">
-                <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">手机收藏加购-基本信息<br/><span style="font-size: 0.8em;color: red;">PC收藏加购任务执行较慢,请前往手机收藏加购发布任务，手机端效果更好哦！</span></p>
+                <p style="margin-top: 0.5em;margin-bottom: 0.5em;font-size: 24px;color: black;font-family: 楷体;">手机收藏加购-基本信息<span style="font-size: 0.8em;">(任务总数<span style="color: #FF5656">0.98TB</span>/个)</span></p>
                 <div>
                     宝贝链接：<input id="mb_collect_good_url" name="goodLinkUrl" class="pcll_input" type="text" placeholder="请输入淘宝或天猫宝贝链接&nbsp;&nbsp;(使用Ctrl+V粘贴天猫淘宝地址)"/>
                 </div>
@@ -836,7 +875,7 @@
     // 计算总的金额
     var totalMoney = 0.00;
     // 发布任务单价
-    var pcRate = 0.60;
+    var pcRate = 0.68;
     // 点击的div框标识
     var pcType = '1';
     // 英文符号
@@ -869,10 +908,13 @@
         // 只要点击PC端 就展示匿名流量
         if('pcll_nmrw' == type){
             currentClickType = 'pc';
-            pcRate = 0.60;
+            pcRate = 0.68;
             pcType = "1";
             $('#pcll_nmrw').html($('#'+clickDivId+'').html());
             $('#pcll_nmrw').show();
+            $("#pcll_smrw").hide();
+            $("#pcll_ztcrw").hide();
+            $("#pcll_jhsrw").hide();
             // 将点击事件前的div内容清除
             //$('#'+clickDivId+'').html("");
             checkClickDivId('pcll_nmrw');
@@ -898,9 +940,10 @@
       // 初始化手机端 页面展现
       if('sjll_nmrw' == type){
           currentClickType = 'mobile';
-          pcRate = 0.60;
+          pcRate = 0.68;
           pcType = '5';
           $('#sjll_nmrw').html($('#'+clickDivId+'').html());
+          $('#task_tips').html('手机匿名流量创建-基本信息<span style="font-size: 0.8em;">(访客量和浏览量<span style="color: #FF5656">0.68TB</span>/条)</span>');
           $('#sjll_nmrw').show();
           // 将点击事件前的div内容清除
           $("#sjll_smrw").hide();
@@ -1065,11 +1108,11 @@
             var goodLinkUrl = $thisGood.val();
             // 数组
             if('' == goodLinkUrl || goodLinkUrl.length == 0){
-                console.log("请输入关键词");
+                layer.msg("请输入关键词");
                 return;
             }
             if(!isRightURL(goodLinkUrl)){
-                console.log("宝贝链接格式有误");
+                layer.msg("宝贝链接格式有误");
                 $thisGood.val("");
                 return;
             }
@@ -1080,22 +1123,23 @@
         var wordList = $thisWord.val();
         // 数组
         if('' == wordList || wordList.length == 0){
-            console.log("请输入关键词");
+            layer.msg("请输入关键词");
             return;
         }
     }
     // 校验访客量是否为空并计算金额
     function changeVistor(){
+        totalMoney = 0;
         var $thisVistor = $("#"+clickDivId+" input[name='totalVisitor']");
         var totalVistor = $thisVistor.val().trim();
         // 数组
         if(totalVistor.length == 0){
-            console.log("请输入访客量");
+            layer.msg("请输入访客量");
             return;
         }
 
         if(!checkValFormat(clickDivId,totalVistor,"访客量")){
-            console.log("访客量格式有误");
+            layer.msg("访客量格式有误");
             $thisVistor.val("");
             return;
         };
@@ -1103,12 +1147,16 @@
         var totalNumber = $thisNumber.val().trim();
         if(totalNumber !='' && totalNumber.length != 0){
             if(!calculateMoney(clickDivId,totalNumber,"浏览量",'bs')){
-                console.log("浏览量格式有误");
+                layer.msg("浏览量格式有误");
                 $thisNumber.val("");
                 return;
             };
 
         }
+        var discount = totalMoney*parseFloat(useDis);
+        discount = discount.toFixed(2);
+        console.log("访客量计算折扣价格 ："+discount +" 访客量计算总价格 ： "+totalMoney);
+        showVipRate('nmfw_last_tip',true,totalMoney,discount,currentClickType);
         // 计算访客量
         //calculateMoney(currentId,totalVistor,pcRate,"vs");
     }
@@ -1120,25 +1168,26 @@
 
     // 校验浏览量格式 并计算金额
     function changeTotalNumber(){
+        totalMoney = 0;
         var $thisNumber = $("#"+clickDivId+" input[name='totalNumber']");
         var $thisVistor = $("#"+clickDivId+" input[name='totalVisitor']");
         var totalNumber = $thisNumber.val().trim();
         var totalVistor = $thisVistor.val().trim();
         // 数组
         if(totalNumber.length == 0 || totalVistor.length == 0){
-            console.log("请输入浏览量或访客量");
+            layer.msg("请输入浏览量或访客量");
             return;
         }
 
         totalMoney = 0;
         // 计算访客量总量
         if(!calculateMoney(clickDivId,totalVistor,"访客量",'vs')){
-            console.log("访客量格式有误");
+            layer.msg("访客量格式有误");
             $thisVistor.val("");
             return;
         }
         if(!calculateMoney(clickDivId,totalNumber,"浏览量",'bs')){
-            console.log("浏览量格式有误");
+            layer.msg("浏览量格式有误");
             $thisNumber.val("");
             return;
         };
@@ -1150,54 +1199,54 @@
     }
 
     // PC端或手机端 模板配置 click_score
-     function selectTemplate($this) {
-        var timeCT = $($this).find('p');
-        var beginCT = timeCT.find('span').eq(0).html();
-        var endCT = timeCT.find('span').eq(1).html();
-        var currBct = 50;
-        var currEct = 80;
-        alert(beginCT +" ------- "+endCT);
-        var timeHtml = "浏览控制：浏览时长&nbsp;&nbsp;<span id=\"beginCT\" class=\"llsc\">"+currBct+"</span>&nbsp;秒&nbsp;-&nbsp;" +
-            "<span id=\"endCT\" class=\"llsc\">"+currEct+"</span>&nbsp;秒&nbsp;&nbsp;" +
-            "<span style=\"font-size: 0.9em;\">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span>";
-         var templateId = '5,';
-         $("#"+clickDivId+" input[type='checkbox']").each(function () {
-             if ($(this).is(":checked")) {
-                 var currentVal =$(this).val();
-                 if('on' === currentVal){
-                     timeHtml ="浏览控制：浏览时长&nbsp;&nbsp;<span id=\"beginCT\" class=\"llsc\">50</span>&nbsp;秒&nbsp;-&nbsp;" +
-                         "<span id=\"endCT\" class=\"llsc\">80</span>&nbsp;秒&nbsp;&nbsp;" +
-                         "<span style=\"font-size: 0.9em;\">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span>";
-                     return;
-                 }else{
-                     if(currentVal == '6'){
-                         // 50
-                         currBct = 100;
-                         currEct = 130;
-                         // timeHtml ="浏览控制：浏览时长&nbsp;&nbsp;<span id=\"beginCT\" class=\"llsc\">100</span>&nbsp;秒&nbsp;-&nbsp;" +
-                         //           "<span id=\"endCT\" class=\"llsc\">130</span>&nbsp;秒&nbsp;&nbsp;" +
-                         //           "<span style=\"font-size: 0.9em;\">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span>";
-                     }else if(currentVal == '7'){
-                         // 60
-                         // timeHtml ="浏览控制：浏览时长&nbsp;&nbsp;<span id=\"beginCT\" class=\"llsc\">160</span>&nbsp;秒&nbsp;-&nbsp;" +
-                         //           "<span id=\"endCT\" class=\"llsc\">190</span>&nbsp;秒&nbsp;&nbsp;" +
-                         //           "<span style=\"font-size: 0.9em;\">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span>";
-                     }else if(currentVal == '8'){
-                         // 70
-                         // timeHtml ="浏览控制：浏览时长&nbsp;&nbsp;<span id=\"beginCT\" class=\"llsc\">230</span>&nbsp;秒&nbsp;-&nbsp;" +
-                         //           "<span id=\"endCT\" class=\"llsc\">260</span>&nbsp;秒&nbsp;&nbsp;" +
-                         //           "<span style=\"font-size: 0.9em;\">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span>";
-                     }
-                     //记录每一次已经点击的浏览时长
-                     templateId +=$(this).val()+",";
-                     console.log($(this).val())
-                 }
-             }
-
-             timeCT.html(timeHtml);
-         });
-         
-     }
+    //  function selectTemplate($this) {
+    //     var timeCT = $($this).find('p');
+    //     var beginCT = timeCT.find('span').eq(0).html();
+    //     var endCT = timeCT.find('span').eq(1).html();
+    //     var currBct = 50;
+    //     var currEct = 80;
+    //     alert(beginCT +" ------- "+endCT);
+    //     var timeHtml = "浏览控制：浏览时长&nbsp;&nbsp;<span id=\"beginCT\" class=\"llsc\">"+currBct+"</span>&nbsp;秒&nbsp;-&nbsp;" +
+    //         "<span id=\"endCT\" class=\"llsc\">"+currEct+"</span>&nbsp;秒&nbsp;&nbsp;" +
+    //         "<span style=\"font-size: 0.9em;\">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span>";
+    //      var templateId = '5,';
+    //      $("#"+clickDivId+" input[type='checkbox']").each(function () {
+    //          if ($(this).is(":checked")) {
+    //              var currentVal =$(this).val();
+    //              if('on' === currentVal){
+    //                  timeHtml ="浏览控制：浏览时长&nbsp;&nbsp;<span id=\"beginCT\" class=\"llsc\">50</span>&nbsp;秒&nbsp;-&nbsp;" +
+    //                      "<span id=\"endCT\" class=\"llsc\">80</span>&nbsp;秒&nbsp;&nbsp;" +
+    //                      "<span style=\"font-size: 0.9em;\">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span>";
+    //                  return;
+    //              }else{
+    //                  if(currentVal == '6'){
+    //                      // 50
+    //                      currBct = 100;
+    //                      currEct = 130;
+    //                      // timeHtml ="浏览控制：浏览时长&nbsp;&nbsp;<span id=\"beginCT\" class=\"llsc\">100</span>&nbsp;秒&nbsp;-&nbsp;" +
+    //                      //           "<span id=\"endCT\" class=\"llsc\">130</span>&nbsp;秒&nbsp;&nbsp;" +
+    //                      //           "<span style=\"font-size: 0.9em;\">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span>";
+    //                  }else if(currentVal == '7'){
+    //                      // 60
+    //                      // timeHtml ="浏览控制：浏览时长&nbsp;&nbsp;<span id=\"beginCT\" class=\"llsc\">160</span>&nbsp;秒&nbsp;-&nbsp;" +
+    //                      //           "<span id=\"endCT\" class=\"llsc\">190</span>&nbsp;秒&nbsp;&nbsp;" +
+    //                      //           "<span style=\"font-size: 0.9em;\">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span>";
+    //                  }else if(currentVal == '8'){
+    //                      // 70
+    //                      // timeHtml ="浏览控制：浏览时长&nbsp;&nbsp;<span id=\"beginCT\" class=\"llsc\">230</span>&nbsp;秒&nbsp;-&nbsp;" +
+    //                      //           "<span id=\"endCT\" class=\"llsc\">260</span>&nbsp;秒&nbsp;&nbsp;" +
+    //                      //           "<span style=\"font-size: 0.9em;\">根据您选择的商品浏览步骤要求，合计您的浏览总时长</span>";
+    //                  }
+    //                  //记录每一次已经点击的浏览时长
+    //                  templateId +=$(this).val()+",";
+    //                  console.log($(this).val())
+    //              }
+    //          }
+    //
+    //          timeCT.html(timeHtml);
+    //      });
+    //
+    //  }
     // 任务发布按钮事件
     function savaTask(){
         var goodUrl = $("#"+clickDivId+" input[name='goodLinkUrl']").val();
@@ -1239,12 +1288,12 @@
         var goodLinkUrl = $("#pcll_jhsrw input[name='goodLinkUrl']").val();
         // 数组
         if('' == goodLinkUrl || goodLinkUrl.length == 0){
-            console.log("请输入关键词");
+            layer.msg("请输入关键词");
             return;
         }
         // 淘宝天猫链接 校验
         if(!isRightURL(goodLinkUrl)){
-            console.log("宝贝链接格式有误");
+            layer.msg("宝贝链接格式有误");
             $("#pcll_jhsrw input[name='goodLinkUrl']").val("");
             return;
         }
@@ -1255,14 +1304,14 @@
         var taskNumber = $("#pcll_jhsrw input[name='taskTotalNumber']").val();
         // 数组
         if('' == taskNumber || taskNumber.length == 0){
-            console.log("请输入关键词");
+            layer.msg("请输入关键词");
             return;
         }
         if(!checkIsNumber(taskNumber)){
-            console.log("请输入任务量");
+            layer.msg("请输入任务量");
             return;
         }
-        totalMoney = taskNumber * 2.00;
+        totalMoney = taskNumber * 1.98;
         totalMoney = totalMoney.toFixed(2);
         // 当前实际折扣价
         var discount = totalMoney*parseFloat(useDis);
@@ -1317,31 +1366,30 @@
     function saveTask(goodUrl,taskType,wordList,totalVisitor,totalNumber,taskTime,taskBeginHour,taskEndHour,taskBeginMiunte,
                       taskEndMiunte,taskSearchScope,templateId) {
 
-        console.log("taskBeginHour : "+taskBeginHour+" isNaN "+isNaN(taskBeginHour) +" 结果 "+isNaN("2@"));
         var bh = parseInt(taskBeginHour);
         var eh = parseInt(taskEndHour);
         // 公共参数校验 !isPositiveInteger(taskBeginHour)
         if(isNaN(bh)){
-            console.log("开始时段为空或格式有误");
+            layer.msg("开始时段为空或格式有误");
             return;
         }
         if(isNaN(eh)){
-            console.log("结束时段为空或格式有误");
+            layer.msg("结束时段为空或格式有误");
             return;
         }
         // todo 开始时段 小于结束时段
         var bm = parseInt(taskBeginMiunte);
         var em = parseInt(taskEndMiunte);
         if(isNaN(bm)){
-            console.log("开始分钟为空或格式有误");
+            layer.msg("开始分钟为空或格式有误");
             return;
         }
         if(isNaN(em)){
-            console.log("结束分钟为空或格式有误");
+            layer.msg("结束分钟为空或格式有误");
             return;
         }
         if( bm > em|| bm > 60 || em > 60 ){
-            console.log("录入的分钟数有误,请检查");
+            layer.msg("录入的分钟数有误,请检查");
             return;
         }
         var useDiscount = $('#discount').val();
@@ -1349,7 +1397,7 @@
             {"customerId":customerId,"customerStateId":$('#customerStateId').val(),"goodLinkUrl":goodUrl,
             "taskType":taskType,"wordList":wordList, "totalVisitor":totalVisitor,"totalNumber":totalNumber,
             "taskTime":taskTime,"totalMoney":totalMoney,"accountMoney":$('#accountMoney').html().split('￥')[1],
-            "taskBeginHour":taskBeginHour,"taskEndHour":taskEndHour,"taskBeginMiunte":taskBeginMiunte,"phone":phone,
+            "taskBeginHour":taskBeginHour,"taskEndHour":taskEndHour,"taskBeginMiunte":taskBeginMiunte,"phoneNum":phone,
             "taskEndMiunte":taskEndMiunte,"taskSearchScope":taskSearchScope,"templateId":templateId,"goodTitle":goodTitle,
             "useDiscount":useDiscount
             };
@@ -1366,11 +1414,10 @@
             data:jsonParams,
             contentType:"application/json",
             success:function(result){
-                console.log(result);
                 if(result.code == "200"){
                     totalMoney = 0.0;
                     pcRate = 0.0;
-                    alert('任务发布成功');
+                    layer.msg('任务发布成功');
                     switch (currentClickType){
                         case 'pc': $('#modal-1').removeClass('md-show');break;
                         case 'mobile': $('#modal-2').removeClass('md-show');break;
@@ -1381,9 +1428,9 @@
                     // todo 刷新主页面的数据 重新加载数据
                     window.location.reload();
                 }else if(result.code == '415'){
-                    alert("您好，您的账户余额不足，请先去充值");
+                    layer.msg("您好，您的账户余额不足，请先去充值");
                 }else if(result.code=="500"){
-                    alert(result.msg);
+                    layer.msg(result.msg);
                 }else if(result.code == '401' || result.code == '402'){
                     // token 失效 直接跳转登录页
                     window.location.href = baseUrl+"page/login.html";
@@ -1395,7 +1442,7 @@
     /*PC端流量的任务栏弹框隐藏显示的js*/
     $("#pc_btn1").click(function(){
         currentClickType = 'pc';
-        pcRate = 0.60;
+        pcRate = 0.68;
         pcType = "1";
         var  html = $('#pcll_nmrw');
         if(html.html() == "" || html.length == 1){
@@ -1406,7 +1453,7 @@
             }
 
         }
-        $('#task_tips').html('PC匿名流量创建-基本信息');
+        $('#task_tips').html('PC匿名流量创建-基本信息<span style="font-size: 0.8em;">(访客量和浏览量<span style="color: #FF5656">0.68TB</span>/条)</span>');
         $("#pcll_nmrw").show();
         $("#pcll_smrw").hide();
         $("#pcll_ztcrw").hide();
@@ -1418,7 +1465,7 @@
     $("#pc_btn2").click(function(){
         currentClickType = 'pc';
         $('#startDate_pcll_nm').valueAsDate=new Date();
-        pcRate = 0.60;
+        pcRate = 0.68;
         pcType = "2";
         var  html = $('#pcll_smrw');
         if(html.html() == "" || html.length == 1){
@@ -1428,7 +1475,7 @@
                 $('#'+clickDivId+'').html("");
             }
         }
-        $('#task_tips').html('PC实名流量创建-基本信息');
+        $('#task_tips').html('PC实名流量创建-基本信息<span style="font-size: 0.8em;">(访客量和浏览量<span style="color: #FF5656">0.68TB</span>/条)</span>');
         $("#pcll_smrw").show();
         $("#pcll_nmrw").hide();
         $("#pcll_ztcrw").hide();
@@ -1440,7 +1487,7 @@
     $("#pc_btn3").click(function(){
         currentClickType = 'pc';
         $('#startDate_pcll_nm').valueAsDate=new Date();
-        pcRate = 0.73;
+        pcRate = 0.88;
         pcType = "3";
         var  html = $('#pcll_ztcrw');
         if(html.html() == "" || html.length == 1){
@@ -1450,7 +1497,7 @@
                 $('#'+clickDivId+'').html("");
             }
         }
-        $('#task_tips').html('PC端直通车流量创建-基本信息');
+        $('#task_tips').html('PC端直通车流量创建-基本信息<span style="font-size: 0.8em;">(访客量和浏览量<span style="color: #FF5656">0.88TB</span>/条)</span>');
         $("#pcll_ztcrw").show();
         $("#pcll_smrw").hide();
         $("#pcll_nmrw").hide();
@@ -1476,7 +1523,7 @@
      * */
     $("#sj_btn1").click(function(){
         currentClickType = 'mobile';
-        pcRate = 0.60;
+        pcRate = 0.68;
         pcType = '5';
         var  html = $('#sjll_nmrw');
         if(html.html() == "" || html.length == 1){
@@ -1486,7 +1533,7 @@
                 $('#'+clickDivId+'').html("");
             }
         }
-        $('#task_tips').html('手机匿名流量创建-基本信息');
+        $('#task_tips').html('手机匿名流量创建-基本信息<span style="font-size: 0.8em;">(访客量和浏览量<span style="color: #FF5656">0.68TB</span>/条)</span>');
         $("#sjll_nmrw").show();
         $("#sjll_smrw").hide();
         $("#sjll_tmapp").hide();
@@ -1497,7 +1544,7 @@
 
     $("#sj_btn2").click(function(){
         currentClickType = 'mobile';
-        pcRate = 0.60;
+        pcRate = 0.68;
         pcType = '6';
         clickDiv = '实名';
         var  html = $('#sjll_smrw');
@@ -1507,7 +1554,7 @@
                 $('#'+clickDivId+'').html("");
             }
         }
-        $('#task_tips').html('手机实名流量创建-基本信息');
+        $('#task_tips').html('手机实名流量创建-基本信息<span style="font-size: 0.8em;">(访客量和浏览量<span style="color: #FF5656">0.68TB</span>/条)</span>');
         $("#sjll_smrw").show();
         $("#sjll_nmrw").hide();
         $("#sjll_tmapp").hide()
@@ -1533,12 +1580,12 @@
       var goodLinkUrl = $thisGood.val();
       // 数组
       if('' == goodLinkUrl || goodLinkUrl.length == 0){
-          console.log("请输入关键词");
+          layer.msg("请输入关键词");
           return;
       }
       // 淘宝天猫链接 校验
       if(!isRightURL(goodLinkUrl)){
-          console.log("宝贝链接格式有误");
+          layer.msg("宝贝链接格式有误");
           $thisGood.val("");
           return;
       }
@@ -1549,7 +1596,7 @@
       var wordList = $thisWord.val();
       // 数组
       if('' == wordList || wordList.length == 0){
-          console.log("请输入关键词");
+          layer.msg("请输入关键词");
           return;
       }
   });
@@ -1559,15 +1606,15 @@
       var taskNumber = $task.val();
       // 数组
       if('' == taskNumber || taskNumber.length == 0){
-          console.log("请输入关键词");
+          layer.msg("请输入关键词");
           return;
       }
       if(!checkIsNumber(taskNumber)){
           $task.val('');
-          console.log("请输入任务量");
+          layer.msg("请输入任务量");
           return;
       }
-      totalMoney = taskNumber * 0.8;
+      totalMoney = taskNumber * 0.78;
       totalMoney = totalMoney.toFixed(2);
       console.log("当前总的价格 ： "+totalMoney);
       // 当前实际折扣价
@@ -1621,12 +1668,12 @@
       var goodLinkUrl = $thisGood.val();
       // 数组
       if('' == goodLinkUrl || goodLinkUrl.length == 0){
-          console.log("请输入宝贝链接");
+          layer.msg("请输入宝贝链接");
           return;
       }
       // 淘宝天猫链接 校验
       if(!isRightURL(goodLinkUrl)){
-          console.log("宝贝链接格式有误");
+          layer.msg("宝贝链接格式有误");
           $thisGood.val("");
           return;
       }
@@ -1638,7 +1685,7 @@
       var wordList = $thisWord.val();
       // 数组
       if('' == wordList || wordList.length == 0){
-          console.log("请输入关键词");
+          layer.msg("请输入关键词");
           return;
       }
   });
@@ -1649,15 +1696,15 @@
       var taskNumber = $task.val();
       // 数组
       if('' == taskNumber || taskNumber.length == 0){
-          console.log("请输入关键词");
+          layer.msg("请输入关键词");
           return;
       }
       if(!checkIsNumber(taskNumber)){
           $task.val('');
-          console.log("请输入任务量");
+          layer.msg("任务量格式有误,只能是数字");
           return;
       }
-      totalMoney = taskNumber * 0.8;
+      totalMoney = taskNumber * 0.98;
       totalMoney = totalMoney.toFixed(2);
       console.log("当前总的价格 ： "+totalMoney);
       // 当前实际折扣价
@@ -1708,12 +1755,12 @@
       var goodLinkUrl = $thisGood.val();
       // 数组
       if('' == goodLinkUrl || goodLinkUrl.length == 0){
-          console.log("请输入宝贝链接");
+          layer.msg("请输入宝贝链接");
           return;
       }
       // 淘宝天猫链接 校验
       if(!isRightURL(goodLinkUrl)){
-          console.log("宝贝链接格式有误");
+          layer.msg("宝贝链接格式有误");
           $thisGood.val("");
           return;
       }
@@ -1725,15 +1772,15 @@
       var taskNumber = $task.val();
       // 数组
       if('' == taskNumber || taskNumber.length == 0){
-          console.log("请输入关键词");
+          layer.msg("请输入关键词");
           return;
       }
       if(!checkIsNumber(taskNumber)){
           $task.val('');
-          console.log("请输入任务量");
+          layer.msg("任务量格式有误,只能是数字");
           return;
       }
-      totalMoney = taskNumber * 2.0;
+      totalMoney = taskNumber * 1.98;
       totalMoney = totalMoney.toFixed(2);
       console.log("当前总的价格 ： "+totalMoney);
       // 当前实际折扣价
@@ -1785,12 +1832,12 @@
       var goodLinkUrl = $thisGood.val();
       // 数组
       if('' == goodLinkUrl || goodLinkUrl.length == 0){
-          console.log("请输入宝贝链接");
+          layer.msg("请输入宝贝链接");
           return;
       }
       // 淘宝天猫链接 校验
       if(!isRightURL(goodLinkUrl)){
-          console.log("宝贝链接格式有误");
+          layer.msg("宝贝链接格式有误");
           $thisGood.val("");
           return;
       }
@@ -1802,7 +1849,7 @@
       console.log("短标题 ： "+title);
       // 数组
       if('' == title || title.length == 0){
-          console.log("请输入端标题");
+          layer.msg("请输入短标题");
           return;
       }
         goodTitle = title;
@@ -1813,7 +1860,7 @@
       var wordList = $thisWord.val();
       // 数组
       if('' == wordList || wordList.length == 0){
-          console.log("请输入关键词");
+          layer.msg("请输入关键词");
           return;
       }
     });
@@ -1823,12 +1870,12 @@
       var taskNumber = $task.val();
       // 数组
       if('' == taskNumber || taskNumber.length == 0){
-          console.log("请输入关键词");
+          layer.msg("请输入关键词");
           return;
       }
       if(!checkIsNumber(taskNumber)){
           $task.val('');
-          console.log("请输入任务量");
+          layer.msg("任务量格式有误,只能是数字");
           return;
       }
     });
@@ -1840,21 +1887,21 @@
         var totalVistor = $thisVistor.val().trim();
         // 数组
         if(totalNumber.length == 0 || totalVistor.length == 0){
-            console.log("请输入浏览量或访客量");
+            layer.msg("请输入浏览量或访客量");
             return;
         }
 
         totalMoney = 0;
         // 此时设置单价为 当前任务的单价
-        pcRate = 0.88;
+        pcRate = 0.98;
         // 计算访客量总量
         if(!calculateMoney('qtll_sjztc',totalVistor,"访客量",'vs')){
-            console.log("访客量格式有误");
+            layer.msg("访客量格式有误");
             $thisVistor.val("");
             return;
         }
         if(!calculateMoney('qtll_sjztc',totalNumber,"浏览量",'bs')){
-            console.log("浏览量格式有误");
+            layer.msg("浏览量格式有误");
             $thisNumber.val("");
             return;
         };
@@ -1907,12 +1954,12 @@
         var goodLinkUrl = $thisGood.val();
         // 数组
         if('' == goodLinkUrl || goodLinkUrl.length == 0){
-            console.log("请输入宝贝链接");
+            layer.msg("请输入宝贝链接");
             return;
         }
         // 淘宝天猫链接 校验
         if(!isRightURL(goodLinkUrl)){
-            console.log("宝贝链接格式有误");
+            layer.msg("宝贝链接格式有误");
             $thisGood.val("");
             return;
         }
@@ -1924,7 +1971,7 @@
         console.log("关键词 ： "+wordList);
         // 数组
         if('' == wordList || wordList.length == 0){
-            console.log("请输入关键词");
+            layer.msg("请输入关键词");
             return;
         }
     });
@@ -1936,7 +1983,7 @@
         var totalTask = Number(selectChx*total);
         console.log('total : '+total+' totalTask '+totalTask);
         $('#pc_collect_total').html(totalTask);
-        totalMoney = totalTask * 0.88;
+        totalMoney = totalTask * 0.98;
         totalMoney = totalMoney.toFixed(2);
         console.log("当前总的价格 ： "+totalMoney);
         // 当前实际折扣价
@@ -1951,12 +1998,12 @@
         var taskNumber = $task.val();
         // 数组
         if('' == taskNumber || taskNumber.length == 0){
-            console.log("请输入关键词");
+            layer.msg("请输入关键词");
             return;
         }
         if(!checkIsNumber(taskNumber)){
             $task.val('');
-            console.log("请输入任务量");
+            layer.msg("任务量格式有误,只能是数字");
             return;
         }
     });
@@ -1988,12 +2035,12 @@
         var goodLinkUrl = $thisGood.val();
         // 数组
         if('' == goodLinkUrl || goodLinkUrl.length == 0){
-            console.log("请输入宝贝链接");
+            layer.msg("请输入宝贝链接");
             return;
         }
         // 淘宝天猫链接 校验
         if(!isRightURL(goodLinkUrl)){
-            console.log("宝贝链接格式有误");
+            layer.msg("宝贝链接格式有误");
             $thisGood.val("");
             return;
         }
@@ -2005,7 +2052,7 @@
         console.log("关键词 ： "+wordList);
         // 数组
         if('' == wordList || wordList.length == 0){
-            console.log("请输入关键词");
+            layer.msg("请输入关键词");
             return;
         }
     });
@@ -2016,7 +2063,7 @@
         var totalTask = Number(selectChx*total);
         console.log('total : '+total+' totalTask '+totalTask);
         $('#mb_collect_total').html(totalTask);
-        totalMoney = totalTask * 0.88;
+        totalMoney = totalTask * 0.98;
         totalMoney = totalMoney.toFixed(2);
         console.log("当前总的价格 ： "+totalMoney);
         // 当前实际折扣价
@@ -2030,12 +2077,12 @@
         var taskNumber = $task.val();
         // 数组
         if('' == taskNumber || taskNumber.length == 0){
-            console.log("请输入关键词");
+            layer.msg("请输入关键词");
             return;
         }
         if(!checkIsNumber(taskNumber)){
             $task.val('');
-            console.log("请输入任务量");
+            layer.msg("任务量格式有误,只能是数字");
             return;
         }
     });

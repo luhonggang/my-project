@@ -6,7 +6,6 @@ import com.renqi.market.dao.*;
 import com.renqi.market.entity.CustomerState;
 import com.renqi.market.entity.CustomerTask;
 import com.renqi.market.entity.CustomerTaskInfo;
-import com.renqi.market.exception.BaseResultException;
 import com.renqi.market.exception.CheckBaseException;
 import com.renqi.market.service.CustomerTaskService;
 import com.renqi.market.util.*;
@@ -226,11 +225,12 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
                 case "13":typeName = "手机端收藏加购";break;
                 default:typeName = "PC端匿名访问";break;
             }
-            logger.info("++++++++++ phone ++++++++++ : {}",task.getPhone());
+            logger.info("++++++++++ phone ++++++++++ : {}",task.getPhoneNum());
             Map<String,String> mapPram = new HashMap<>();
 //            mapPram.put("phone","15812346666");
-            mapPram.put("ownPhone","17717926547");
-            mapPram.put("phone",task.getPhone());
+            mapPram.put("ownPhone",redisTemplate.opsForValue().get("phone"));
+            mapPram.put("templateId","SMS_150575604");
+            mapPram.put("phone",task.getPhoneNum());
         try {
             MobileCodeUtil.sendSmsTask(mapPram);
         } catch (ClientException e) {

@@ -22,6 +22,8 @@ public class CustomerTaskDto implements Serializable {
     public CustomerTaskDto() {
     }
 
+    private String phoneNum;
+
     private Integer totalTask;
 
     private Double totalMoney;

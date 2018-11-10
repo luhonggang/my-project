@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>帮助中心</title>
+    <link rel="stylesheet" href="market/css/help.css">
+</head>
+<style type="text/css">
+    body{
+        margin: 0;
+        background-image: url("market/images/help/pc-bgimg.png");
+        background-repeat: no-repeat;
+        min-width: 1276px;
+        font-size:62.5%;
+    }
+</style>
+<body>
+<div class="header">
+    <!--导航条-->
+    <span class="head_a1">
+        <span>欢迎使用人气通&nbsp;</span>|
+       <!-- <span><a href="#">返回首页</a></span>-->
+    </span>
+    <span  class="head_a2">
+        <span>您好，</span>
+        <span id="phone">15827703606&nbsp;</span>|
+        <span><a href="login.html">切换用户&nbsp;</a>|</span>
+        <span><a href="#">帮助中心&nbsp;</a>|</span>
+        <span>
+            <a target="_blank" href="http://wpa.qq.com/msgrd?v=1&uin=1248326918&site=qq&menu=yes"><img style="height:1.2em;width: 1.2em; vertical-align: middle;margin-top: -3px;" border="0" src="market/images/register/qqq.png" alt="联系客服" title="联系客服"/>联系客服</a>
+        </span>
+    </span>
+</div>
+<script th:src="@{market/js/base.js}" type="text/javascript"></script>
+<script type="text/javascript">
+    console.log("当前用户手机号 ： " + phone);
+    if(phone == null || phone === ''){
+        window.location.href = baseUrl+"page/login.html";
+    }
+    document.getElementById('phone').value = phone;
+</script>
+<!--收费标准-->
+
+<table border="1px;" class="sfbz_table" cellspacing="0px" cellpadding="5px">
+    <tr>
+        <td colspan="2"><h3 class="sfbz">收费标准</h3></td>
+    </tr>
+    <tr>
+        <td colspan="1">任务类型</td>
+        <td colspan="3">价格</td>
+    </tr>
+    <tr>
+        <td>PC流量(匿名和实名)</td>
+        <td>访客量和浏览量0.68TB/条</td>
+    </tr>
+    <tr>
+        <td>PC直通车</td>
+        <td>访客量和浏览量0.88TB/条</td>
+    </tr>
+    <tr>
+        <td>聚划算开团提醒</td>
+        <td>任务数量1.98TB/个</td>
+    </tr>
+    <tr>
+        <td>手机流量(匿名和实名)</td>
+        <td>访客量和浏览量0.68TB/条</td>
+    </tr>
+    <tr>
+        <td>天猫APP流量</td>
+        <td>访客量0.78TB/条</td>
+    </tr>
+    <tr>
+        <td>京东APP流量</td>
+        <td>访客量和浏览量0.98TB/条</td>
+    </tr>
+    <tr>
+        <td>猜你喜欢流量</td>
+        <td>任务数量1.98TB/个</td>
+    </tr>
+    <tr>
+        <td>手机直通车流量</td>
+        <td>访客量和浏览量0.98TB/条</td>
+    </tr>
+    <tr>
+        <td>PC收藏加购</td>
+        <td>任务总数0.88TB/个</td>
+    </tr>
+    <tr>
+        <td>手机收藏加购</td>
+        <td>任务总数0.98TB/个</td>
+    </tr>
+</table>
+<!--操作流程-->
+<div class="czlc">
+    <h1 class="sfbz">操作流程</h1>
+    <h1 class="sfbz">关于发布任务问题</h1>
+    <img class="help_img" src="market/images/help/help_one.png"/>
+    <p>1.进入人气通平台，点击任务栏选择。（做其他类型流量可以选项栏选择。）</p>
+    <p>2.选择PC实名流量。（不要选错，我们做的都是实名点击才会有权重。）</p>
+    <p>3.复制要做的产品连接到此栏。</p>
+    <p>4.添加关键词点击，可以批量增添多个关键词投放，请使用逗号（，）隔开</p>
+    <p>5.添加访客量点击，可以批量增添多个关键词投放，请使用逗号（，）隔开</p>
+    <p>6.添加浏览量点击，可以批量增添多个关键词投放，请使用逗号（，）隔开</p>
+    <p>7.任务区间间隔时间，每做一个访客和展现的时间，我们任务最大不能超过晚上24点，所以在设置任务的时候，为了保持流量的平稳这里要进行调整，保持流量不要过于集中，比如（上午10点发布任务，某个关键词需要放20个访客，10点至24点是840分钟，我们只要控制20个访客最大时间不超过840分钟即可当天完成全部任务，比如任务区间间隔时间可以设置30分-40分，保持流量的稳定）其他时段，和任务区间的时间可以根据各自的情况设定。</p>
+    <p>8.搜索范围每次发布都勾选范围最大前500条。</p>
+    <p>9.浏览控制这里全选。</p>
+    <hr/>
+    <h1 class="sfbz" style="color: black">收藏加购发布流程</h1>
+    <img class="help_img" src="market/images/help/help_two.png">
+    <p>1.选项栏选择收藏加购。</p>
+    <p>2.点击手机收藏加购。</p>
+    <p>3.输入要发布的宝贝链接。</p>
+    <p>4.输入要做的关键词。（收藏加购关键词只能一个一个的发布）</p>
+    <p>5.在这里选择你要发布的数量。</p>
+    <p>6.做收藏就在宝贝收藏这里勾选，其他不勾选。</p>
+    <p>7.做加入购物车，就在此勾选加入购物车，其他不选。</p>
+    <p>8.和发布流量同理设置区间时间，保持收藏加购稳定，避免收藏加购过于集中。</p>
+    <hr/>
+    <h1 class="sfbz" style="color: black">一.人气通是做什么的？</h1>
+    <p>发布任务：我们将您的任务需求发布到全网平台，我们最优质的淘宝用户来接取任务！</p>
+    <p>分配任务：来自全国各地的优质淘宝用户及时接收任务,无需漫长等待，万人在线！</p>
+    <p>人气真实：真实买家购物账号操作丨原纬度购物行为丨全国不同IP</p>
+    <h1 class="sfbz" style="color: black">二.粉丝是全国各地的吗？</h1>
+    <p>1.全国各地域真实用户购物号，无线端APP操作，买家帐号多重审核，需两心以上，注册时长，实名认证。且必须经过身份证、QQ、微信、银行卡、支付宝、手机等认证。资金只能提现到经过认证所对应的银行卡。</p>
+    <p>2.买家通过进入人气通网站，注册账号并绑定真实的的购物大号，待客服审核通过之后，才可以接取商家的任务。
+        通过商家设置的关键词进入淘宝APP搜索额任务商品，找到任务商品之后根据任务要求进行收藏加购等操作。
+    </p>
+    <h1 class="sfbz" style="color: black">三.收藏加购比例怎么控制？</h1>
+    <p>一般一个健康的宝贝，收藏控制在单品流量的30-40%左右，加购控制在单品流量的20-30%，但是每个行业类目店铺情况有所不同，仅仅作为一个参考</p>
+    <p>）每日有持续有新增。因为新增收藏加购权重大于历史累计收藏的权重；</p>
+</div>
+
+</body>
+</html>
