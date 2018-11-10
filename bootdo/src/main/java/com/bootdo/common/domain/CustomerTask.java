@@ -54,6 +54,8 @@ public class CustomerTask {
 
     private String templateId;
 
+    private String templateName;
+
     private Integer taskState;
 
     private String taskType;

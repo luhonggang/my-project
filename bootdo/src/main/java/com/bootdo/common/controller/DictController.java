@@ -74,8 +74,16 @@ public class DictController extends BaseController {
 			task.setWordList(wordList);
 			// 浏览时长 todo
 			String tId = task.getTemplateId();
-			String lastElement = tId.substring(tId.lastIndexOf(",")+1);
-			task.setBowerTime(StringUtils.getBowerTime(lastElement));
+			if(StringUtils.isNotEmpty(tId) && tId.contains(",")){
+//				String lastElement = tId.substring(tId.lastIndexOf(",")+1);
+//
+//				task.setBowerTime(StringUtils.getBowerTime(lastElement));
+				// 获取的是 搜索的范围
+				task.setTemplateName(StringUtils.getTemplateName(tId.split(",")));
+			}else{
+				// 获取的是 搜索的范围
+				task.setTemplateName("");
+			}
 			// 获取的是 任务类型名称
 			log.info("+++++++++++++ taskType ++++++++++++++ ",task.getTaskType() +" task.getTotalNumber "+task.getTotalNumber());
 			task.setTaskTypeName(StringUtils.getTaskType(task.getTaskType()));

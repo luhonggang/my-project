@@ -225,7 +225,7 @@
         <span><a href="javascript:void(0)" onclick="showVipRate('nmfw_last_tip',false,0,0,'pcll_nmrw');" class="md-trigger" data-modal="modal-1">电脑端流量</a></span>
         <span><a href="javascript:void(0)" onclick="showVipRateWithMobile('nmrw_last_tip',false,0,0,'sjll_nmrw');" class="md-trigger" data-modal="modal-2">手机端流量</a></span>
         <span><a href="javascript:void(0)" onclick="showVipRateOther('otapp_last_tip',false,0,0);" class="md-trigger" data-modal="modal-3">其他流量</a></span>
-        <span><a href="javascript:void(0)" onclick="showVipRate('shjg_last_tip',false,0,0);" class="md-trigger" data-modal="modal-4">收藏加购</a></span>
+        <span><a href="javascript:void(0)" onclick="showVipRateOther('collect_last_tip',false,0,0);" class="md-trigger" data-modal="modal-4">收藏加购</a></span>
     </span>
 </div>
 
@@ -739,7 +739,7 @@
                 </div>
                 <div style="margin-top: 1em;font-size: 0.9em;">
                     <span>任务数量：</span><span style="margin-left: 0.4em;">每&nbsp;
-                    <input id="collect_number" name="totalNumber" style="padding-left: 0;width: 8%;" class="jhs_rnum" type="text" placeholder="请输入任务数量"/>&nbsp;&nbsp;个任务扣除任务总数&nbsp;<span id="pc_collect_total" class="llsc">0</span>&nbsp;个，若多选下列选项，则加倍扣除任务数，至少选一个</span>
+                    <input id="collect_number" name="totalNumber" style="padding-left: 0;width: 8%;" class="jhs_rnum" type="text" placeholder="0"/>&nbsp;&nbsp;个任务扣除任务总数&nbsp;<span id="pc_collect_total" class="llsc">0</span>&nbsp;个，若多选下列选项，则加倍扣除任务数，至少选一个</span>
                 </div>
                 <div id="pc_chx">
                     <div class="pretty info circle a-jelly" style="margin-top: 0.5em;">
@@ -806,7 +806,7 @@
                 </div>
                 <div style="margin-top: 1em;font-size: 0.9em;">
                     <span>任务数量：</span><span style="margin-left: 0.4em;">每&nbsp;
-                    <input id="mb_collect_number" name="totalNumber" style="padding-left: 0;width: 8%;" class="jhs_rnum" type="text" placeholder="请输入任务数量"/>&nbsp;&nbsp;个任务扣除任务总数&nbsp;<span id="mb_collect_total" class="llsc">0</span>&nbsp;个，若多选下列选项，则加倍扣除任务数</span>
+                    <input id="mb_collect_number" name="totalNumber" style="padding-left: 0;width: 8%;" class="jhs_rnum" type="text" placeholder="0"/>&nbsp;&nbsp;个任务扣除任务总数&nbsp;<span id="mb_collect_total" class="llsc">0</span>&nbsp;个，若多选下列选项，则加倍扣除任务数</span>
                 </div>
                 <div id="mb_chx">
                     <div class="pretty info circle a-jelly" style="margin-top: 0.5em;">
@@ -943,6 +943,7 @@
           pcRate = 0.68;
           pcType = '5';
           $('#sjll_nmrw').html($('#'+clickDivId+'').html());
+          $('#'+clickDivId+'').html("");
           $('#task_tips').html('手机匿名流量创建-基本信息<span style="font-size: 0.8em;">(访客量和浏览量<span style="color: #FF5656">0.68TB</span>/条)</span>');
           $('#sjll_nmrw').show();
           // 将点击事件前的div内容清除
@@ -1402,7 +1403,6 @@
             "useDiscount":useDiscount
             };
         var jsonParams = JSON.stringify(taskParams);
-        console.log("格式化的参数是 ： "+jsonParams+"当前用户的ID ： "+customerId+ " 当前用户的token ： "+token);
         $.ajax({
             url:baseUrl+'task/saveCustomerTask.json',
             type:'POST',
@@ -1429,7 +1429,7 @@
                     window.location.reload();
                 }else if(result.code == '415'){
                     layer.msg("您好，您的账户余额不足，请先去充值");
-                }else if(result.code=="500"){
+                }else if(result.code=="500" || result.code == '501'){
                     layer.msg(result.msg);
                 }else if(result.code == '401' || result.code == '402'){
                     // token 失效 直接跳转登录页
@@ -1983,7 +1983,7 @@
         var totalTask = Number(selectChx*total);
         console.log('total : '+total+' totalTask '+totalTask);
         $('#pc_collect_total').html(totalTask);
-        totalMoney = totalTask * 0.98;
+        totalMoney = totalTask * 0.88;
         totalMoney = totalMoney.toFixed(2);
         console.log("当前总的价格 ： "+totalMoney);
         // 当前实际折扣价
@@ -2018,7 +2018,7 @@
         var taskEndHour = $("#scjg_pc input[name='taskEndHour']").val();
         var taskBeginMiunte = $("#scjg_pc input[name='taskBeginMiunte']").val();
         var taskEndMiunte = $("#scjg_pc input[name='taskEndMiunte']").val();
-        var taskSearchScope = $("#qtll_jdapp input[name='qwe']:checked").val();
+        var taskSearchScope = $("#scjg_pc input[name='qwe']:checked").val();
         // 模板ID组合 多选框的值
         var templateId = 'no';
         var totalVisitor = '0';
@@ -2056,7 +2056,7 @@
             return;
         }
     });
-    // pc收藏加购 点击计算
+    // 手机端收藏加购 点击计算
     $('#mb_chx').on('click',function () {
         var selectChx = $("#mb_chx input[type='checkbox']:checked").length;
         var total = $("#scjg_sj input[name='totalNumber']").val();
@@ -2087,7 +2087,7 @@
         }
     });
 
-    // PC收藏加购发布任务
+    // 手机端收藏加购发布任务
     $('.mb_collect_fbrw').on('click',function () {
         var goodUrl = $("#scjg_sj input[name='goodLinkUrl']").val();
         var wordList = $("#scjg_sj input[name='wordList']").val();
@@ -2097,7 +2097,7 @@
         var taskEndHour = $("#scjg_sj input[name='taskEndHour']").val();
         var taskBeginMiunte = $("#scjg_sj input[name='taskBeginMiunte']").val();
         var taskEndMiunte = $("#scjg_sj input[name='taskEndMiunte']").val();
-        var taskSearchScope = $("#qtll_jdapp input[name='qwe']:checked").val();
+        var taskSearchScope = $("#scjg_sj input[name='qwe']:checked").val();
         // 模板ID组合 多选框的值
         var templateId = 'no';
         var totalVisitor = '0';

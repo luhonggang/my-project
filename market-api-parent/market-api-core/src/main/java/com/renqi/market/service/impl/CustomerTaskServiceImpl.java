@@ -78,7 +78,7 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
                 customer.setTaskIsDoing(taskContinue);
                 customer.setTaskIsException(taskException);
                 // 设置完成率的百分比
-                int isRate = taskCom + taskContinue;
+                int isRate = taskCom;
                 int rate = isRate/totalTask;
                 customer.setTaskRate(rate+"%");
             }
@@ -144,10 +144,11 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
             task.setTotalVisitor(StringHandleUtils.calculateTotalVal(task.getTotalVisitor()));
             task.setTotalNumber(StringHandleUtils.calculateTotalVal(task.getTotalNumber()));
             // 设置模板组合ID
-            if("0".equals(task.getTemplateId())){
+            String tId = task.getTemplateId();
+            if("0".equals(tId) || "no".equalsIgnoreCase(tId)){
                 task.setTemplateId(null);
             }else {
-                task.setTemplateId(task.getTemplateId().substring(0, task.getTemplateId().length() - 1));
+                task.setTemplateId(tId.substring(0, tId.length()-1));
             }
         }
 

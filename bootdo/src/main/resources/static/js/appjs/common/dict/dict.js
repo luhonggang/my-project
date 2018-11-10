@@ -106,10 +106,6 @@ function load() {
                         title : '创建时间'
                     },
                     {
-                        field : 'orderNo',
-                        title : '订单编号'
-                    },
-                    {
                         field : 'wordList',
                         title : '关键词'
                     },
@@ -150,6 +146,10 @@ function load() {
                     {
                         field : 'taskSearchScope',
                         title : '搜索范围'
+                    },
+                    {
+                        field : 'templateName',
+                        title : '浏览控制'
                     },
 					{
 						title : '操作',

@@ -1,5 +1,8 @@
 package com.bootdo.common.utils;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * @author bootdo
  */
@@ -7,6 +10,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils{
 
     private static final String[] pcTypeList = new String[]{"1","2","3","4","5","6","7","11","13"};
 
+    private static final String[] templateNameList;
     private static final String[] templateList;
     static {
         templateList = new String[]{
@@ -19,7 +23,51 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils{
                 "160秒 - 190秒",
                 "230秒 - 260秒"
         };
+        templateNameList = new String[]{
+          "浏览商品详情页,",
+          "货比三家,",
+          "浏览商品评价,",
+          "浏览关联商品",
+          "浏览商品详情页,",
+          "货比三家,",
+          "浏览商品评价,",
+          "浏览商品详情页"
+        };
     }
+
+    /**
+     * 获取模板名称
+     * @param arrayList
+     * @return
+     */
+    public static String getTemplateName(String[] arrayList){
+        String templateName = "";
+        for (int i = 0; i < arrayList.length; i++) {
+            if(isNumeric(arrayList[0])) {
+                templateName += templateNameList[Integer.parseInt(arrayList[0]) - 1];
+            }else {
+                continue;
+            }
+        }
+        if(templateName.endsWith(",")){
+            templateName = templateName.substring(0,templateName.length()-1);
+        }
+        return  templateName;
+    }
+    /**
+     * 利用正则表达式判断字符串是否是数字
+     * @param str
+     * @return
+     */
+    public static boolean isNumeric(String str){
+        Pattern pattern = Pattern.compile("[0-9]*");
+        Matcher isNum = pattern.matcher(str);
+        if(!isNum.matches()){
+            return false;
+        }
+        return true;
+    }
+
     /**
      * 获得浏览时长
      * @param templateId 模板ID
