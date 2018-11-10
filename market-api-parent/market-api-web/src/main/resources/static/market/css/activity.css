@@ -1,0 +1,134 @@
+.header{
+    background-color: #1B1B1B;
+    width:100%;
+    height:35px;
+    line-height: 35px;
+    position: relative;
+    min-width: 920px;
+}
+.head_a1{
+    position: absolute;
+    left: 20%;
+}
+.head_a2{
+    position: absolute;
+    left:55%;
+}
+.header>span{
+    color:white;
+    font-size: 17px;
+}
+.header a{
+    color:white;
+    text-decoration: none;
+}
+.header a:hover{
+    color:#3399ff;
+}
+
+.header_nav{
+    width:100%;
+    min-width: 920px;
+    background-color:#FFFFFF;
+    height:60px;
+    line-height: 60px;
+    text-align: center;
+    position: relative;
+}
+.header_nav img{
+    vertical-align: middle;
+    padding-bottom: 8px;
+}
+.header_nav_text{
+    font-size: 24px;
+    color:black;
+    font-family: "楷体";
+}
+.header_nav_posi1{
+    position: absolute;
+    left: 17%;
+}
+.header_nav_posi2{
+    position: absolute;
+    left:55%;
+
+}
+.header_nav_posi2 span{
+    padding-left: 15px;
+    font-size: 17px;
+}
+.header_nav_posi2 span a{
+    color:black;
+}
+.header_nav_posi2 span a:hover{
+    color:#3399ff;
+    border-bottom: 1px solid red;
+}
+
+.realize{
+    width:800px;
+    height:350px;
+    background-color: white;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+.realize_d1{
+    text-align: center;
+}
+.realize_d1_span1{
+    color: #F22E3F;
+    font-size: 2.1em;
+    font-weight: bold;
+}
+.realize_d1_one{
+    width:200px;
+    height:250px;
+    display: inline-block;
+    overflow: hidden;
+    border-radius: 5px;
+    background: -moz-linear-gradient(top, #FF805D 0%,#FF0000 130%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FF805D), color-stop(130%,#FF0000));
+    background: -webkit-linear-gradient(top, #FF805D 0%,#FF0000 130%);
+    background: -o-linear-gradient(top, #FF805D 0%,#FF0000 130%);
+    background: -ms-linear-gradient(top, #FF805D 0%,#FF0000 130%);
+    background: linear-gradient(to bottom, #FF805D 0%,#FF0000 130%);
+}
+.blod_num{
+    font-weight: bold;
+    font-size: 30px;
+    color: white;
+}
+.smail_font{
+    font-size: 1.5em;
+    color: white;
+}
+.newimg_div{
+    display: inline-block;
+}
+.new_user_img{
+    width:170px;
+    height:180px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
