@@ -191,9 +191,10 @@
                     console.log(result);
                     if(result.code == '200' || result.code == '408'){
                         //$("#mobileCode").val(result.data);
-                        layer.msg(result.msg);
+                        // layer.msg(result.msg);
                         // 说明注册成功 跳转到登录页面
-                        window.location.href = "login.html";
+                        // window.location.href = "login.html";
+                        window.open("login.html");
                     }else if(result.code == '411'){
                         // 输入的验证码有误
                         layer.msg(result.msg);

@@ -102,21 +102,21 @@ public class CustomerTaskServiceImpl implements CustomerTaskService {
         if (null == TaskType.values()[Integer.parseInt(taskType) - 1] || StringUtils.isEmpty(TaskType.values()[Integer.parseInt(taskType) - 1].getValue())) {
             throw new CheckBaseException(msg, SystemCode.TASK_TYPE_EXCEPTION.getCode(), SystemCode.TASK_TYPE_EXCEPTION.getMsg()); /* return ResultMsgUtil.setCodeMsg(msg,SystemCode.TASK_TYPE_EXCEPTION.getCode(),SystemCode.TASK_TYPE_EXCEPTION.getMsg());*/
         }
-        String[] mobileType = new String[]{"5", "6", "7"}; /* 手机端 发布任务设置宝贝ID*/
-        if (StringHandleUtils.containsStr(taskType, mobileType)) { /* 需要获取旺旺名称 httpClient 调用*/
-            String wwName = ""; /*手机端流量任务发布 就需要获取宝贝的ID 手机端宝贝链接 如 ： http://item.taobao.com/item.htm?id=535560353891*/
-            if (task.getGoodLinkUrl().indexOf("?") != -1) {
-                String goodId = task.getGoodLinkUrl().split("=")[1];
-                logger.info("+++++++++++ 手机端宝贝ID ： {} ",goodId);
-                task.setGoodId(Long.parseLong(goodId));
-            } else {
-                throw new CheckBaseException(msg, SystemCode.GOOD_LINKURL_ERROR.getCode(), SystemCode.GOOD_LINKURL_ERROR.getMsg());
-                //return ResultMsgUtil.setCodeMsg(msg,SystemCode.GOOD_LINKURL_ERROR.getCode(),SystemCode.GOOD_LINKURL_ERROR.getMsg());
-            }
-            if (StringUtils.isEmpty(task.getStoreName())) {
-                task.setStoreName(wwName);
-            }
-        }
+//        String[] mobileType = new String[]{"5", "6", "7"}; /* 手机端 发布任务设置宝贝ID*/
+//        if (StringHandleUtils.containsStr(taskType, mobileType)) { /* 需要获取旺旺名称 httpClient 调用*/
+//            String wwName = ""; /*手机端流量任务发布 就需要获取宝贝的ID 手机端宝贝链接 如 ： http://item.taobao.com/item.htm?id=535560353891*/
+//            if (task.getGoodLinkUrl().indexOf("?") != -1) {
+//                String goodId = task.getGoodLinkUrl().split("=")[1];
+//                logger.info("+++++++++++ 手机端宝贝ID ： {} ",goodId);
+//                task.setGoodId(Long.parseLong(goodId));
+//            } else {
+//                throw new CheckBaseException(msg, SystemCode.GOOD_LINKURL_ERROR.getCode(), SystemCode.GOOD_LINKURL_ERROR.getMsg());
+//                //return ResultMsgUtil.setCodeMsg(msg,SystemCode.GOOD_LINKURL_ERROR.getCode(),SystemCode.GOOD_LINKURL_ERROR.getMsg());
+//            }
+//            if (StringUtils.isEmpty(task.getStoreName())) {
+//                task.setStoreName(wwName);
+//            }
+//        }
         // 此时设置任务编号
         task.setOrderNo((System.currentTimeMillis() + 1) + "");
         task.setCreateTime(new Date());

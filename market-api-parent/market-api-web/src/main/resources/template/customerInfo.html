@@ -1109,14 +1109,14 @@
             var goodLinkUrl = $thisGood.val();
             // 数组
             if('' == goodLinkUrl || goodLinkUrl.length == 0){
-                layer.msg("请输入关键词");
+                layer.msg("请输入宝贝链接");
                 return;
             }
-            if(!isRightURL(goodLinkUrl)){
-                layer.msg("宝贝链接格式有误");
-                $thisGood.val("");
-                return;
-            }
+            // if(!isRightURL(goodLinkUrl)){
+            //     layer.msg("宝贝链接格式有误");
+            //     $thisGood.val("");
+            //     return;
+            // }
     }
     // 关键词校验
     function changeWordName(){
@@ -1289,15 +1289,15 @@
         var goodLinkUrl = $("#pcll_jhsrw input[name='goodLinkUrl']").val();
         // 数组
         if('' == goodLinkUrl || goodLinkUrl.length == 0){
-            layer.msg("请输入关键词");
+            layer.msg("请输入宝贝链接");
             return;
         }
         // 淘宝天猫链接 校验
-        if(!isRightURL(goodLinkUrl)){
-            layer.msg("宝贝链接格式有误");
-            $("#pcll_jhsrw input[name='goodLinkUrl']").val("");
-            return;
-        }
+        // if(!isRightURL(goodLinkUrl)){
+        //     layer.msg("宝贝链接格式有误");
+        //     $("#pcll_jhsrw input[name='goodLinkUrl']").val("");
+        //     return;
+        // }
     });
 
     // 聚划算任务数量
@@ -1366,7 +1366,6 @@
     // 任务保存
     function saveTask(goodUrl,taskType,wordList,totalVisitor,totalNumber,taskTime,taskBeginHour,taskEndHour,taskBeginMiunte,
                       taskEndMiunte,taskSearchScope,templateId) {
-
         var bh = parseInt(taskBeginHour);
         var eh = parseInt(taskEndHour);
         // 公共参数校验 !isPositiveInteger(taskBeginHour)
@@ -1415,25 +1414,39 @@
             contentType:"application/json",
             success:function(result){
                 if(result.code == "200"){
+                    layer.msg('恭喜您，任务发布成功！');
+                    // layer.open({
+                    //      title: '任务详情'
+                    //     ,content: '您好，您已成功发布任务'
+                    //     ,time: 4000
+                    // });
+                    // layer.msg('发布任务成功',{
+                    //     icon:1, //图标
+                    //     time:8000   //2秒关闭(如果不配置,默认是3秒)
+                    // });
                     totalMoney = 0.0;
                     pcRate = 0.0;
-                    layer.msg('任务发布成功');
-                    switch (currentClickType){
-                        case 'pc': $('#modal-1').removeClass('md-show');break;
-                        case 'mobile': $('#modal-2').removeClass('md-show');break;
-                        case 'other': $('#modal-3').removeClass('md-show');break;
-                        case 'collection': $('#modal-4').removeClass('md-show');break;
-                        default : $('#modal-1').removeClass('md-show');break;
-                    }
                     // todo 刷新主页面的数据 重新加载数据
-                    window.location.reload();
+                    setTimeout(function(){
+                        switch (currentClickType){
+                            case 'pc': $('#modal-1').removeClass('md-show');break;
+                            case 'mobile': $('#modal-2').removeClass('md-show');break;
+                            case 'other': $('#modal-3').removeClass('md-show');break;
+                            case 'collection': $('#modal-4').removeClass('md-show');break;
+                            default : $('#modal-1').removeClass('md-show');break;
+                        }
+                        window.location.reload();
+                    }, 3000);
                 }else if(result.code == '415'){
                     layer.msg("您好，您的账户余额不足，请先去充值");
                 }else if(result.code=="500" || result.code == '501'){
                     layer.msg(result.msg);
                 }else if(result.code == '401' || result.code == '402'){
                     // token 失效 直接跳转登录页
-                    window.location.href = baseUrl+"page/login.html";
+                    layer.msg(result.msg);
+                    setTimeout(function(){
+                        window.location.href = baseUrl+"page/login.html";
+                    }, 3000);
                 }
             }
         });
@@ -1580,15 +1593,15 @@
       var goodLinkUrl = $thisGood.val();
       // 数组
       if('' == goodLinkUrl || goodLinkUrl.length == 0){
-          layer.msg("请输入关键词");
+          layer.msg("请输入宝贝链接");
           return;
       }
       // 淘宝天猫链接 校验
-      if(!isRightURL(goodLinkUrl)){
-          layer.msg("宝贝链接格式有误");
-          $thisGood.val("");
-          return;
-      }
+      // if(!isRightURL(goodLinkUrl)){
+      //     layer.msg("宝贝链接格式有误");
+      //     $thisGood.val("");
+      //     return;
+      // }
   });
   // 关键词
   $('#tmapp_word').on('blur',function () {
@@ -1672,11 +1685,11 @@
           return;
       }
       // 淘宝天猫链接 校验
-      if(!isRightURL(goodLinkUrl)){
-          layer.msg("宝贝链接格式有误");
-          $thisGood.val("");
-          return;
-      }
+      // if(!isRightURL(goodLinkUrl)){
+      //     layer.msg("宝贝链接格式有误");
+      //     $thisGood.val("");
+      //     return;
+      // }
   });
 
   // 关键词
@@ -1759,11 +1772,11 @@
           return;
       }
       // 淘宝天猫链接 校验
-      if(!isRightURL(goodLinkUrl)){
-          layer.msg("宝贝链接格式有误");
-          $thisGood.val("");
-          return;
-      }
+      // if(!isRightURL(goodLinkUrl)){
+      //     layer.msg("宝贝链接格式有误");
+      //     $thisGood.val("");
+      //     return;
+      // }
   });
 
   // 任务数量都是  totalNumber
@@ -1836,11 +1849,11 @@
           return;
       }
       // 淘宝天猫链接 校验
-      if(!isRightURL(goodLinkUrl)){
-          layer.msg("宝贝链接格式有误");
-          $thisGood.val("");
-          return;
-      }
+      // if(!isRightURL(goodLinkUrl)){
+      //     layer.msg("宝贝链接格式有误");
+      //     $thisGood.val("");
+      //     return;
+      // }
     });
      // 短标题
     $('#mbztc_title').on('blur',function () {
@@ -1958,11 +1971,11 @@
             return;
         }
         // 淘宝天猫链接 校验
-        if(!isRightURL(goodLinkUrl)){
-            layer.msg("宝贝链接格式有误");
-            $thisGood.val("");
-            return;
-        }
+        // if(!isRightURL(goodLinkUrl)){
+        //     layer.msg("宝贝链接格式有误");
+        //     $thisGood.val("");
+        //     return;
+        // }
     });
     // 关键词
     $('#collect_word').on('blur',function () {
@@ -2039,17 +2052,16 @@
             return;
         }
         // 淘宝天猫链接 校验
-        if(!isRightURL(goodLinkUrl)){
-            layer.msg("宝贝链接格式有误");
-            $thisGood.val("");
-            return;
-        }
+        // if(!isRightURL(goodLinkUrl)){
+        //     layer.msg("宝贝链接格式有误");
+        //     $thisGood.val("");
+        //     return;
+        // }
     });
     // 关键词
     $('#mb_collect_word').on('blur',function () {
         var $thisWord = $("#scjg_sj input[name='wordList']");
         var wordList = $thisWord.val();
-        console.log("关键词 ： "+wordList);
         // 数组
         if('' == wordList || wordList.length == 0){
             layer.msg("请输入关键词");
