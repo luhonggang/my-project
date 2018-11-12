@@ -48,11 +48,89 @@
                 return;
             }
         }
+        // 点击忘记密码 进行密码修改
         function checkWjPwd() {
-            $("#wjpwd").show();
-            $("#phone").val('');
-            $('#pwd').val('');
-            $('#conform_pwd').val('');
+            // $("#wjpwd").show();
+            // $("#phone").val('');
+            // $('#pwd').val('');
+            // $('#conform_pwd').val('');
+            layer.open({
+                id:1,
+                type: 1,
+                title:'用户修改密码',
+                skin:'layui-layer-rim',
+                area:['450px', 'auto'],
+                content:
+                    '<div class="row" style="width: 420px;  margin-left:7px; margin-top:10px;">'
+                    +'<div class="col-sm-12">'
+                    +'<div class="input-group" style="margin-top: 10px">'
+                    +'<span class="input-group-addon">手机号码:</span>'
+                    +'<input id="forget_phone" type="phone" class="form-control" placeholder="请输入您的手机号码">'
+                    +'</div>'
+                    +'</div>'
+                    +'<div class="col-sm-12" style="margin-top: 10px">'
+                    +'<div class="input-group">'
+                    +'<span class="input-group-addon">新的密码:</span>'
+                    +'<input id="new_pwd" type="password" style="width: 175px;" class="form-control" placeholder="请输入您的新密码">'
+                    +'</div>'
+                    +'</div>'
+                    +'<div class="col-sm-12" style="margin-top: 10px">'
+                    +'<div class="input-group">'
+                    +'<span class="input-group-addon">确认密码:</span>'
+                    +'<input id="confirm_Pwd" type="password" style="width: 175px;" class="form-control" placeholder="请再确认您的密码">'
+                    +'</div>'
+                    +'</div>'
+                    +'</div>'
+                ,
+                btn:['保存','取消'],
+                btn1: function (index,layero) {
+                    // 修改密码 点击完成按钮
+                    var phone = $('#forget_phone').val();
+                    var newPwd = $('#new_pwd').val();
+                    var confirmPwd = $('#confirm_Pwd').val();
+                    if(phone === ''){
+                        layer.msg('您的手机号码为空！'); // 后续优化
+                        return;
+                    }
+                    if(newPwd === ''){
+                        layer.msg('您的新密码为空！'); // 后续优化
+                        return;
+                    }
+                    if(confirmPwd === ''){
+                        layer.msg('您的确认密码为空！'); // 后续优化
+                        return;
+                    }
+                    if(newPwd !== confirmPwd){
+                        layer.msg('输入的确认密码有误,请重新输入确认密码！');
+                        return;
+                    }
+                    var jsonPwd = '{"phone":"'+phone+'","passWord":"'+newPwd+'","confirmPwd":"'+confirmPwd+'"}';
+                    $.ajax({
+                        url:baseUrl+'customer/updatePwd',
+                        type:'POST',
+                        async:"true", //默认是true,异步
+                        dataType:"json",
+                        data:jsonPwd,
+                        processData:false, //post一个对象需要设置为false
+                        contentType:"application/json",
+                        success:function(result){
+                            if(result.code ==='200'){
+                                layer.msg('修改密码成功');
+                                layer.close(index);
+                            }else if(result.code ==='418'){
+                                layer.msg(result.msg);
+                                layer.close(index);
+                            }else if(result.code === '500'){
+                                layer.msg(result.msg);
+                                layer.close(index);
+                            }
+                        }
+                    });
+                },
+                btn2:function (index,layero) {
+                    layer.close(index);
+                }
+            });
         }
     </script>
     <style type="text/css">
@@ -87,7 +165,6 @@
         </div>
 
         <!--登陆-->
-        <!--<form id="loginForm">-->
         <div class="login_div">
             <div class="login_div1">
                 <span>用户登陆</span>
@@ -110,14 +187,13 @@
                 <input type="submit" id="login_submit" value="登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;陆"/>
             </div>
             <div class="mm_pwd">
-                <input style="cursor:pointer;" type="checkbox" id="jz"/><label for="jz">记住密码</label>
+                <input id="remember_pwd"  type="checkbox" style="cursor:pointer;"/><label >记住密码</label>
                 <a style="cursor:pointer;" onclick="checkWjPwd()">忘记密码？</a>
             </div>
             <div class="reg_foot">
                 <a href="register.html">立即注册，快来提升你网店的各项指标吧</a>
             </div>
         </div>
-        <!--</form>-->
     </div>
     <!--尾部-->
     <div class="footer">
@@ -128,27 +204,41 @@
 <script th:src="@{market/js/base.js}" type="text/javascript"></script>
 <script th:src="@{market/js/jquery-3.1.1.js}" type="text/javascript"></script>
 <script th:src="@{market/js/layer/layer.js}" type="text/javascript"></script>
+<script th:src="@{market/js/jquery.cookie.js}" type="text/javascript"></script>
 <script th:inline="javascript">
     $(function(){
-        // 自动控制显示隐藏
-        // $('.header').click(function (e) {
-        //     // 获取点击发生的对象
-        //     layer.msg(e.target);
-        //     var target = $(e.target);
-        //     if(!target.is('#wjpwd')){
-        //         if($('#wjpwd').is(':visible')){
-        //             $('#wjpwd').hide();
-        //         }else{
-        //             $('#wjpwd').show();
-        //         }
-        //     }
-        // });
+        //记住密码功能 获取cookie的值
+        var password = $.cookie('password');
+        //将获取的值填充入输入框中
+        $('#customer_pwd').val(password);
+        if(password != null && password != ''){
+            //选中保存秘密的复选框
+            document.getElementById('remember_pwd').checked = true;
+        }
+        // 记住密码
+        $('#remember_pwd').on('click',function () {
+            var password = $('#customer_pwd').val();
+            if (document.getElementById('remember_pwd').checked) {
+                console.log('选择')
+                $.cookie("password", password, { expires: 7 });
+            } else {
+                $.cookie("password", "", { expires: -1 });
+            }
+        });
+
+        // 检查忘记密码框中用户输入的手机号码格式 没有生效
+        $('#forget_phone').on('blur',function () {
+            if(!(/^1[3456978]\d{9}$/.test(phone))){
+                layer.msg('您输入的手机号码有误,手机号码只能是11位的数字！');
+                return;
+            }
+        });
         // 校验手机号是否正确
         $('#phone').on('blur',function(){
             var myPhone = $('#phone').val();
-            if(!(/^1[34578]\d{9}$/.test(myPhone))){
-                layer.msg('您输入的手机号码有误，请重新输入');
-                return false;
+            if(!(/^1[3456978]\d{9}$/.test(myPhone))){
+                layer.msg('您输入的手机号码有误,手机号码只能是11位的数字！');
+                return;
             }
         });
         
@@ -169,42 +259,6 @@
             $('#pwd').val('');
             $('#conform_pwd').val('');
         });
-        // 修改密码 点击完成按钮
-        $('#commit').on('click',function () {
-            var phone = $('#forget_phone').val();
-            var pwd = $('#pwd').val();
-            var confirmPwd = $('#conform_pwd').val();
-            if(phone == '' || pwd == '' || confirmPwd == ''){
-                layer.msg('参数为空'); // 后续优化
-                return;
-            }
-            if(pwd != confirmPwd){
-                layer.msg('输入的密码有误,请重新确认密码！');
-                return;
-            }
-            var jsonPwd = '{"phone":"'+phone+'","passWord":"'+pwd+'","confirmPwd":"'+confirmPwd+'"}';
-            $.ajax({
-                url:baseUrl+'customer/updatePwd',
-                type:'POST',
-                async:"true", //默认是true,异步
-                dataType:"json",
-                data:jsonPwd,
-                processData:false, //post一个对象需要设置为false
-                contentType:"application/json",
-                success:function(result){
-                    console.log(result);
-                    if(result.code=="200"){
-                        $('#wjpwd').hide();
-                    }else if(result.code=="418"){
-                        layer.msg(result.msg);
-                        // $("#pwd_yz").fadeIn(3000);
-                    }else if(result.code == "500"){
-                        layer.msg(result.msg);
-                    }
-                }
-            });
-        });
-
         // 回车键登录
         document.onkeyup = function (event) {
             var e = event || window.event;
@@ -213,15 +267,6 @@
                 $("#login_submit").click();
             }
         };
-
-
-        // $('#customer_pwd').on('keypress',function(event){
-        //     if(event.keyCode == 13)
-        //     {
-        //         AjaxLogin();
-        //     }
-        // });
-
         $("#login_submit").click(function () {
             var customerPhone = $("#phone").val();
             if(customerPhone == ''){
