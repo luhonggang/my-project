@@ -91,9 +91,9 @@ public class CustomerController extends BaseController {
 		Double cuTotalMoney = taskVo.getTotalMoney() == null ? 0.0D : taskVo.getTotalMoney();
 		// 修改用户的折扣 总的账户余额 是否充值
 		if(taskVo != null){
-			if(totalMoney < cuTotalMoney){
-				return R.error("金额不能小于用户发布任务已用过的总金额");
-			}
+//			if(totalMoney < cuTotalMoney){
+//				return R.error("金额不能小于用户发布任务已用过的总金额");
+//			}
 			// 将当前用户的状态ID 赋值给当前修改参数
 			customerInfoDto.setStateId(infoDto.getStateId());
 			customerMapper.updateTotalMoney(customerInfoDto);
